@@ -1,0 +1,7 @@
+import { ArrowUpRight, Layers3 } from 'lucide-react';
+import { SiteShell } from '@/core/layout';
+import { SHOWCASE_SITES } from '@/lib/showcase';
+
+export default function HomePage() {
+  return <SiteShell brand="Avenox Vitrin" tagline="Sektöre göre tasarlanan çok sayfalı web deneyimleri"><section className="showcase-intro"><div className="container"><p className="section-heading__eyebrow">12 sektör · 6 tasarım sistemi</p><h1>Avenox Vitrin</h1><p>Restorandan emlağa, araştırma yayınlarından hukuk bürolarına uzanan çok sayfalı site seçkisi.</p><div className="showcase-intro__meta"><span><Layers3 size={16} /> {SHOWCASE_SITES.reduce((total, site) => total + site.pages.length, 0)} ana sayfa</span><span>{SHOWCASE_SITES.reduce((total, site) => total + site.details.length, 0)} detay kaydı</span></div></div></section><main className="container showcase-grid" aria-label="Demo site seçimi">{SHOWCASE_SITES.map((site) => <a className="showcase-card" href={`/sites/${site.id}/${site.pages[0].slug}/`} key={site.id}><div className="showcase-card__media"><img src={site.image} alt={site.imageAlt} loading={site.order <= 4 ? 'eager' : 'lazy'} /><span>{String(site.order).padStart(2, '0')}</span></div><div className="showcase-card__body"><p className="section-heading__eyebrow">{site.category}</p><h2>{site.name}</h2><p>{site.description}</p><footer><span>{site.pages.length} sayfa · {site.inventoryLabel}</span><ArrowUpRight size={18} /></footer></div></a>)}</main></SiteShell>;
+}
