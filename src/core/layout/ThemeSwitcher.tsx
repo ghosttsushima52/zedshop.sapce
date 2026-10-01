@@ -44,12 +44,18 @@ function applyPalette(id: PaletteId, store = false) {
 // ── Swatch dot ────────────────────────────────────────────────
 
 const SWATCH_COLORS: Record<VisualSystemId, string> = {
-  'violet-signal': '#06d6f0',
-  'raycast':        '#ff6363',
-  'resend':         '#111111',
-  'linear':         '#5e6ad2',
-  'print':          '#c0392b',
-  'premium':        '#d4af72',
+  'violet-signal':   '#06d6f0',
+  'raycast':         '#ff6363',
+  'resend':          '#111111',
+  'linear':          '#5e6ad2',
+  'print':           '#c0392b',
+  'premium':         '#d4af72',
+  'swiss-modern':    '#e63946',
+  'warm-minimal':    '#a89f91',
+  'neo-brutalist':   '#0055ff',
+  'atelier-haute':   '#c5a059',
+  'mono-industrial': '#f59e0b',
+  'cyber-minimal':   '#10b981',
 };
 
 function Swatch({ id }: { id: VisualSystemId }) {

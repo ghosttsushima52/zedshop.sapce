@@ -23,7 +23,7 @@ function assertCount(label: string, actual: number, expected: number) {
 }
 
 assertCount('Demo sitesi sayısı', SHOWCASE_SITES.length, 12);
-assertCount('Görsel sistem sayısı', VISUAL_SYSTEMS.length, 6);
+assertCount('Görsel sistem sayısı', VISUAL_SYSTEMS.length, 12);
 assert(SHOWCASE_SITES.every((site) => site.pages.length >= 4), 'Her demo sitesinde en az dört ana sayfa bulunmalı.');
 assertUnique('Site kimlikleri', SHOWCASE_SITES.map((site) => site.id));
 

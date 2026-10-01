@@ -77,10 +77,10 @@ a {
   --c-highlight:    #f59e0b;
 
   /* Typography */
-  --font-sans:      system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans:      'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-display:   var(--font-sans);
-  --font-mono:      'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
-  --font-serif:     Georgia, 'Times New Roman', serif;
+  --font-mono:      'JetBrains Mono', 'SF Mono', 'Fira Code', Consolas, monospace;
+  --font-serif:     'Cormorant Garamond', 'Playfair Display', Georgia, serif;
 
   /* Scale */
   --text-xs:   0.6875rem;
@@ -833,7 +833,442 @@ a {
 }
 
 /* ============================================================
-   PALETTES (Color Overrides)
+   SYSTEM 7: SWISS MODERN (İsviçre Modernizmi)
+   International Typographic Style, 12-col baseline, vermillion
+   ============================================================ */
+[data-visual-system='swiss-modern'] {
+  --c-bg:           #f8f9fa;
+  --c-bg-subtle:    #edf2f4;
+  --c-bg-raised:    #ffffff;
+  --c-border:       #111111;
+  --c-border-strong:#000000;
+
+  --c-fg:           #0b090a;
+  --c-fg-muted:     #495057;
+  --c-fg-faint:     #adb5bd;
+
+  --c-accent:       #e63946;
+  --c-accent-fg:    #ffffff;
+  --c-accent-hover: #ba181b;
+  --c-highlight:    #111111;
+
+  --font-sans:      'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --font-display:   'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:      'JetBrains Mono', monospace;
+
+  --text-xs:        0.75rem;
+  --text-sm:        0.875rem;
+  --text-base:      1rem;
+  --text-lg:        1.25rem;
+  --text-xl:        1.625rem;
+  --text-2xl:       2.5rem;
+  --text-3xl:       3.75rem;
+  --text-4xl:       5rem;
+
+  --leading-tight:  1.02;
+  --leading-snug:   1.2;
+  --leading-normal: 1.5;
+
+  --tracking-tight: -0.02em;
+  --tracking-wide:  0.04em;
+  --tracking-caps:  0.14em;
+
+  --radius-sm:      0px;
+  --radius-md:      0px;
+  --radius-lg:      0px;
+  --card-radius:    0px;
+  --btn-radius:     0px;
+
+  --shadow-sm:      none;
+  --shadow-md:      none;
+  --shadow-lg:      none;
+
+  --header-h:       60px;
+  --header-bg:      #f8f9fa;
+  --header-border:  #111111;
+
+  --card-bg:        #ffffff;
+  --card-border:    #111111;
+  --card-shadow:    none;
+  --card-px:        var(--sp-6);
+  --card-py:        var(--sp-6);
+
+  --btn-px:         var(--sp-6);
+  --btn-py:         var(--sp-3);
+  --btn-weight:     700;
+  --btn-tracking:   var(--tracking-wide);
+
+  --dur-fast:       100ms;
+  --dur-mid:        200ms;
+  --dur-slow:       350ms;
+  --ease-out:       cubic-bezier(0, 0, 0.2, 1);
+
+  --demo-bg:        #111111;
+  --demo-fg:        #ffffff;
+  --demo-height:    28px;
+}
+
+[data-visual-system='swiss-modern'] body {
+  background-color: var(--c-bg);
+  color: var(--c-fg);
+  font-family: var(--font-sans);
+}
+
+/* ============================================================
+   SYSTEM 8: WARM MINIMAL (Japandi & Kinfolk)
+   Serene negative space, limestone/linen neutrals, quiet luxury
+   ============================================================ */
+[data-visual-system='warm-minimal'] {
+  --c-bg:           #f5f2eb;
+  --c-bg-subtle:    #eae5dc;
+  --c-bg-raised:    #ffffff;
+  --c-border:       #ddd6cc;
+  --c-border-strong:#8c8275;
+
+  --c-fg:           #2c2825;
+  --c-fg-muted:     #6e675f;
+  --c-fg-faint:     #a69f95;
+
+  --c-accent:       #8b5e3c;
+  --c-accent-fg:    #ffffff;
+  --c-accent-hover: #6f472b;
+  --c-highlight:    #c49a6c;
+
+  --font-sans:      'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display:   'Cormorant Garamond', Georgia, serif;
+  --font-serif:     'Cormorant Garamond', Georgia, serif;
+
+  --text-xs:        0.75rem;
+  --text-sm:        0.875rem;
+  --text-base:      1.0625rem;
+  --text-lg:        1.3125rem;
+  --text-xl:        1.75rem;
+  --text-2xl:       2.75rem;
+  --text-3xl:       4.25rem;
+  --text-4xl:       6rem;
+
+  --leading-tight:  1.05;
+  --leading-snug:   1.25;
+  --leading-normal: 1.68;
+  --leading-relaxed: 1.88;
+
+  --radius-sm:      4px;
+  --radius-md:      8px;
+  --radius-lg:      14px;
+  --card-radius:    10px;
+  --btn-radius:     6px;
+
+  --shadow-sm:      0 2px 6px rgba(44,40,37,0.03);
+  --shadow-md:      0 8px 24px rgba(44,40,37,0.06);
+  --shadow-lg:      0 16px 40px rgba(44,40,37,0.08);
+
+  --header-h:       68px;
+  --header-bg:      rgba(245,242,235,0.94);
+  --header-border:  var(--c-border);
+
+  --card-bg:        var(--c-bg-raised);
+  --card-border:    var(--c-border);
+  --card-shadow:    var(--shadow-sm);
+  --card-px:        var(--sp-8);
+  --card-py:        var(--sp-8);
+
+  --btn-px:         var(--sp-8);
+  --btn-py:         0.65rem;
+  --btn-weight:     500;
+  --btn-tracking:   0.03em;
+
+  --dur-fast:       160ms;
+  --dur-mid:        320ms;
+  --dur-slow:       600ms;
+  --ease-out:       cubic-bezier(0.16, 1, 0.3, 1);
+
+  --demo-bg:        rgba(139,94,60,0.12);
+  --demo-fg:        var(--c-accent);
+  --demo-height:    28px;
+}
+
+[data-visual-system='warm-minimal'] body {
+  background-color: var(--c-bg);
+  color: var(--c-fg);
+  font-family: var(--font-sans);
+}
+
+/* ============================================================
+   SYSTEM 9: NEO BRUTALIST (Mimari Brutalizm)
+   Raw structural wireframes, 2px borders, hard shadows, data tags
+   ============================================================ */
+[data-visual-system='neo-brutalist'] {
+  --c-bg:           #f0f0f0;
+  --c-bg-subtle:    #e4e4e4;
+  --c-bg-raised:    #ffffff;
+  --c-border:       #121212;
+  --c-border-strong:#000000;
+
+  --c-fg:           #050505;
+  --c-fg-muted:     #404040;
+  --c-fg-faint:     #737373;
+
+  --c-accent:       #0055ff;
+  --c-accent-fg:    #ffffff;
+  --c-accent-hover: #003acc;
+  --c-highlight:    #ffdd00;
+
+  --font-sans:      'Space Grotesk', system-ui, sans-serif;
+  --font-display:   'Space Grotesk', system-ui, sans-serif;
+  --font-mono:      'JetBrains Mono', monospace;
+
+  --radius-sm:      0px;
+  --radius-md:      0px;
+  --radius-lg:      0px;
+  --card-radius:    0px;
+  --btn-radius:     0px;
+
+  --shadow-sm:      2px 2px 0 #121212;
+  --shadow-md:      4px 4px 0 #121212;
+  --shadow-lg:      8px 8px 0 #121212;
+
+  --header-h:       56px;
+  --header-bg:      #ffffff;
+  --header-border:  #121212;
+
+  --card-bg:        #ffffff;
+  --card-border:    #121212;
+  --card-shadow:    var(--shadow-md);
+  --card-px:        var(--sp-6);
+  --card-py:        var(--sp-6);
+
+  --btn-px:         var(--sp-6);
+  --btn-py:         var(--sp-3);
+  --btn-weight:     700;
+  --btn-tracking:   0.05em;
+
+  --dur-fast:       80ms;
+  --dur-mid:        160ms;
+  --dur-slow:       300ms;
+
+  --demo-bg:        #ffdd00;
+  --demo-fg:        #000000;
+  --demo-height:    28px;
+}
+
+[data-visual-system='neo-brutalist'] body {
+  background-color: var(--c-bg);
+  color: var(--c-fg);
+  font-family: var(--font-sans);
+}
+
+/* ============================================================
+   SYSTEM 10: ATELIER HAUTE (Haute Lüks Atölye)
+   High-contrast serif display, deep velvet darks, champagne gold
+   ============================================================ */
+[data-visual-system='atelier-haute'] {
+  --c-bg:           #09090b;
+  --c-bg-subtle:    #121216;
+  --c-bg-raised:    #1c1c22;
+  --c-border:       rgba(197, 160, 89, 0.22);
+  --c-border-strong:rgba(197, 160, 89, 0.55);
+
+  --c-fg:           #faf7f2;
+  --c-fg-muted:     #b5aba0;
+  --c-fg-faint:     #686158;
+
+  --c-accent:       #c5a059;
+  --c-accent-fg:    #09090b;
+  --c-accent-hover: #e0be7a;
+  --c-highlight:    #c5a059;
+
+  --font-sans:      'Plus Jakarta Sans', sans-serif;
+  --font-display:   'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --font-serif:     'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+
+  --text-2xl:       2.75rem;
+  --text-3xl:       4.5rem;
+  --text-4xl:       6.5rem;
+
+  --leading-tight:  0.98;
+  --leading-snug:   1.14;
+  --leading-normal: 1.6;
+
+  --tracking-wide:  0.08em;
+  --tracking-caps:  0.22em;
+
+  --radius-sm:      0px;
+  --radius-md:      0px;
+  --radius-lg:      1px;
+  --card-radius:    0px;
+  --btn-radius:     0px;
+
+  --shadow-sm:      0 2px 10px rgba(0,0,0,0.6);
+  --shadow-md:      0 8px 30px rgba(0,0,0,0.8);
+  --shadow-lg:      0 16px 50px rgba(0,0,0,0.9);
+
+  --header-h:       72px;
+  --header-bg:      rgba(9,9,11,0.96);
+  --header-border:  rgba(197,160,89,0.3);
+
+  --card-bg:        #121216;
+  --card-border:    rgba(197,160,89,0.2);
+  --card-shadow:    var(--shadow-sm);
+  --card-px:        var(--sp-8);
+  --card-py:        var(--sp-8);
+
+  --btn-px:         var(--sp-8);
+  --btn-py:         var(--sp-3);
+  --btn-weight:     500;
+  --btn-tracking:   0.18em;
+
+  --dur-fast:       180ms;
+  --dur-mid:        360ms;
+  --dur-slow:       720ms;
+  --ease-out:       cubic-bezier(0.16, 1, 0.3, 1);
+
+  --demo-bg:        rgba(197,160,89,0.15);
+  --demo-fg:        #c5a059;
+  --demo-height:    28px;
+}
+
+[data-visual-system='atelier-haute'] body {
+  background-color: var(--c-bg);
+  color: var(--c-fg);
+  font-family: var(--font-sans);
+}
+
+/* ============================================================
+   SYSTEM 11: MONO INDUSTRIAL (Teknik Çekirdek / Mono)
+   Laboratory telemetry, pure monospace, coordinate grid, amber
+   ============================================================ */
+[data-visual-system='mono-industrial'] {
+  --c-bg:           #14171a;
+  --c-bg-subtle:    #1c2127;
+  --c-bg-raised:    #252b33;
+  --c-border:       #323a45;
+  --c-border-strong:#546274;
+
+  --c-fg:           #e2e8f0;
+  --c-fg-muted:     #94a3b8;
+  --c-fg-faint:     #64748b;
+
+  --c-accent:       #f59e0b;
+  --c-accent-fg:    #0f172a;
+  --c-accent-hover: #fbbf24;
+  --c-highlight:    #10b981;
+
+  --font-sans:      'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  --font-display:   'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  --font-mono:      'JetBrains Mono', monospace;
+
+  --text-xs:        0.65rem;
+  --text-sm:        0.78rem;
+  --text-base:      0.9rem;
+  --text-lg:        1.15rem;
+  --text-xl:        1.45rem;
+  --text-2xl:       1.9rem;
+  --text-3xl:       2.6rem;
+  --text-4xl:       3.6rem;
+
+  --radius-sm:      2px;
+  --radius-md:      3px;
+  --radius-lg:      4px;
+  --card-radius:    2px;
+  --btn-radius:     2px;
+
+  --shadow-sm:      0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md:      0 4px 12px rgba(0,0,0,0.5);
+  --shadow-lg:      0 12px 24px rgba(0,0,0,0.6);
+
+  --header-h:       50px;
+  --header-bg:      #14171a;
+  --header-border:  var(--c-border);
+
+  --card-bg:        var(--c-bg-raised);
+  --card-border:    var(--c-border);
+  --card-px:        var(--sp-5);
+  --card-py:        var(--sp-5);
+
+  --btn-font-size:  var(--text-xs);
+  --btn-tracking:   0.06em;
+  --btn-px:         var(--sp-5);
+  --btn-py:         var(--sp-2);
+
+  --dur-fast:       60ms;
+  --dur-mid:        140ms;
+  --dur-slow:       260ms;
+
+  --demo-bg:        rgba(245,158,11,0.15);
+  --demo-fg:        #f59e0b;
+  --demo-height:    24px;
+}
+
+[data-visual-system='mono-industrial'] body {
+  background-color: var(--c-bg);
+  color: var(--c-fg);
+  font-family: var(--font-sans);
+}
+
+/* ============================================================
+   SYSTEM 12: CYBER MINIMAL (OLED Monolith)
+   Pure pitch black, precision emerald telemetry, zero fluff
+   ============================================================ */
+[data-visual-system='cyber-minimal'] {
+  --c-bg:           #000000;
+  --c-bg-subtle:    #09090b;
+  --c-bg-raised:    #141416;
+  --c-border:       rgba(255,255,255,0.09);
+  --c-border-strong:rgba(255,255,255,0.22);
+
+  --c-fg:           #ffffff;
+  --c-fg-muted:     #a1a1aa;
+  --c-fg-faint:     #52525b;
+
+  --c-accent:       #10b981;
+  --c-accent-fg:    #000000;
+  --c-accent-hover: #34d399;
+  --c-highlight:    #10b981;
+
+  --font-sans:      'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display:   'Space Grotesk', system-ui, sans-serif;
+  --font-mono:      'JetBrains Mono', monospace;
+
+  --radius-sm:      3px;
+  --radius-md:      6px;
+  --radius-lg:      8px;
+  --card-radius:    6px;
+  --btn-radius:     4px;
+
+  --shadow-sm:      0 0 0 1px rgba(255,255,255,0.08);
+  --shadow-md:      0 4px 20px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.08);
+  --shadow-lg:      0 12px 32px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.12);
+
+  --header-h:       56px;
+  --header-bg:      rgba(0,0,0,0.95);
+  --header-border:  var(--c-border);
+
+  --card-bg:        #09090b;
+  --card-border:    var(--c-border);
+  --card-px:        var(--sp-6);
+  --card-py:        var(--sp-6);
+
+  --btn-weight:     600;
+  --btn-px:         var(--sp-6);
+  --btn-py:         var(--sp-3);
+
+  --dur-fast:       100ms;
+  --dur-mid:        200ms;
+  --dur-slow:       400ms;
+
+  --demo-bg:        rgba(16,185,129,0.12);
+  --demo-fg:        #10b981;
+  --demo-height:    26px;
+}
+
+[data-visual-system='cyber-minimal'] body {
+  background-color: var(--c-bg);
+  color: var(--c-fg);
+  font-family: var(--font-sans);
+}
+
+/* ============================================================
+   PALETTES (Color Overrides - 12 Curated Harmonies)
    ============================================================ */
 [data-palette='midnight'] {
   --c-bg: #080d19; --c-bg-subtle: #101c2b; --c-bg-raised: #172637;
@@ -865,6 +1300,36 @@ a {
   --c-border: #dce4e1; --c-border-strong: #a9bab4;
   --c-fg: #17201f; --c-fg-muted: #53615d; --c-fg-faint: #71817b;
 }
+[data-palette='obsidian'] {
+  --c-bg: #070709; --c-bg-subtle: #111114; --c-bg-raised: #1a1a1f;
+  --c-border: #282830; --c-border-strong: #4a4a58;
+  --c-fg: #f5f5f7; --c-fg-muted: #b0b0bc; --c-fg-faint: #6c6c78;
+}
+[data-palette='sandstone'] {
+  --c-bg: #f4efe6; --c-bg-subtle: #eae4d8; --c-bg-raised: #e1d9cc;
+  --c-border: #cfc5b4; --c-border-strong: #9e917d;
+  --c-fg: #29241e; --c-fg-muted: #695f53; --c-fg-faint: #9c9183;
+}
+[data-palette='nordic-ice'] {
+  --c-bg: #f0f4f8; --c-bg-subtle: #e2e9f0; --c-bg-raised: #d4e0eb;
+  --c-border: #b8c9d9; --c-border-strong: #7b94ad;
+  --c-fg: #101c26; --c-fg-muted: #435b6f; --c-fg-faint: #6c889f;
+}
+[data-palette='terracotta'] {
+  --c-bg: #f7f1eb; --c-bg-subtle: #eedecd; --c-bg-raised: #e4cdb8;
+  --c-border: #d4b59b; --c-border-strong: #a47c5d;
+  --c-fg: #2c1a11; --c-fg-muted: #6e4c37; --c-fg-faint: #9d755c;
+}
+[data-palette='sage'] {
+  --c-bg: #f0f3ee; --c-bg-subtle: #e2e8df; --c-bg-raised: #d4ddd0;
+  --c-border: #b8c6b2; --c-border-strong: #788d71;
+  --c-fg: #192417; --c-fg-muted: #475a43; --c-fg-faint: #6c8466;
+}
+[data-palette='indigo-ink'] {
+  --c-bg: #090e17; --c-bg-subtle: #111a29; --c-bg-raised: #1a273c;
+  --c-border: #293d5c; --c-border-strong: #4f6e99;
+  --c-fg: #f0f5fc; --c-fg-muted: #9bb2d1; --c-fg-faint: #637fa6;
+}
 
 [data-palette] {
   --header-bg: var(--c-bg);
@@ -879,7 +1344,17 @@ a {
 
 [data-palette='midnight'],
 [data-palette='graphite'],
-[data-palette='forest'] { color-scheme: dark; }
+[data-palette='forest'],
+[data-palette='obsidian'],
+[data-palette='indigo-ink'] { color-scheme: dark; }
+
+[data-palette='sandstone'],
+[data-palette='nordic-ice'],
+[data-palette='terracotta'],
+[data-palette='sage'],
+[data-palette='paper'],
+[data-palette='porcelain'],
+[data-palette='daylight'] { color-scheme: light; }
 
 [data-palette='paper'][data-visual-system='violet-signal'],
 [data-palette='porcelain'][data-visual-system='violet-signal'],
@@ -1499,7 +1974,10 @@ body {
   position: absolute;
   top: calc(100% + var(--sp-2));
   right: 0;
-  min-width: 240px;
+  min-width: 250px;
+  max-height: min(74vh, 460px);
+  overflow-y: auto;
+  scrollbar-width: thin;
   background: var(--c-bg-raised);
   border: 1px solid var(--c-border-strong);
   border-radius: var(--radius-md);
@@ -2180,4 +2658,186 @@ body {
   [data-visual-system='violet-signal'] .site-shell[data-site-theme='saas'] h1 {
     font-size: 2.5rem;
   }
+}
+
+/* ============================================================
+   SECTOR DOMAIN AUTHENTICITY ENGINE (ANTI-AI-SLOP RULES)
+   Each site gets distinctive industry-grade typographic dignity,
+   authentic metadata badges, tailored card weights and layouts.
+   ============================================================ */
+
+/* 1. Yörünge Araştırma Dergisi (Academic / Editorial Journal) */
+[data-active-site='orbital-journal'],
+.site-shell[data-site-theme='editorial'] {
+  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+}
+[data-active-site='orbital-journal'] .article-card,
+.site-shell[data-site-theme='editorial'] .article-card {
+  border-left: 3px solid var(--c-accent);
+  border-radius: 0;
+  transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast);
+}
+[data-active-site='orbital-journal'] .article-card:hover,
+.site-shell[data-site-theme='editorial'] .article-card:hover {
+  transform: translateX(4px);
+  border-left-color: var(--c-fg);
+}
+[data-active-site='orbital-journal'] .article-card footer,
+.site-shell[data-site-theme='editorial'] .article-card footer {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+}
+
+/* 2. Mola Kıyı Restoranı (Aegean Coastal Gastronomy) */
+[data-active-site='restaurant'],
+.site-shell[data-site-theme='restaurant'] {
+  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+}
+[data-active-site='restaurant'] .card,
+.site-shell[data-site-theme='restaurant'] .card {
+  border-radius: var(--radius-sm);
+  transition: transform var(--dur-mid) var(--ease-out), box-shadow var(--dur-mid);
+}
+[data-active-site='restaurant'] .card:hover,
+.site-shell[data-site-theme='restaurant'] .card:hover {
+  transform: translateY(-3px);
+}
+[data-active-site='restaurant'] .section-heading__eyebrow,
+.site-shell[data-site-theme='restaurant'] .section-heading__eyebrow {
+  letter-spacing: 0.18em;
+  font-size: var(--text-xs);
+}
+
+/* 3. Arkhe Taşınmaz & Mimarlık (Architectural Studio & Living Spaces) */
+[data-active-site='real-estate'],
+.site-shell[data-site-theme='real-estate'] {
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+}
+[data-active-site='real-estate'] .property-card,
+.site-shell[data-site-theme='real-estate'] .property-card {
+  border-radius: 0;
+  border: 1px solid var(--c-border);
+}
+[data-active-site='real-estate'] .property-card__specs,
+.site-shell[data-site-theme='real-estate'] .property-card__specs {
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+[data-active-site='real-estate'] .property-card__image-wrap img,
+.site-shell[data-site-theme='real-estate'] .property-card__image-wrap img {
+  filter: saturate(0.92) contrast(1.02);
+}
+
+/* 4. Kaf Dağı İnziva (Landscape Retreat & Thermal Sanctuary) */
+[data-active-site='hotel'],
+.site-shell[data-site-theme='hotel'] {
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+}
+[data-active-site='hotel'] .card,
+.site-shell[data-site-theme='hotel'] .card {
+  border-radius: var(--radius-md);
+}
+
+/* 5. Misk & Buhur (Independent Perfume Atelier) */
+[data-active-site='perfume'],
+.site-shell[data-site-theme='perfume'] {
+  --font-display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+}
+[data-active-site='perfume'] .card,
+.site-shell[data-site-theme='perfume'] .card {
+  border-radius: 1px;
+}
+[data-active-site='perfume'] .section-heading__title,
+.site-shell[data-site-theme='perfume'] .section-heading__title {
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* 6. Perde Luthier (Custom Instrument Workshop) */
+[data-active-site='guitar'],
+.site-shell[data-site-theme='guitar'] {
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+[data-active-site='guitar'] .service-panel,
+.site-shell[data-site-theme='guitar'] .service-panel {
+  border: 1px solid var(--c-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--c-bg-subtle);
+}
+[data-active-site='guitar'] .spec-table,
+.site-shell[data-site-theme='guitar'] .spec-table {
+  font-family: var(--font-mono);
+}
+
+/* 7. Demirbağ & Ortakları (Institutional Legal Advisory) */
+[data-active-site='law'],
+.site-shell[data-site-theme='law'] {
+  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --card-radius: 0px;
+  --btn-radius: 0px;
+}
+[data-active-site='law'] .card,
+.site-shell[data-site-theme='law'] .card {
+  border-radius: 0px;
+  box-shadow: none;
+}
+[data-active-site='law'] .sector-hero--law,
+.site-shell[data-site-theme='law'] .sector-hero--law {
+  border-top: 3px solid var(--c-fg);
+}
+
+/* 8. VektörOps (B2B SaaS / Operations Platform) */
+[data-active-site='saas'],
+.site-shell[data-site-theme='saas'] {
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+[data-active-site='saas'] .card,
+.site-shell[data-site-theme='saas'] .card {
+  border-radius: var(--radius-md);
+}
+
+/* 9. VadiDent (Evidence-Based Dental Clinic) */
+[data-active-site='dental'],
+.site-shell[data-site-theme='dental'] {
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+[data-active-site='dental'] .sector-hero--dental,
+.site-shell[data-site-theme='dental'] .sector-hero--dental {
+  border-top: 3px solid #0d9488;
+}
+
+/* 10. KOR Atletik (High-Performance Athletic Club) */
+[data-active-site='fitness'],
+.site-shell[data-site-theme='fitness'] {
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+}
+[data-active-site='fitness'] .card h2,
+.site-shell[data-site-theme='fitness'] .card h2 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* 11. Nadirat Kitap & Matbua (Antiquarian Book & Print Gallery) */
+[data-active-site='rare-books'],
+.site-shell[data-site-theme='rare-books'] {
+  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+}
+[data-active-site='rare-books'] .card,
+.site-shell[data-site-theme='rare-books'] .card {
+  border-radius: 0px;
+}
+
+/* 12. Pusula Keşif (Expedition & Travel Studio) */
+[data-active-site='travel'],
+.site-shell[data-site-theme='travel'] {
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+}
+[data-active-site='travel'] .card,
+.site-shell[data-site-theme='travel'] .card {
+  border-radius: var(--radius-sm);
 }

@@ -15,7 +15,13 @@ export type VisualSystemId =
   | 'resend'         // 3. Teknik editoryal, bol beyaz boşluk, kesin hatlar
   | 'linear'         // 4. Ürün zarafeti, disiplinli grid, sessiz gradyanlar
   | 'original-print' // 5. Sıcak modernist, asimetrik editoryal, mürekkep & fildişi
-  | 'premium-pro';   // 6. Galeri sınıfı, zamansız tipografi, müze benzeri sadelik
+  | 'premium-pro'    // 6. Galeri sınıfı, zamansız tipografi, müze benzeri sadelik
+  | 'swiss-modern'   // 7. İsviçre modernizmi, katı 12-kolon ızgara, vermilyon vurgu
+  | 'warm-minimal'   // 8. Japandi & Kinfolk, kireçtaşı dokuları, dingin nefes alan alanlar
+  | 'neo-brutalist'  // 9. Mimari brutalizm, ham strüktür, 2px tel çerçeve, teknik damga
+  | 'atelier-haute'  // 10. Parisian haute editoryal, derin kadife, şampanya altın kılcal hatlar
+  | 'mono-industrial'// 11. Laboratuvar telemetrisi, saf monospace, koordinat ızgarası
+  | 'cyber-minimal'; // 12. Zifiri OLED siyahı, monolitik kartlar, zümrüt telemetri
 
 export type SectorId =
   | 'editorial'    // Dergi, Araştırma

@@ -10,9 +10,22 @@ export function SiteRouter({ siteId, segments }: { siteId: ShowcaseSiteId; segme
   const isDetail = segments[0] === 'detail';
   const pageSlug = isDetail ? 'detail' : (segments[0] ?? 'index');
   const itemSlug = isDetail ? segments[1] : undefined;
-  if (siteId === 'orbital-journal' || siteId === 'rare-books') return <EditorialSiteRenderer siteId={siteId} pageSlug={pageSlug} itemSlug={itemSlug} />;
-  if (siteId === 'restaurant' || siteId === 'hotel' || siteId === 'travel') return <HospitalitySiteRenderer siteId={siteId} pageSlug={pageSlug} itemSlug={itemSlug} />;
-  if (siteId === 'real-estate' || siteId === 'perfume' || siteId === 'guitar') return <CommerceSiteRenderer siteId={siteId} pageSlug={pageSlug} itemSlug={itemSlug} />;
-  return <ServicesSiteRenderer siteId={siteId} pageSlug={pageSlug} itemSlug={itemSlug} />;
+
+  let content: React.ReactNode;
+  if (siteId === 'orbital-journal' || siteId === 'rare-books') {
+    content = <EditorialSiteRenderer siteId={siteId} pageSlug={pageSlug} itemSlug={itemSlug} />;
+  } else if (siteId === 'restaurant' || siteId === 'hotel' || siteId === 'travel') {
+    content = <HospitalitySiteRenderer siteId={siteId} pageSlug={pageSlug} itemSlug={itemSlug} />;
+  } else if (siteId === 'real-estate' || siteId === 'perfume' || siteId === 'guitar') {
+    content = <CommerceSiteRenderer siteId={siteId} pageSlug={pageSlug} itemSlug={itemSlug} />;
+  } else {
+    content = <ServicesSiteRenderer siteId={siteId} pageSlug={pageSlug} itemSlug={itemSlug} />;
+  }
+
+  return (
+    <div data-active-site={siteId} className="site-canvas">
+      {content}
+    </div>
+  );
 }
 
