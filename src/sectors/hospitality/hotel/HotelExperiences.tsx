@@ -21,12 +21,12 @@ export function HotelExperiences() {
   }, [activeCategory]);
 
   return (
-    <SiteShell>
+    <SiteShell brand="Kaf Dağı İnziva" tagline="Sessizlik ve Doğa Oteli">
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '4rem 2rem' }}>
         {/* Intro */}
         <section style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <h1 style={{ fontSize: '3rem', fontWeight: 300, marginBottom: '1rem' }}>Doğa ve Zanaat Deneyimleri</h1>
-          <p style={{ color: '#555', fontSize: '1.125rem', maxWidth: '700px', margin: '0 auto' }}>
+          <p style={{ color: 'var(--c-fg-muted)', fontSize: '1.125rem', maxWidth: '700px', margin: '0 auto' }}>
             Bölgenin yerel kültürünü, coğrafyanın sunduğu cömertliği ve zanaatkar ruhunu keşfedin. Zamanın yavaş aktığı bu topraklarda kendinize yeni deneyimler hediye edin.
           </p>
         </section>
@@ -39,12 +39,13 @@ export function HotelExperiences() {
               onClick={() => setActiveCategory(cat.id)}
               style={{
                 padding: '0.5rem 1rem',
-                border: '1px solid #ccc',
-                backgroundColor: activeCategory === cat.id ? '#000' : '#fff',
-                color: activeCategory === cat.id ? '#fff' : '#000',
+                border: '1px solid var(--c-border)',
+                backgroundColor: activeCategory === cat.id ? 'var(--c-primary)' : 'var(--c-bg-subtle)',
+                color: activeCategory === cat.id ? 'var(--c-primary-fg)' : 'var(--c-fg)',
                 cursor: 'pointer',
                 borderRadius: '9999px',
-                fontSize: '0.875rem'
+                fontSize: '0.875rem',
+                transition: 'all 0.2s ease'
               }}
             >
               {cat.label}
@@ -55,22 +56,24 @@ export function HotelExperiences() {
         {/* Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2.5rem' }}>
           {filteredExperiences.map(exp => (
-            <div key={exp.id} style={{ display: 'flex', flexDirection: 'column' }}>
-              <img src={exp.imageUrl} alt={exp.alt} style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', marginBottom: '1rem' }} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#666' }}>{categories.find(c => c.id === exp.category)?.label}</span>
-                <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>{exp.displayPrice}</span>
+            <div key={exp.id} className="card" style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 'var(--card-radius)', overflow: 'hidden' }}>
+              <img src={exp.imageUrl} alt={exp.alt} style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover' }} />
+              <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--c-fg-subtle)' }}>{categories.find(c => c.id === exp.category)?.label}</span>
+                  <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--c-primary)' }}>{exp.displayPrice}</span>
+                </div>
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: 'var(--c-fg)' }}>{exp.title}</h3>
+                <div style={{ fontSize: '0.875rem', color: 'var(--c-fg-muted)', marginBottom: '1rem' }}>
+                  <p><strong>Rehber:</strong> {exp.host}</p>
+                  <p><strong>Süre:</strong> {exp.duration} &bull; <strong>Sezon:</strong> {exp.seasonality.join(', ')}</p>
+                </div>
+                <ul style={{ paddingLeft: '1.2rem', margin: 0, fontSize: '0.875rem', color: 'var(--c-fg-muted)' }}>
+                  {exp.highlights.slice(0, 3).map((hl, idx) => (
+                    <li key={idx} style={{ marginBottom: '0.25rem' }}>{hl}</li>
+                  ))}
+                </ul>
               </div>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>{exp.title}</h3>
-              <div style={{ fontSize: '0.875rem', color: '#555', marginBottom: '1rem' }}>
-                <p><strong>Rehber:</strong> {exp.host}</p>
-                <p><strong>Süre:</strong> {exp.duration} &bull; <strong>Sezon:</strong> {exp.seasonality.join(', ')}</p>
-              </div>
-              <ul style={{ paddingLeft: '1.2rem', margin: 0, fontSize: '0.875rem', color: '#444' }}>
-                {exp.highlights.slice(0, 3).map((hl, idx) => (
-                  <li key={idx} style={{ marginBottom: '0.25rem' }}>{hl}</li>
-                ))}
-              </ul>
             </div>
           ))}
         </div>

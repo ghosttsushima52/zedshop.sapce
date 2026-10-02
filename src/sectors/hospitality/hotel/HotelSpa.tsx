@@ -18,11 +18,11 @@ export function HotelSpa() {
   ];
 
   return (
-    <SiteShell>
+    <SiteShell brand="Kaf Dağı İnziva" tagline="Sessizlik ve Doğa Oteli">
       {/* Hero */}
-      <section style={{ backgroundColor: '#000', color: '#fff', padding: '6rem 2rem', textAlign: 'center' }}>
+      <section style={{ backgroundColor: 'var(--c-bg-subtle)', color: 'var(--c-fg)', padding: '6rem 2rem', textAlign: 'center', borderBottom: '1px solid var(--c-border)' }}>
         <h1 style={{ fontSize: '3.5rem', fontWeight: 300, marginBottom: '1.5rem' }}>Spa & Termal Şifa</h1>
-        <p style={{ fontSize: '1.25rem', maxWidth: '700px', margin: '0 auto', opacity: 0.9 }}>
+        <p style={{ fontSize: '1.25rem', maxWidth: '700px', margin: '0 auto', color: 'var(--c-fg-muted)' }}>
           Yerin derinliklerinden gelen termal suyun iyileştirici gücüyle bedeninizi ve ruhunuzu yenileyin. Doğanın sessizliğinde tam bir arınma.
         </p>
       </section>
@@ -32,29 +32,31 @@ export function HotelSpa() {
         <h2 style={{ fontSize: '2.5rem', textAlign: 'center', marginBottom: '3rem', fontWeight: 300 }}>Şifa Alanları</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
           {facilities.map((fac, idx) => (
-            <div key={idx} style={{ display: 'flex', flexDirection: 'column' }}>
-              <img src={fac.img} alt={fac.name} style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', marginBottom: '1rem' }} />
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{fac.name}</h3>
-              <p style={{ color: '#555', lineHeight: 1.6 }}>{fac.desc}</p>
+            <div key={idx} className="card" style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 'var(--card-radius)', overflow: 'hidden' }}>
+              <img src={fac.img} alt={fac.name} style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover' }} />
+              <div style={{ padding: '1.5rem' }}>
+                <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: 'var(--c-fg)' }}>{fac.name}</h3>
+                <p style={{ color: 'var(--c-fg-muted)', lineHeight: 1.6 }}>{fac.desc}</p>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
       {/* Treatments Menu */}
-      <section style={{ backgroundColor: '#f9f9f9', padding: '5rem 2rem' }}>
+      <section style={{ backgroundColor: 'var(--c-bg-subtle)', padding: '5rem 2rem', borderTop: '1px solid var(--c-border)' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <h2 style={{ fontSize: '2.5rem', textAlign: 'center', marginBottom: '3rem', fontWeight: 300 }}>Bakım & Terapi Menüsü</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             {treatments.map((tr, idx) => (
-              <div key={idx} style={{ paddingBottom: '2rem', borderBottom: '1px solid #ddd' }}>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>{tr.title}</h3>
-                <p style={{ color: '#555' }}>{tr.desc}</p>
+              <div key={idx} style={{ paddingBottom: '2rem', borderBottom: '1px solid var(--c-border)' }}>
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: 'var(--c-fg)' }}>{tr.title}</h3>
+                <p style={{ color: 'var(--c-fg-muted)' }}>{tr.desc}</p>
               </div>
             ))}
           </div>
           <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-            <Button>Rezervasyon İçin İletişim</Button>
+            <Button variant="primary">Rezervasyon İçin İletişim</Button>
           </div>
         </div>
       </section>

@@ -8,7 +8,7 @@ export function HotelHome() {
   const featuredRooms = HOTEL_ROOMS.slice(0, 3);
   
   return (
-    <SiteShell>
+    <SiteShell brand="Kaf Dağı İnziva" tagline="Sessizlik ve Doğa Oteli">
       {/* Hero Section */}
       <section style={{ position: 'relative', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundColor: '#000', zIndex: -1 }}>
@@ -23,22 +23,22 @@ export function HotelHome() {
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
             <Link href="/sites/hotel/odalar">
-              <Button style={{ backgroundColor: '#fff', color: '#000' }}>Oda Seç</Button>
+              <Button style={{ backgroundColor: 'var(--c-primary)', color: 'var(--c-primary-fg)' }}>Oda Seç</Button>
             </Link>
             <Link href="/sites/hotel/deneyimler">
-              <Button style={{ backgroundColor: 'transparent', border: '1px solid #fff', color: '#fff' }}>Deneyimler</Button>
+              <Button style={{ backgroundColor: 'transparent', border: '1px solid currentColor', color: '#fff' }}>Deneyimler</Button>
             </Link>
           </div>
         </div>
       </section>
 
       {/* Stats Strip */}
-      <section style={{ backgroundColor: 'var(--color-surface-muted, #f5f5f5)', padding: '3rem 0', borderBottom: '1px solid var(--color-border, #e5e5e5)' }}>
+      <section style={{ backgroundColor: 'var(--c-bg-subtle)', padding: '3rem 0', borderBottom: '1px solid var(--c-border)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: '2rem', textAlign: 'center' }}>
-          <div><strong style={{ display: 'block', fontSize: '2rem' }}>18</strong><span>Oda ve Villa</span></div>
-          <div><strong style={{ display: 'block', fontSize: '2rem' }}>20</strong><span>Rehberli Deneyim</span></div>
-          <div><strong style={{ display: 'block', fontSize: '2rem' }}>4 Mevsim</strong><span>Açık</span></div>
-          <div><strong style={{ display: 'block', fontSize: '2rem' }}>Kaçkar</strong><span>Dağları</span></div>
+          <div><strong style={{ display: 'block', fontSize: '2rem', color: 'var(--c-primary)' }}>18</strong><span style={{ color: 'var(--c-fg-muted)' }}>Oda ve Villa</span></div>
+          <div><strong style={{ display: 'block', fontSize: '2rem', color: 'var(--c-primary)' }}>20</strong><span style={{ color: 'var(--c-fg-muted)' }}>Rehberli Deneyim</span></div>
+          <div><strong style={{ display: 'block', fontSize: '2rem', color: 'var(--c-primary)' }}>4 Mevsim</strong><span style={{ color: 'var(--c-fg-muted)' }}>Açık</span></div>
+          <div><strong style={{ display: 'block', fontSize: '2rem', color: 'var(--c-primary)' }}>Kaçkar</strong><span style={{ color: 'var(--c-fg-muted)' }}>Dağları</span></div>
         </div>
       </section>
 
@@ -47,12 +47,12 @@ export function HotelHome() {
         <h2 style={{ fontSize: '2.5rem', marginBottom: '3rem', textAlign: 'center', fontWeight: 300 }}>Öne Çıkan Yaşam Alanları</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
           {featuredRooms.map(room => (
-            <div key={room.id} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div key={room.id} className="card" style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 'var(--card-radius)', overflow: 'hidden' }}>
               <img src={room.imageUrl} alt={room.alt} style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover' }} />
-              <div>
-                <span style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#666' }}>{room.type}</span>
-                <h3 style={{ fontSize: '1.5rem', marginTop: '0.5rem' }}>{room.title}</h3>
-                <p style={{ color: '#555', marginTop: '0.5rem' }}>{room.tagline}</p>
+              <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                <span style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--c-fg-subtle)' }}>{room.type}</span>
+                <h3 style={{ fontSize: '1.5rem', marginTop: '0.5rem', color: 'var(--c-fg)' }}>{room.title}</h3>
+                <p style={{ color: 'var(--c-fg-muted)', marginTop: '0.5rem' }}>{room.tagline}</p>
               </div>
             </div>
           ))}
@@ -60,15 +60,15 @@ export function HotelHome() {
       </section>
 
       {/* Philosophy Section */}
-      <section style={{ backgroundColor: '#000', color: '#fff', padding: '6rem 2rem' }}>
+      <section style={{ backgroundColor: 'var(--c-bg-subtle)', color: 'var(--c-fg)', padding: '6rem 2rem', borderTop: '1px solid var(--c-border)', borderBottom: '1px solid var(--c-border)' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           <h2 style={{ fontSize: '2rem', fontWeight: 300, textAlign: 'center' }}>Felsefemiz</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', fontSize: '1.125rem', lineHeight: 1.6, opacity: 0.9 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', fontSize: '1.125rem', lineHeight: 1.6, color: 'var(--c-fg-muted)' }}>
             <p>Doğa mimarisi, var olanı bozmadan onunla bütünleşmeyi gerektirir. Kaf Dağı İnziva, bulunduğu coğrafyanın taşını, ahşabını ve ruhunu yansıtan bir anlayışla inşa edildi.</p>
             <p>Yavaş seyahat felsefesini benimsiyoruz. Ziyaretçilerimizi zamanın yavaş aktığı, anıların derinleştiği ve kendileriyle baş başa kalabilecekleri bir atmosfere davet ediyoruz.</p>
             <p>Minimal ayak izi prensibimizle, enerjimizi doğadan alıyor, atıklarımızı kaynağında ayrıştırıyor ve sadece çevremize değil, yerel topluluğa da değer katmayı hedefliyoruz.</p>
           </div>
-          <blockquote style={{ fontSize: '1.5rem', fontStyle: 'italic', textAlign: 'center', marginTop: '2rem', borderLeft: 'none', padding: 0 }}>
+          <blockquote style={{ fontSize: '1.5rem', fontStyle: 'italic', textAlign: 'center', marginTop: '2rem', borderLeft: 'none', padding: 0, color: 'var(--c-primary)' }}>
             "Doğanın sessizliği, ruhun en güçlü müziğidir."
           </blockquote>
         </div>
@@ -84,11 +84,11 @@ export function HotelHome() {
             { name: 'Güz', theme: 'Hasat ve Dönüşüm', exp: 'Soğuk Taş Baskı Zeytin Hasadı' },
             { name: 'Kış', theme: 'İçedönüş ve Sessizlik', exp: 'Samanyolu Gözlemi' }
           ].map((season) => (
-            <div key={season.name} style={{ padding: '2rem', backgroundColor: '#f9f9f9', border: '1px solid #eee', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <h3 style={{ fontSize: '1.5rem' }}>{season.name}</h3>
-              <p style={{ color: '#444' }}><strong>Tema:</strong> {season.theme}</p>
-              <p style={{ color: '#444' }}><strong>Öne Çıkan:</strong> {season.exp}</p>
-              <Link href="/sites/hotel/deneyimler" style={{ marginTop: 'auto', textDecoration: 'underline', fontWeight: 500, color: '#000' }}>
+            <div key={season.name} className="card" style={{ padding: '2rem', backgroundColor: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 'var(--card-radius)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <h3 style={{ fontSize: '1.5rem', color: 'var(--c-fg)' }}>{season.name}</h3>
+              <p style={{ color: 'var(--c-fg-muted)' }}><strong>Tema:</strong> {season.theme}</p>
+              <p style={{ color: 'var(--c-fg-muted)' }}><strong>Öne Çıkan:</strong> {season.exp}</p>
+              <Link href="/sites/hotel/deneyimler" style={{ marginTop: 'auto', textDecoration: 'underline', fontWeight: 500, color: 'var(--c-primary)' }}>
                 Detayları İncele
               </Link>
             </div>
