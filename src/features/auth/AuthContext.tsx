@@ -24,14 +24,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setMounted(true);
+    // Sayfaya girildiğinde direkt giriş ekranı açılsın diye eski kalıntıları sıfırla
     try {
-      const savedUser = localStorage.getItem(STORAGE_KEY);
-      if (savedUser) {
-        setUser(JSON.parse(savedUser));
-      }
-    } catch {
-      // Fallback
-    }
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem('zedshop_auth_user');
+      sessionStorage.removeItem(STORAGE_KEY);
+    } catch {}
+    setUser(null);
   }, []);
 
   const login = (username: string, password: string) => {
@@ -46,9 +45,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         accessibleSites: ['*'],
       };
       setUser(authUser);
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(authUser));
-      } catch {}
       return { success: true, role: 'master_admin' };
     }
 
@@ -60,9 +56,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         accessibleSites: ['legendgame'],
       };
       setUser(authUser);
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(authUser));
-      } catch {}
       return { success: true, role: 'legend_client' };
     }
 
