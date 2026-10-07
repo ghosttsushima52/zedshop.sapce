@@ -3,14 +3,25 @@
 import React, { useState, useEffect, ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 import { FuturisticTechGate } from './FuturisticTechGate';
+import { usePathname, useRouter } from 'next/navigation';
 
 export function AuthGateWrapper({ children }: { children: ReactNode }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLegendClient } = useAuth();
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (mounted && isAuthenticated && isLegendClient) {
+      if (pathname === '/' || pathname === '') {
+        router.push('/sites/legendgame');
+      }
+    }
+  }, [mounted, isAuthenticated, isLegendClient, pathname, router]);
 
   // Before client hydration or if not authenticated:
   // Render ONLY the single page Futuristic Tech Gate!

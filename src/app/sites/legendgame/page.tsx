@@ -409,11 +409,13 @@ export default function LegendGamePage() {
               <span className="text-slate-400">İtemsatış & Gaming Marketplace</span>
             </div>
 
-            <div className="flex items-center gap-6">
-              <Link href="/" className="hover:text-white transition">Showcase Ana Sayfa</Link>
-              <Link href="/sites/volta" className="hover:text-white transition">Volta Motor</Link>
-              <Link href="/admin" className="hover:text-white transition">Admin Paneli</Link>
-            </div>
+            {isMasterAdmin && (
+              <div className="flex items-center gap-6">
+                <Link href="/" className="hover:text-white transition">Showcase Ana Sayfa</Link>
+                <Link href="/sites/volta" className="hover:text-white transition">Volta Motor</Link>
+                <Link href="/admin" className="hover:text-white transition">Admin Paneli</Link>
+              </div>
+            )}
           </div>
 
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-600 text-[11px]">

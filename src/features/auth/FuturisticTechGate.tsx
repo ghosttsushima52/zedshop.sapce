@@ -6,7 +6,7 @@ import { User, Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle2 } from '
 import { useRouter, usePathname } from 'next/navigation';
 
 export function FuturisticTechGate() {
-  const { user, isAuthenticated, isMasterAdmin, login, logout } = useAuth();
+  const { user, isAuthenticated, isMasterAdmin, checkCredentials, login, logout } = useAuth();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -43,22 +43,23 @@ export function FuturisticTechGate() {
     setLoading(true);
 
     setTimeout(() => {
-      const res = login(username, password);
+      const check = checkCredentials(username, password);
       setLoading(false);
 
-      if (res.success) {
+      if (check.valid) {
         setIsGranted(true);
         setTimeout(() => {
+          login(username, password);
           document.body.style.overflow = '';
-          if (res.role === 'legend_client' && pathname !== '/sites/legendgame' && pathname !== '/legendgame') {
-            router.push('/sites/legendgame');
+          if (check.role === 'legend_client') {
+            window.location.href = '/sites/legendgame/';
           }
-        }, 750);
+        }, 600);
       } else {
         setErrorMsg('Hatalı kullanıcı adı veya şifre. Erişim engellendi.');
         triggerShake();
       }
-    }, 400);
+    }, 280);
   };
 
   const triggerShake = () => {
@@ -158,17 +159,11 @@ export function FuturisticTechGate() {
         @keyframes smoothScaleUpCenter {
           0% {
             opacity: 0;
-            transform: scale(0.68);
-            filter: blur(8px);
-          }
-          60% {
-            opacity: 0.95;
-            filter: blur(1px);
+            transform: scale(0.85);
           }
           100% {
             opacity: 1;
             transform: scale(1);
-            filter: blur(0px);
           }
         }
         @keyframes shakeGlitch {
@@ -229,7 +224,7 @@ export function FuturisticTechGate() {
             boxShadow: '0 30px 80px -15px rgba(0, 0, 0, 0.95), 0 0 45px rgba(56, 189, 248, 0.1)',
             animation: shake
               ? 'shakeGlitch 0.45s ease-in-out'
-              : 'smoothScaleUpCenter 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              : 'smoothScaleUpCenter 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards',
           }}
         >
           {/* Başlık Alanı - LOGOSUZ */}
