@@ -12,17 +12,14 @@ interface AuthContextType {
   login: (username: string, password: string) => { success: boolean; message?: string; role?: string };
   logout: () => void;
   openGate: () => void;
-  closeGate: () => void;
 }
 
 const STORAGE_KEY = 'zedshop_auth_user_v2';
-const GATE_VISITED_KEY = 'zedshop_gate_visited_v2';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [isGateOpen, setIsGateOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -31,13 +28,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const savedUser = localStorage.getItem(STORAGE_KEY);
       if (savedUser) {
         setUser(JSON.parse(savedUser));
-      } else {
-        // If not logged in, trigger gate animation on first visit
-        const visited = sessionStorage.getItem(GATE_VISITED_KEY);
-        if (!visited) {
-          setIsGateOpen(true);
-          sessionStorage.setItem(GATE_VISITED_KEY, 'true');
-        }
       }
     } catch {
       // Fallback
@@ -56,8 +46,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         accessibleSites: ['*'],
       };
       setUser(authUser);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(authUser));
-      setIsGateOpen(false);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(authUser));
+      } catch {}
       return { success: true, role: 'master_admin' };
     }
 
@@ -69,12 +60,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         accessibleSites: ['legendgame'],
       };
       setUser(authUser);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(authUser));
-      setIsGateOpen(false);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(authUser));
+      } catch {}
       return { success: true, role: 'legend_client' };
     }
 
-    return { success: false, message: 'Geçersiz kullanıcı adı veya şifre!' };
+    return { success: false, message: 'Hatalı kullanıcı adı veya şifre. Erişim engellendi.' };
   };
 
   const logout = () => {
@@ -82,11 +74,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch {}
-    setIsGateOpen(true);
   };
 
-  const openGate = () => setIsGateOpen(true);
-  const closeGate = () => setIsGateOpen(false);
+  // If user is not authenticated, the gate is strictly OPEN (cannot be closed without logging in)
+  const isGateOpen = mounted && !user;
+
+  const openGate = () => {
+    // If authenticated user wants to switch account, they logout
+    logout();
+  };
 
   return (
     <AuthContext.Provider
@@ -99,7 +95,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         logout,
         openGate,
-        closeGate,
       }}
     >
       {children}

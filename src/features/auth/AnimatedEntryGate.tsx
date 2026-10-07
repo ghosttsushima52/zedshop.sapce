@@ -1,447 +1,283 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
-import { ShieldCheck, Lock, User, Eye, EyeOff, Sparkles, Gamepad2, ArrowRight, CheckCircle2, AlertCircle, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { MASTER_CREDENTIALS, LEGEND_CREDENTIALS } from './types';
+import { 
+  Lock, 
+  User, 
+  Eye, 
+  EyeOff, 
+  ArrowRight, 
+  ShieldCheck, 
+  AlertCircle, 
+  Sparkles,
+  CheckCircle2,
+  KeyRound
+} from 'lucide-react';
+import { useRouter, usePathname } from 'next/navigation';
 
 export function AnimatedEntryGate() {
-  const { user, isAuthenticated, isMasterAdmin, isGateOpen, login, logout, closeGate, openGate } = useAuth();
+  const { user, isAuthenticated, isMasterAdmin, isGateOpen, login, logout } = useAuth();
+  
+  // Phase state: 'intro' (0-2s) -> 'login' -> 'granted'
+  const [phase, setPhase] = useState<'intro' | 'login' | 'granted'>('intro');
+  const [progress, setProgress] = useState(0);
+
+  // Form state - ZERO HINTS
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [shake, setShake] = useState(false);
+
   const router = useRouter();
+  const pathname = usePathname();
 
-  if (!isGateOpen && isAuthenticated) {
-    // Render top mini status badge when authenticated
-    return (
-      <div
-        style={{
-          position: 'fixed',
-          top: '12px',
-          right: '12px',
-          zIndex: 9999,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          padding: '6px 14px',
-          borderRadius: '9999px',
-          background: 'rgba(15, 23, 42, 0.85)',
-          backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
-          color: '#fff',
-          fontSize: '12px',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-          fontFamily: 'var(--font-mono, monospace)',
-        }}
-      >
-        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: isMasterAdmin ? '#10b981' : '#6366f1', boxShadow: '0 0 8px currentColor' }}></span>
-        <span style={{ fontWeight: 600 }}>{user?.username}</span>
-        <span style={{ color: 'rgba(255, 255, 255, 0.5)' }}>({isMasterAdmin ? 'Master Admin' : 'Legend Client'})</span>
-        {isMasterAdmin && (
-          <a
-            href="/admin/"
-            style={{
-              padding: '2px 8px',
-              borderRadius: '4px',
-              background: 'rgba(99, 102, 241, 0.25)',
-              color: '#a5b4fc',
-              textDecoration: 'none',
-              marginLeft: '4px',
-              border: '1px solid rgba(99, 102, 241, 0.4)',
-            }}
-          >
-            Yönetim Paneli
-          </a>
-        )}
-        <button
-          onClick={logout}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: 'rgba(255, 255, 255, 0.6)',
-            cursor: 'pointer',
-            padding: '2px 4px',
-            fontSize: '11px',
-            textDecoration: 'underline',
-          }}
-        >
-          Çıkış
-        </button>
-      </div>
-    );
-  }
+  // 0 - 2 Second Sleek Intro Animation
+  useEffect(() => {
+    if (!isAuthenticated) {
+      document.body.style.overflow = 'hidden';
+      
+      const startTime = Date.now();
+      const duration = 2000; // Exact 2 seconds
 
-  if (!isGateOpen) {
-    return (
-      <button
-        onClick={openGate}
-        title="Giriş Yap / Kimlik Doğrula"
-        style={{
-          position: 'fixed',
-          top: '14px',
-          right: '14px',
-          zIndex: 9999,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-          padding: '7px 14px',
-          borderRadius: '9999px',
-          background: 'rgba(15, 23, 42, 0.8)',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
-          color: '#fff',
-          fontSize: '12px',
-          cursor: 'pointer',
-          fontFamily: 'var(--font-mono, monospace)',
-          transition: 'all 0.2s ease',
-        }}
-      >
-        <Lock size={13} style={{ color: '#38bdf8' }} />
-        <span>Giriş Yap</span>
-      </button>
-    );
-  }
+      const timer = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const currentProgress = Math.min(100, Math.round((elapsed / duration) * 100));
+        setProgress(currentProgress);
 
-  const handleFillMaster = () => {
-    setUsername(MASTER_CREDENTIALS.username);
-    setPassword(MASTER_CREDENTIALS.password);
-    setError(null);
-  };
+        if (elapsed >= duration) {
+          clearInterval(timer);
+          setPhase('login');
+        }
+      }, 30);
 
-  const handleFillLegend = () => {
-    setUsername(LEGEND_CREDENTIALS.username);
-    setPassword(LEGEND_CREDENTIALS.password);
-    setError(null);
-  };
+      return () => {
+        clearInterval(timer);
+        document.body.style.overflow = '';
+      };
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [isAuthenticated]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!username.trim() || !password.trim()) {
+      setError('Lütfen kullanıcı adı ve parolanızı eksiksiz giriniz.');
+      triggerShake();
+      return;
+    }
+
     setLoading(true);
 
     setTimeout(() => {
       const res = login(username, password);
       setLoading(false);
+
       if (res.success) {
-        if (res.role === 'master_admin') {
-          setSuccessMsg('👑 Ana Yönetici Yetkileri Doğrulandı. Tüm siteler aktif.');
-          setTimeout(() => {
-            closeGate();
-            setSuccessMsg(null);
-          }, 1000);
-        } else {
-          setSuccessMsg('🎮 Legend Gamer Doğrulandı. Yönlendiriliyorsunuz...');
-          setTimeout(() => {
-            closeGate();
-            setSuccessMsg(null);
-            router.push('/sites/legendgame/index/');
-          }, 1000);
-        }
+        setPhase('granted');
+        setTimeout(() => {
+          document.body.style.overflow = '';
+          if (res.role === 'legend_client' && pathname !== '/sites/legendgame' && pathname !== '/legendgame') {
+            router.push('/sites/legendgame');
+          }
+        }, 850);
       } else {
-        setError(res.message || 'Hatalı giriş!');
+        setError(res.message || 'Geçersiz kimlik bilgileri. Erişim engellendi.');
+        triggerShake();
       }
     }, 450);
   };
 
-  return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 100000,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'radial-gradient(ellipse at center, rgba(15, 23, 42, 0.92) 0%, rgba(2, 6, 23, 0.98) 100%)',
-        backdropFilter: 'blur(16px)',
-        padding: '16px',
-        animation: 'fadeIn 0.3s ease-out',
-      }}
-    >
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '460px',
-          background: 'rgba(30, 41, 59, 0.75)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          borderRadius: '24px',
-          padding: '32px',
-          boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 40px rgba(59, 130, 246, 0.15)',
-          color: '#fff',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Glow ambient accent */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '-80px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '260px',
-            height: '140px',
-            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.35) 0%, rgba(99, 102, 241, 0) 70%)',
-            pointerEvents: 'none',
-          }}
-        />
+  const triggerShake = () => {
+    setShake(true);
+    setTimeout(() => setShake(false), 500);
+  };
 
-        <button
-          onClick={closeGate}
-          style={{
-            position: 'absolute',
-            top: '18px',
-            right: '18px',
-            background: 'rgba(255, 255, 255, 0.08)',
-            border: 'none',
-            borderRadius: '50%',
-            width: '32px',
-            height: '32px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'rgba(255, 255, 255, 0.6)',
-            cursor: 'pointer',
-          }}
-        >
-          <X size={16} />
-        </button>
-
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-          <div
-            style={{
-              display: 'inline-flex',
-              padding: '10px',
-              borderRadius: '16px',
-              background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(99, 102, 241, 0.2))',
-              border: '1px solid rgba(56, 189, 248, 0.3)',
-              marginBottom: '12px',
-            }}
+  // If already authenticated and gate is unlocked, render minimal floating status pill
+  if (isAuthenticated && phase !== 'intro') {
+    return (
+      <div className="fixed top-3 right-3 z-50 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 backdrop-blur-md border border-slate-700/80 text-white text-xs shadow-xl font-mono">
+        <span className={`w-2 h-2 rounded-full ${isMasterAdmin ? 'bg-emerald-400' : 'bg-cyan-400'} animate-pulse`} />
+        <span className="font-semibold text-slate-200">{user?.username}</span>
+        {isMasterAdmin && (
+          <a
+            href="/admin"
+            className="px-2 py-0.5 rounded bg-red-600/30 text-red-300 hover:bg-red-600/50 text-[11px] font-bold transition ml-1"
           >
-            <ShieldCheck size={28} style={{ color: '#38bdf8' }} />
+            Panel
+          </a>
+        )}
+        <button
+          onClick={logout}
+          className="text-slate-400 hover:text-rose-400 transition text-[11px] ml-1.5 pl-1.5 border-l border-slate-700"
+          title="Çıkış Yap ve Ekranı Kilitle"
+        >
+          Kapat
+        </button>
+      </div>
+    );
+  }
+
+  // Strictly blocking gate modal
+  return (
+    <div className="fixed inset-0 z-[999999] bg-[#04060a] flex items-center justify-center p-4 select-none overflow-hidden font-sans">
+      {/* Background ambient lighting */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-[25%] -left-[10%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-br from-indigo-900/20 via-cyan-900/10 to-transparent blur-3xl animate-pulse" />
+        <div className="absolute -bottom-[20%] -right-[10%] w-[55vw] h-[55vw] rounded-full bg-gradient-to-tl from-red-900/15 via-rose-900/10 to-transparent blur-3xl animate-pulse" />
+        <div className="absolute inset-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] [background-size:24px_24px] opacity-40" />
+      </div>
+
+      {/* PHASE 1: 0 - 2 Saniye Açılış Animasyonu */}
+      {phase === 'intro' && (
+        <div className="relative z-10 flex flex-col items-center justify-center text-center max-w-sm w-full animate-in fade-in duration-700">
+          {/* Animated Central Emblem */}
+          <div className="relative w-28 h-28 mb-8 flex items-center justify-center">
+            {/* Outer rotating pulse ring */}
+            <div className="absolute inset-0 rounded-3xl border border-cyan-500/30 animate-[spin_6s_linear_infinite]" />
+            <div className="absolute inset-2 rounded-2xl border border-indigo-500/40 animate-[spin_4s_linear_infinite_reverse]" />
+            
+            {/* Center Glowing Logo Monogram */}
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-600 via-indigo-600 to-rose-600 flex items-center justify-center text-white shadow-2xl shadow-cyan-500/40 relative z-10 animate-pulse">
+              <span className="text-3xl font-black tracking-tighter">A</span>
+            </div>
+
+            {/* Glowing radial back-shadow */}
+            <div className="absolute inset-0 bg-cyan-500/20 blur-xl rounded-full" />
           </div>
-          <h2 style={{ fontSize: '22px', fontWeight: 700, margin: '0 0 6px 0', letterSpacing: '-0.02em' }}>
-            Avenox Güvenli Giriş Kapısı
+
+          {/* Intro Text */}
+          <h2 className="text-xl sm:text-2xl font-black tracking-wider text-white mb-2 uppercase font-mono">
+            AVENOX PROTOCOL
           </h2>
-          <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.6)', margin: 0, lineHeight: 1.5 }}>
-            Yetkili portala erişmek için giriş yapın veya demo vitrinine devam edin.
+          <p className="text-xs text-slate-400 font-mono tracking-widest uppercase mb-6">
+            GÜVENLİ ERİŞİM MERKEZİ BAŞLATILIYOR
+          </p>
+
+          {/* Sleek Minimal Progress Bar */}
+          <div className="w-56 h-1.5 bg-slate-900/80 rounded-full overflow-hidden border border-slate-800 relative">
+            <div 
+              className="h-full bg-gradient-to-r from-cyan-400 via-indigo-400 to-rose-500 rounded-full transition-all duration-75 ease-out shadow-sm shadow-cyan-400/50"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <div className="text-[10px] text-slate-500 font-mono mt-2.5">
+            %{progress}
+          </div>
+        </div>
+      )}
+
+      {/* PHASE 2: Giriş Yap Formu (SIFIR HINT / KESİNTİSİZ KİLİT) */}
+      {phase === 'login' && (
+        <div className={`relative z-10 w-full max-w-md bg-[#0a0f1d]/90 backdrop-blur-2xl border border-slate-800/90 rounded-3xl p-7 sm:p-9 shadow-2xl shadow-black/80 animate-in fade-in zoom-in-95 duration-500 ${shake ? 'animate-bounce' : ''}`}>
+          
+          {/* Header */}
+          <div className="text-center mb-7">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-indigo-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mx-auto mb-3 shadow-lg shadow-cyan-500/10">
+              <Lock className="w-5 h-5" />
+            </div>
+            <h1 className="text-2xl font-black text-white tracking-tight">
+              Yetkili Girişi
+            </h1>
+            <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+              Devam etmek için sisteme tanımlı kullanıcı adı ve şifrenizi giriniz.
+            </p>
+          </div>
+
+          {/* Login Form - ZERO HINTS */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5 font-mono">
+                Kullanıcı Adı
+              </label>
+              <div className="relative">
+                <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Kullanıcı Adı"
+                  autoFocus
+                  autoComplete="off"
+                  className="w-full bg-[#05070e] border border-slate-800 focus:border-cyan-500/80 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none transition font-sans"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5 font-mono">
+                Parola
+              </label>
+              <div className="relative">
+                <KeyRound className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••••••"
+                  autoComplete="current-password"
+                  className="w-full bg-[#05070e] border border-slate-800 focus:border-cyan-500/80 rounded-xl pl-10 pr-10 py-3 text-sm text-white placeholder-slate-600 focus:outline-none transition font-sans"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition p-1"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {error && (
+              <div className="p-3 bg-rose-950/60 border border-rose-800/80 rounded-xl text-rose-300 text-xs flex items-center gap-2 animate-in fade-in duration-200">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full mt-2 bg-gradient-to-r from-cyan-500 via-indigo-600 to-rose-600 hover:from-cyan-400 hover:via-indigo-500 hover:to-rose-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-cyan-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-50"
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <>
+                  <span>Giriş Yap</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Footer Security Badge */}
+          <div className="mt-6 pt-5 border-t border-slate-800/80 flex items-center justify-center gap-2 text-[11px] text-slate-500 font-mono">
+            <ShieldCheck className="w-3.5 h-3.5 text-cyan-500/70" />
+            <span>256-Bit Uçtan Uca Şifreli Protokol</span>
+          </div>
+        </div>
+      )}
+
+      {/* PHASE 3: Onaylandı / Başarılı Geçiş Animasyonu */}
+      {phase === 'granted' && (
+        <div className="relative z-10 flex flex-col items-center justify-center text-center animate-in zoom-in-90 fade-in duration-300">
+          <div className="w-20 h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center text-emerald-400 mb-4 shadow-2xl shadow-emerald-500/50 animate-pulse">
+            <CheckCircle2 className="w-10 h-10" />
+          </div>
+          <h2 className="text-2xl font-black text-white font-mono tracking-wider">
+            ERİŞİM ONAYLANDI
+          </h2>
+          <p className="text-xs text-slate-400 font-mono mt-1">
+            Sisteme yönlendiriliyorsunuz...
           </p>
         </div>
-
-        {/* Quick Fill Preset Buttons */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '20px' }}>
-          <button
-            type="button"
-            onClick={handleFillMaster}
-            style={{
-              padding: '8px 10px',
-              borderRadius: '10px',
-              background: 'rgba(56, 189, 248, 0.1)',
-              border: '1px solid rgba(56, 189, 248, 0.25)',
-              color: '#7dd3fc',
-              fontSize: '11px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-            }}
-          >
-            <Sparkles size={12} />
-            <span>Ana Yönetici (qwacy)</span>
-          </button>
-          <button
-            type="button"
-            onClick={handleFillLegend}
-            style={{
-              padding: '8px 10px',
-              borderRadius: '10px',
-              background: 'rgba(168, 85, 247, 0.1)',
-              border: '1px solid rgba(168, 85, 247, 0.25)',
-              color: '#d8b4fe',
-              fontSize: '11px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-            }}
-          >
-            <Gamepad2 size={12} />
-            <span>Legend Gamer (Müşteri)</span>
-          </button>
-        </div>
-
-        {error && (
-          <div
-            style={{
-              padding: '10px 14px',
-              borderRadius: '10px',
-              background: 'rgba(239, 68, 68, 0.15)',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-              color: '#fca5a5',
-              fontSize: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              marginBottom: '16px',
-            }}
-          >
-            <AlertCircle size={15} style={{ flexShrink: 0 }} />
-            <span>{error}</span>
-          </div>
-        )}
-
-        {successMsg && (
-          <div
-            style={{
-              padding: '10px 14px',
-              borderRadius: '10px',
-              background: 'rgba(16, 185, 129, 0.15)',
-              border: '1px solid rgba(16, 185, 129, 0.3)',
-              color: '#86efac',
-              fontSize: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              marginBottom: '16px',
-            }}
-          >
-            <CheckCircle2 size={15} style={{ flexShrink: 0 }} />
-            <span>{successMsg}</span>
-          </div>
-        )}
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          <div>
-            <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Kullanıcı Adı (Username)
-            </label>
-            <div style={{ position: 'relative' }}>
-              <User size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255, 255, 255, 0.4)' }} />
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="qwacy veya ggLegendGamer3339"
-                required
-                style={{
-                  width: '100%',
-                  padding: '11px 12px 11px 38px',
-                  borderRadius: '10px',
-                  background: 'rgba(15, 23, 42, 0.8)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  color: '#fff',
-                  fontSize: '13px',
-                  outline: 'none',
-                  fontFamily: 'inherit',
-                  boxSizing: 'border-box',
-                }}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Şifre (Password)
-            </label>
-            <div style={{ position: 'relative' }}>
-              <Lock size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255, 255, 255, 0.4)' }} />
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••••••"
-                required
-                style={{
-                  width: '100%',
-                  padding: '11px 40px 11px 38px',
-                  borderRadius: '10px',
-                  background: 'rgba(15, 23, 42, 0.8)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  color: '#fff',
-                  fontSize: '13px',
-                  outline: 'none',
-                  fontFamily: 'inherit',
-                  boxSizing: 'border-box',
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  position: 'absolute',
-                  right: '12px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  background: 'none',
-                  border: 'none',
-                  color: 'rgba(255, 255, 255, 0.5)',
-                  cursor: 'pointer',
-                  padding: 0,
-                }}
-              >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              marginTop: '8px',
-              padding: '12px',
-              borderRadius: '10px',
-              background: 'linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)',
-              border: 'none',
-              color: '#fff',
-              fontSize: '14px',
-              fontWeight: 600,
-              cursor: loading ? 'wait' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              boxShadow: '0 8px 24px -4px rgba(59, 130, 246, 0.5)',
-              transition: 'transform 0.15s ease',
-            }}
-          >
-            {loading ? 'Doğrulanıyor...' : (
-              <>
-                <span>Güvenli Giriş Yap</span>
-                <ArrowRight size={16} />
-              </>
-            )}
-          </button>
-        </form>
-
-        <div style={{ marginTop: '20px', textAlign: 'center', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '16px' }}>
-          <button
-            type="button"
-            onClick={closeGate}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'rgba(255, 255, 255, 0.5)',
-              fontSize: '12px',
-              cursor: 'pointer',
-              textDecoration: 'underline',
-            }}
-          >
-            Misafir Olarak Vitrini İncele →
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
