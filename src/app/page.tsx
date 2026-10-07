@@ -85,6 +85,90 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="container" style={{ paddingBlockStart: 'var(--sp-8)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'var(--sp-4)', marginBlockEnd: 'var(--sp-8)' }}>
+          {/* Volta Motor Feature Card */}
+          <a 
+            href="/sites/volta" 
+            style={{ 
+              display: 'block',
+              textDecoration: 'none',
+              padding: 'var(--sp-6)', 
+              borderRadius: 'var(--radius-lg)', 
+              border: '1px solid rgba(220, 38, 38, 0.3)', 
+              background: 'linear-gradient(135deg, rgba(220, 38, 38, 0.04) 0%, var(--c-bg-raised) 100%)',
+              transition: 'transform var(--dur-fast), border-color var(--dur-fast)',
+              boxShadow: 'var(--shadow-sm)'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBlockEnd: 'var(--sp-3)' }}>
+              <span style={{ 
+                background: '#dc2626', 
+                color: '#fff', 
+                fontSize: '11px', 
+                fontWeight: 800, 
+                padding: '3px 8px', 
+                borderRadius: '6px',
+                letterSpacing: '0.05em' 
+              }}>
+                VOLTA MOTOR RESMİ
+              </span>
+              <span style={{ fontSize: '11px', color: 'var(--c-fg-muted)', fontFamily: 'var(--font-mono)' }}>%100 ELEKTRİKLİ</span>
+            </div>
+            <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 800, color: 'var(--c-fg)', marginBlockEnd: 'var(--sp-2)' }}>
+              Volta Motor & Elektrikli Mobilite
+            </h3>
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-fg-muted)', marginBlockEnd: 'var(--sp-4)', lineHeight: 1.5 }}>
+              Ekim ayına özel VSM ve VB2 PRO modelleri, %100 elektrikli sıfır emisyon filosu ve canlı admin onaylı IBAN havale sistemi.
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 'var(--text-xs)', fontWeight: 600, color: '#dc2626' }}>
+              <span>Model ve Kampanyaları İncele →</span>
+              <ArrowUpRight size={16} />
+            </div>
+          </a>
+
+          {/* LegendGame Feature Card */}
+          <a 
+            href="/sites/legendgame" 
+            style={{ 
+              display: 'block',
+              textDecoration: 'none',
+              padding: 'var(--sp-6)', 
+              borderRadius: 'var(--radius-lg)', 
+              border: '1px solid rgba(6, 182, 212, 0.3)', 
+              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, var(--c-bg-raised) 100%)',
+              transition: 'transform var(--dur-fast), border-color var(--dur-fast)',
+              boxShadow: 'var(--shadow-sm)'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBlockEnd: 'var(--sp-3)' }}>
+              <span style={{ 
+                background: '#06b6d4', 
+                color: '#080c15', 
+                fontSize: '11px', 
+                fontWeight: 900, 
+                padding: '3px 8px', 
+                borderRadius: '6px',
+                letterSpacing: '0.05em' 
+              }}>
+                LEGENDGAME GAMING
+              </span>
+              <span style={{ fontSize: '11px', color: 'var(--c-fg-muted)', fontFamily: 'var(--font-mono)' }}>İTEMSATIŞ MODELİ</span>
+            </div>
+            <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 800, color: 'var(--c-fg)', marginBlockEnd: 'var(--sp-2)' }}>
+              LegendGame Pazar Yeri & E-Pin
+            </h3>
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-fg-muted)', marginBlockEnd: 'var(--sp-4)', lineHeight: 1.5 }}>
+              Valorant, CS2, LoL, Steam hesapları, escrow havuzu, geri sayımlı dinamik IBAN ödeme ve dekont yükleme altyapısı.
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 'var(--text-xs)', fontWeight: 600, color: '#06b6d4' }}>
+              <span>İlanları ve Pazar Yerini Aç →</span>
+              <ArrowUpRight size={16} />
+            </div>
+          </a>
+        </div>
+      </section>
+
       <main className="container showcase-grid" aria-label="Demo site seçimi">
         {filteredSites.map((site) => (
           <a
