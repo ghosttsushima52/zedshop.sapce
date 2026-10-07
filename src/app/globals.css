@@ -1,3 +1,6 @@
+@tailwind components;
+@tailwind utilities;
+
 /* ============================================================
    AVENOX MULTISITE SHOWCASE — globals.css
    Six structurally distinct visual systems via CSS custom props

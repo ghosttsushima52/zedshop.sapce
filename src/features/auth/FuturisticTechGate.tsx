@@ -2,65 +2,32 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
-import { User, Lock, Eye, EyeOff, ArrowRight, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { User, Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 
 export function FuturisticTechGate() {
   const { user, isAuthenticated, isMasterAdmin, login, logout } = useAuth();
 
-  // Phase: 'intro' (0-2s) -> 'console' -> 'granted'
-  const [phase, setPhase] = useState<'intro' | 'console' | 'granted'>('intro');
-  const [progress, setProgress] = useState(0);
-  const [telemetryLog, setTelemetryLog] = useState('SYSTEM BOOTING...');
-
-  // Form states - STRICTLY ZERO HINTS
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [glitchShake, setGlitchShake] = useState(false);
+  const [isGranted, setIsGranted] = useState(false);
+  const [shake, setShake] = useState(false);
 
   const router = useRouter();
   const pathname = usePathname();
 
-  // 0 - 2 Saniye Açılış Animasyonu (Cinematic Cyber HUD Boot)
   useEffect(() => {
     if (!isAuthenticated) {
       document.body.style.overflow = 'hidden';
-      const startTime = Date.now();
-      const duration = 2000; // Tam 2 saniye
-
-      const logs = [
-        'INITIALIZING QUANTUM ENCRYPTION...',
-        'CHECKING TLS HANDSHAKE & NEURAL LINK...',
-        'SCANNING SYSTEM INTEGRITY...',
-        'BYPASS PROTECTION: LOCKED',
-        'TERMINAL READY FOR OPERATOR AUTH'
-      ];
-
-      const interval = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        const p = Math.min(100, Math.round((elapsed / duration) * 100));
-        setProgress(p);
-
-        // Update telemetry log text
-        const logIndex = Math.min(logs.length - 1, Math.floor((p / 100) * logs.length));
-        setTelemetryLog(logs[logIndex]);
-
-        if (elapsed >= duration) {
-          clearInterval(interval);
-          setPhase('console');
-        }
-      }, 25);
-
-      return () => {
-        clearInterval(interval);
-        document.body.style.overflow = '';
-      };
     } else {
       document.body.style.overflow = '';
     }
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isAuthenticated]);
 
   const handleLogin = (e: React.FormEvent) => {
@@ -68,8 +35,8 @@ export function FuturisticTechGate() {
     setErrorMsg(null);
 
     if (!username.trim() || !password.trim()) {
-      setErrorMsg('GİRİŞ PARAMETRELERİ EKSİK. KULLANICI VE ŞİFRE GEREKLİ.');
-      triggerGlitch();
+      setErrorMsg('Lütfen kullanıcı adı ve parolanızı giriniz.');
+      triggerShake();
       return;
     }
 
@@ -80,27 +47,27 @@ export function FuturisticTechGate() {
       setLoading(false);
 
       if (res.success) {
-        setPhase('granted');
+        setIsGranted(true);
         setTimeout(() => {
           document.body.style.overflow = '';
           if (res.role === 'legend_client' && pathname !== '/sites/legendgame' && pathname !== '/legendgame') {
             router.push('/sites/legendgame');
           }
-        }, 850);
+        }, 750);
       } else {
-        setErrorMsg('403 YETKİSİZ ERİŞİM: KİMLİK DOĞRULANAMADI.');
-        triggerGlitch();
+        setErrorMsg('Hatalı kullanıcı adı veya şifre. Erişim engellendi.');
+        triggerShake();
       }
-    }, 450);
+    }, 400);
   };
 
-  const triggerGlitch = () => {
-    setGlitchShake(true);
-    setTimeout(() => setGlitchShake(false), 500);
+  const triggerShake = () => {
+    setShake(true);
+    setTimeout(() => setShake(false), 500);
   };
 
-  // Eğer giriş yapılmışsa sadece sağ üstte minimal sci-fi durum çubuğu göster
-  if (isAuthenticated && phase !== 'intro') {
+  // Eğer kullanıcı zaten giriş yapmışsa, sağ üstte ufak durum hapı göster
+  if (isAuthenticated && !isGranted) {
     return (
       <div
         style={{
@@ -110,43 +77,44 @@ export function FuturisticTechGate() {
           zIndex: 999999,
           display: 'flex',
           alignItems: 'center',
-          gap: '10px',
+          gap: '8px',
           padding: '6px 14px',
-          borderRadius: '4px',
-          background: 'rgba(2, 6, 18, 0.92)',
-          border: '1px solid #00f0ff',
-          color: '#00f0ff',
-          fontSize: '11px',
-          boxShadow: '0 0 20px rgba(0, 240, 255, 0.3)',
-          fontFamily: 'monospace',
-          letterSpacing: '0.08em',
+          borderRadius: '9999px',
+          background: 'rgba(15, 23, 42, 0.9)',
+          backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          color: '#fff',
+          fontSize: '12px',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+          fontFamily: 'var(--font-mono, monospace)',
         }}
       >
         <span
           style={{
-            width: '6px',
-            height: '6px',
+            width: '8px',
+            height: '8px',
             borderRadius: '50%',
-            background: isMasterAdmin ? '#00ff66' : '#00f0ff',
-            boxShadow: `0 0 8px ${isMasterAdmin ? '#00ff66' : '#00f0ff'}`,
+            background: isMasterAdmin ? '#10b981' : '#38bdf8',
+            boxShadow: `0 0 10px ${isMasterAdmin ? '#10b981' : '#38bdf8'}`,
           }}
         />
-        <span>OPERATOR: {user?.username}</span>
+        <span style={{ fontWeight: 600 }}>{user?.username}</span>
         {isMasterAdmin && (
           <a
             href="/admin"
             style={{
               padding: '2px 8px',
-              borderRadius: '2px',
-              background: 'rgba(255, 0, 85, 0.2)',
-              border: '1px solid #ff0055',
-              color: '#ff0055',
+              borderRadius: '6px',
+              background: 'rgba(239, 68, 68, 0.25)',
+              color: '#fca5a5',
               textDecoration: 'none',
-              fontSize: '10px',
-              fontWeight: 800,
+              marginLeft: '4px',
+              fontSize: '11px',
+              fontWeight: 700,
+              border: '1px solid rgba(239, 68, 68, 0.4)',
             }}
           >
-            [ ADMIN ]
+            Panel
           </a>
         )}
         <button
@@ -156,311 +124,136 @@ export function FuturisticTechGate() {
             border: 'none',
             color: 'rgba(255, 255, 255, 0.5)',
             cursor: 'pointer',
+            padding: '2px 4px',
             fontSize: '11px',
-            fontFamily: 'monospace',
             textDecoration: 'underline',
             marginLeft: '4px',
           }}
         >
-          KİLİTLE
+          Çıkış
         </button>
       </div>
     );
   }
 
-  // GİRİŞ YAPILMADAN ÖNCE: TEK SAYFA HALİNDE 100% FUTURISTIC TECH CONSOLE
+  // GİRİŞ YAPILMADAN ÖNCE: TEK SAYFA HALİNDE ORTADAN YAVAŞÇA BÜYÜYEN SLEEK GİRİŞ KARTI
   return (
     <div
       style={{
         position: 'fixed',
         inset: 0,
         zIndex: 9999999,
-        background: '#020409',
-        color: '#e2e8f0',
-        fontFamily: "'JetBrains Mono', 'Space Grotesk', monospace, sans-serif",
+        background: '#040711', // Katı derin karanlık arka plan
         display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
         overflow: 'hidden',
         userSelect: 'none',
+        fontFamily: 'var(--font-sans, system-ui, -apple-system, sans-serif)',
       }}
     >
       <style>{`
-        @keyframes radarSweep {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+        /* Ortadan yavaşça büyüyen sleek animasyon */
+        @keyframes smoothScaleUpCenter {
+          0% {
+            opacity: 0;
+            transform: scale(0.68);
+            filter: blur(8px);
+          }
+          60% {
+            opacity: 0.95;
+            filter: blur(1px);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+            filter: blur(0px);
+          }
         }
-        @keyframes pulseLaser {
-          0% { opacity: 0.3; transform: scale(0.95); }
-          50% { opacity: 0.9; transform: scale(1.05); }
-          100% { opacity: 0.3; transform: scale(0.95); }
+        @keyframes shakeGlitch {
+          0%, 100% { transform: translateX(0); }
+          20%, 60% { transform: translateX(-8px); }
+          40%, 80% { transform: translateX(8px); }
         }
-        @keyframes scanlineAnim {
-          0% { background-position: 0 0; }
-          100% { background-position: 0 100%; }
-        }
-        @keyframes glitchShakeKey {
-          0%, 100% { transform: translate(0, 0); }
-          20% { transform: translate(-6px, 2px); }
-          40% { transform: translate(6px, -2px); }
-          60% { transform: translate(-4px, -2px); }
-          80% { transform: translate(4px, 2px); }
-        }
-        @keyframes cyberFadeIn {
-          0% { opacity: 0; transform: scale(0.94); filter: blur(4px); }
-          100% { opacity: 1; transform: scale(1); filter: blur(0); }
+        @keyframes ambientPulse {
+          0%, 100% { transform: scale(1); opacity: 0.15; }
+          50% { transform: scale(1.15); opacity: 0.25; }
         }
       `}</style>
 
-      {/* Cyber Grid & Perspective Lines Background */}
+      {/* Arka plan derin uzay ışıması */}
       <div
         style={{
           position: 'absolute',
-          inset: 0,
-          backgroundImage: `
-            linear-gradient(to right, rgba(0, 240, 255, 0.05) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(0, 240, 255, 0.05) 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px',
-          opacity: 0.7,
+          top: '20%',
+          left: '30%',
+          width: '40vw',
+          height: '40vw',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(56, 189, 248, 0.18) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+          animation: 'ambientPulse 6s ease-in-out infinite',
+          pointerEvents: 'none',
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '20%',
+          right: '30%',
+          width: '35vw',
+          height: '35vw',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(99, 102, 241, 0.16) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+          animation: 'ambientPulse 6s ease-in-out infinite reverse',
           pointerEvents: 'none',
         }}
       />
 
-      {/* Scanline CRT Texture */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%)',
-          backgroundSize: '100% 4px',
-          pointerEvents: 'none',
-          opacity: 0.6,
-        }}
-      />
-
-      {/* Top Header Telemetry Bar */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '42px',
-          borderBottom: '1px solid rgba(0, 240, 255, 0.15)',
-          background: 'rgba(2, 6, 14, 0.8)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0 24px',
-          fontSize: '11px',
-          fontFamily: 'monospace',
-          letterSpacing: '0.1em',
-          color: 'rgba(0, 240, 255, 0.7)',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00f0ff', boxShadow: '0 0 8px #00f0ff' }} />
-          <span>NET_CORE: RESTRICTED</span>
-        </div>
-        <div style={{ display: 'flex', gap: '20px' }}>
-          <span style={{ color: 'rgba(255, 255, 255, 0.4)' }}>PORT: 443_TLS</span>
-          <span>SEC_MATRIX: ACTIVE</span>
-        </div>
-      </div>
-
-      {/* ================= 1. AŞAMA: 0 - 2 SANİYE AÇILIŞ ANİMASYONU ================= */}
-      {phase === 'intro' && (
+      {/* Ortadan yavaşça büyüyen Kart (LOGOSUZ & SIFIR HİNT) */}
+      {!isGranted ? (
         <div
           style={{
             position: 'relative',
             zIndex: 10,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            animation: 'cyberFadeIn 0.4s ease',
-          }}
-        >
-          {/* Cyber Radar HUD Ring */}
-          <div
-            style={{
-              position: 'relative',
-              width: '140px',
-              height: '140px',
-              marginBottom: '32px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            {/* Dış Kesikli Radar Çemberi */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                borderRadius: '50%',
-                border: '1.5px dashed #00f0ff',
-                boxShadow: '0 0 20px rgba(0, 240, 255, 0.3)',
-                animation: 'radarSweep 5s linear infinite',
-              }}
-            />
-            {/* İç Dönen Optik Gösterge */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: '16px',
-                borderRadius: '50%',
-                border: '1px solid rgba(99, 102, 241, 0.6)',
-                borderTopColor: '#ff0055',
-                animation: 'radarSweep 2.5s linear infinite reverse',
-              }}
-            />
-            {/* Merkez Hedef Noktası */}
-            <div
-              style={{
-                width: '16px',
-                height: '16px',
-                borderRadius: '50%',
-                background: '#00f0ff',
-                boxShadow: '0 0 25px #00f0ff, 0 0 50px rgba(0, 240, 255, 0.8)',
-                animation: 'pulseLaser 1.5s ease-in-out infinite',
-              }}
-            />
-            {/* Nişangah Çizgileri */}
-            <div style={{ position: 'absolute', top: 0, bottom: 0, width: '1px', background: 'rgba(0, 240, 255, 0.2)' }} />
-            <div style={{ position: 'absolute', left: 0, right: 0, height: '1px', background: 'rgba(0, 240, 255, 0.2)' }} />
-          </div>
-
-          {/* Sci-Fi Başlık & Log */}
-          <div
-            style={{
-              fontSize: '12px',
-              fontFamily: 'monospace',
-              letterSpacing: '0.25em',
-              color: '#00f0ff',
-              marginBottom: '8px',
-              textShadow: '0 0 10px rgba(0, 240, 255, 0.5)',
-            }}
-          >
-            // SYSTEM INITIATION //
-          </div>
-
-          <div
-            style={{
-              fontSize: '13px',
-              fontFamily: 'monospace',
-              letterSpacing: '0.12em',
-              color: 'rgba(255, 255, 255, 0.7)',
-              marginBottom: '24px',
-              minHeight: '20px',
-            }}
-          >
-            {telemetryLog}
-          </div>
-
-          {/* Lazer İlerleme Çubuğu */}
-          <div
-            style={{
-              width: '280px',
-              height: '4px',
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(0, 240, 255, 0.3)',
-              borderRadius: '2px',
-              overflow: 'hidden',
-              position: 'relative',
-              boxShadow: '0 0 15px rgba(0, 240, 255, 0.2)',
-            }}
-          >
-            <div
-              style={{
-                height: '100%',
-                width: `${progress}%`,
-                background: 'linear-gradient(90deg, #00f0ff 0%, #6366f1 70%, #ff0055 100%)',
-                boxShadow: '0 0 15px #00f0ff',
-                transition: 'width 0.04s linear',
-              }}
-            />
-          </div>
-
-          <div
-            style={{
-              fontSize: '11px',
-              fontFamily: 'monospace',
-              color: '#00f0ff',
-              marginTop: '12px',
-              letterSpacing: '0.1em',
-            }}
-          >
-            [ LOAD_FACTOR: {progress}% ]
-          </div>
-        </div>
-      )}
-
-      {/* ================= 2. AŞAMA: LOGOSUZ & SIFIR HİNT CYBER KONSOL ================= */}
-      {phase === 'console' && (
-        <div
-          style={{
-            position: 'relative',
-            zIndex: 10,
-            maxWidth: '440px',
+            maxWidth: '420px',
             width: '100%',
-            background: 'rgba(6, 12, 26, 0.94)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(0, 240, 255, 0.35)',
-            boxShadow: '0 0 50px rgba(0, 240, 255, 0.15), 0 25px 60px rgba(0, 0, 0, 0.95)',
-            padding: '36px 32px',
-            animation: glitchShake ? 'glitchShakeKey 0.45s ease-in-out' : 'cyberFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+            background: 'rgba(11, 18, 33, 0.88)',
+            backdropFilter: 'blur(32px)',
+            WebkitBackdropFilter: 'blur(32px)',
+            border: '1px solid rgba(56, 189, 248, 0.25)',
+            borderRadius: '24px',
+            padding: '40px 34px',
+            boxShadow: '0 30px 80px -15px rgba(0, 0, 0, 0.95), 0 0 45px rgba(56, 189, 248, 0.1)',
+            animation: shake
+              ? 'shakeGlitch 0.45s ease-in-out'
+              : 'smoothScaleUpCenter 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
           }}
         >
-          {/* Fütüristik 4 Köşe Ayracı (Corner Brackets) */}
-          <div style={{ position: 'absolute', top: '-1px', left: '-1px', width: '12px', height: '12px', borderTop: '2px solid #00f0ff', borderLeft: '2px solid #00f0ff' }} />
-          <div style={{ position: 'absolute', top: '-1px', right: '-1px', width: '12px', height: '12px', borderTop: '2px solid #00f0ff', borderRight: '2px solid #00f0ff' }} />
-          <div style={{ position: 'absolute', bottom: '-1px', left: '-1px', width: '12px', height: '12px', borderBottom: '2px solid #00f0ff', borderLeft: '2px solid #00f0ff' }} />
-          <div style={{ position: 'absolute', bottom: '-1px', right: '-1px', width: '12px', height: '12px', borderBottom: '2px solid #00f0ff', borderRight: '2px solid #00f0ff' }} />
-
-          {/* Konsol Üst Başlık (LOGOSUZ) */}
-          <div style={{ marginBottom: '28px', borderBottom: '1px solid rgba(0, 240, 255, 0.15)', paddingBottom: '16px' }}>
-            <div
-              style={{
-                fontSize: '10px',
-                fontFamily: 'monospace',
-                color: '#00f0ff',
-                letterSpacing: '0.2em',
-                marginBottom: '6px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-              }}
-            >
-              <span style={{ width: '6px', height: '6px', background: '#00f0ff', display: 'inline-block' }} />
-              <span>TERMINAL: ACCESS_PORTAL_V2</span>
-            </div>
+          {/* Başlık Alanı - LOGOSUZ */}
+          <div style={{ textAlign: 'center', marginBottom: '28px' }}>
             <h1
               style={{
-                fontSize: '20px',
+                fontSize: '24px',
                 fontWeight: 800,
                 color: '#fff',
-                letterSpacing: '0.04em',
-                margin: '0 0 6px 0',
-                textTransform: 'uppercase',
+                letterSpacing: '-0.02em',
+                margin: '0 0 8px 0',
               }}
             >
-              KİMLİK DOĞRULAMA
+              Yetkili Girişi
             </h1>
             <p
               style={{
-                fontSize: '12px',
-                color: 'rgba(255, 255, 255, 0.5)',
+                fontSize: '13px',
+                color: 'rgba(255, 255, 255, 0.55)',
                 margin: 0,
                 lineHeight: 1.5,
               }}
             >
-              Sistem erişimi için yetkili operatör kodlarını tanımlayınız.
+              Devam etmek için tanımlı kullanıcı adı ve şifrenizi giriniz.
             </p>
           </div>
 
@@ -468,49 +261,49 @@ export function FuturisticTechGate() {
           {errorMsg && (
             <div
               style={{
-                padding: '10px 14px',
-                background: 'rgba(255, 0, 85, 0.15)',
-                border: '1px solid #ff0055',
-                color: '#ff6b8b',
-                fontSize: '11px',
-                fontFamily: 'monospace',
+                padding: '12px 14px',
+                borderRadius: '12px',
+                background: 'rgba(239, 68, 68, 0.15)',
+                border: '1px solid rgba(239, 68, 68, 0.35)',
+                color: '#fca5a5',
+                fontSize: '12px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
                 marginBottom: '20px',
-                boxShadow: '0 0 15px rgba(255, 0, 85, 0.2)',
               }}
             >
-              <ShieldAlert size={16} style={{ color: '#ff0055', flexShrink: 0 }} />
+              <AlertCircle size={16} style={{ flexShrink: 0, color: '#f87171' }} />
               <span>{errorMsg}</span>
             </div>
           )}
 
-          {/* Form - STRICTLY ZERO HINTS */}
-          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+          {/* Form - KESİNLİKLE SIFIR HİNT / İPUCU YOKTUR */}
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
               <label
                 style={{
                   display: 'block',
-                  fontSize: '10px',
-                  fontFamily: 'monospace',
-                  color: 'rgba(0, 240, 255, 0.8)',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  color: 'rgba(255, 255, 255, 0.7)',
                   marginBottom: '8px',
-                  letterSpacing: '0.1em',
                   textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  fontFamily: 'var(--font-mono, monospace)',
                 }}
               >
-                // KULLANICI KİMLİĞİ (OPERATOR_ID)
+                Kullanıcı Adı
               </label>
               <div style={{ position: 'relative' }}>
                 <User
-                  size={15}
+                  size={16}
                   style={{
                     position: 'absolute',
-                    left: '12px',
+                    left: '14px',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    color: 'rgba(0, 240, 255, 0.5)',
+                    color: 'rgba(255, 255, 255, 0.4)',
                   }}
                 />
                 <input
@@ -523,22 +316,22 @@ export function FuturisticTechGate() {
                   autoComplete="off"
                   style={{
                     width: '100%',
-                    padding: '12px 14px 12px 38px',
-                    background: 'rgba(2, 6, 16, 0.9)',
-                    border: '1px solid rgba(0, 240, 255, 0.25)',
+                    padding: '12px 14px 12px 42px',
+                    borderRadius: '12px',
+                    background: 'rgba(6, 11, 22, 0.9)',
+                    border: '1px solid rgba(255, 255, 255, 0.14)',
                     color: '#fff',
-                    fontSize: '13px',
-                    fontFamily: 'monospace',
+                    fontSize: '14px',
                     outline: 'none',
                     boxSizing: 'border-box',
-                    transition: 'all 0.2s',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = '#00f0ff';
-                    e.currentTarget.style.boxShadow = '0 0 12px rgba(0, 240, 255, 0.3)';
+                    e.currentTarget.style.borderColor = '#38bdf8';
+                    e.currentTarget.style.boxShadow = '0 0 15px rgba(56, 189, 248, 0.25)';
                   }}
                   onBlur={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(0, 240, 255, 0.25)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.14)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}
                 />
@@ -549,25 +342,26 @@ export function FuturisticTechGate() {
               <label
                 style={{
                   display: 'block',
-                  fontSize: '10px',
-                  fontFamily: 'monospace',
-                  color: 'rgba(0, 240, 255, 0.8)',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  color: 'rgba(255, 255, 255, 0.7)',
                   marginBottom: '8px',
-                  letterSpacing: '0.1em',
                   textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  fontFamily: 'var(--font-mono, monospace)',
                 }}
               >
-                // ERİŞİM ANAHTARI (CIPHER_KEY)
+                Parola
               </label>
               <div style={{ position: 'relative' }}>
                 <Lock
-                  size={15}
+                  size={16}
                   style={{
                     position: 'absolute',
-                    left: '12px',
+                    left: '14px',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    color: 'rgba(0, 240, 255, 0.5)',
+                    color: 'rgba(255, 255, 255, 0.4)',
                   }}
                 />
                 <input
@@ -579,22 +373,22 @@ export function FuturisticTechGate() {
                   autoComplete="current-password"
                   style={{
                     width: '100%',
-                    padding: '12px 40px 12px 38px',
-                    background: 'rgba(2, 6, 16, 0.9)',
-                    border: '1px solid rgba(0, 240, 255, 0.25)',
+                    padding: '12px 44px 12px 42px',
+                    borderRadius: '12px',
+                    background: 'rgba(6, 11, 22, 0.9)',
+                    border: '1px solid rgba(255, 255, 255, 0.14)',
                     color: '#fff',
-                    fontSize: '13px',
-                    fontFamily: 'monospace',
+                    fontSize: '14px',
                     outline: 'none',
                     boxSizing: 'border-box',
-                    transition: 'all 0.2s',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = '#00f0ff';
-                    e.currentTarget.style.boxShadow = '0 0 12px rgba(0, 240, 255, 0.3)';
+                    e.currentTarget.style.borderColor = '#38bdf8';
+                    e.currentTarget.style.boxShadow = '0 0 15px rgba(56, 189, 248, 0.25)';
                   }}
                   onBlur={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(0, 240, 255, 0.25)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.14)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}
                 />
@@ -603,17 +397,20 @@ export function FuturisticTechGate() {
                   onClick={() => setShowPassword(!showPassword)}
                   style={{
                     position: 'absolute',
-                    right: '12px',
+                    right: '14px',
                     top: '50%',
                     transform: 'translateY(-50%)',
                     background: 'none',
                     border: 'none',
-                    color: 'rgba(0, 240, 255, 0.6)',
+                    color: 'rgba(255, 255, 255, 0.5)',
                     cursor: 'pointer',
                     padding: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
                 >
-                  {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
@@ -624,68 +421,62 @@ export function FuturisticTechGate() {
               style={{
                 marginTop: '10px',
                 padding: '13px 18px',
-                background: 'linear-gradient(90deg, #00f0ff 0%, #4f46e5 100%)',
+                borderRadius: '12px',
+                background: 'linear-gradient(135deg, #0284c7 0%, #4f46e5 100%)',
                 border: 'none',
-                color: '#020617',
-                fontSize: '12px',
-                fontFamily: 'monospace',
-                fontWeight: 900,
-                letterSpacing: '0.12em',
+                color: '#fff',
+                fontSize: '14px',
+                fontWeight: 700,
                 cursor: loading ? 'wait' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                boxShadow: '0 0 25px rgba(0, 240, 255, 0.4)',
+                boxShadow: '0 10px 25px -4px rgba(2, 132, 199, 0.5)',
                 transition: 'all 0.15s ease',
-                textTransform: 'uppercase',
+                opacity: loading ? 0.7 : 1,
               }}
               onMouseEnter={(e) => {
                 if (!loading) {
-                  e.currentTarget.style.boxShadow = '0 0 35px rgba(0, 240, 255, 0.7)';
                   e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 14px 30px -4px rgba(2, 132, 199, 0.65)';
                 }
               }}
               onMouseLeave={(e) => {
                 if (!loading) {
-                  e.currentTarget.style.boxShadow = '0 0 25px rgba(0, 240, 255, 0.4)';
                   e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 10px 25px -4px rgba(2, 132, 199, 0.5)';
                 }
               }}
             >
               {loading ? (
-                <span>KİMLİK DOĞRULANIYOR...</span>
+                <span>Doğrulanıyor...</span>
               ) : (
                 <>
-                  <span>[ SİSTEME GİRİŞ YAP ]</span>
-                  <ArrowRight size={15} />
+                  <span>Giriş Yap</span>
+                  <ArrowRight size={16} />
                 </>
               )}
             </button>
           </form>
 
-          {/* Alt Güvenlik Protokolü */}
+          {/* Alt Güvenlik Yazısı */}
           <div
             style={{
               marginTop: '24px',
               paddingTop: '16px',
-              borderTop: '1px solid rgba(0, 240, 255, 0.15)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              fontSize: '10px',
-              color: 'rgba(255, 255, 255, 0.35)',
-              fontFamily: 'monospace',
+              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              textAlign: 'center',
+              fontSize: '11px',
+              color: 'rgba(255, 255, 255, 0.4)',
+              fontFamily: 'var(--font-mono, monospace)',
             }}
           >
-            <span>SECURITY LEVEL: CLASS_4</span>
-            <span style={{ color: '#00f0ff' }}>STATUS: ENCRYPTED</span>
+            256-Bit Uçtan Uca Şifreli Protokol
           </div>
         </div>
-      )}
-
-      {/* ================= 3. AŞAMA: ONAYLANDI ================= */}
-      {phase === 'granted' && (
+      ) : (
+        /* Başarılı Giriş */
         <div
           style={{
             position: 'relative',
@@ -695,62 +486,49 @@ export function FuturisticTechGate() {
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
-            animation: 'cyberFadeIn 0.3s ease',
           }}
         >
           <div
             style={{
-              width: '80px',
-              height: '80px',
-              border: '2px solid #00ff66',
-              boxShadow: '0 0 40px #00ff66',
+              width: '72px',
+              height: '72px',
+              borderRadius: '50%',
+              background: 'rgba(16, 185, 129, 0.15)',
+              border: '2px solid #10b981',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#00ff66',
-              marginBottom: '20px',
+              color: '#10b981',
+              marginBottom: '16px',
+              boxShadow: '0 0 35px rgba(16, 185, 129, 0.4)',
             }}
           >
-            <CheckCircle2 size={42} />
+            <CheckCircle2 size={36} />
           </div>
           <h2
             style={{
               fontSize: '22px',
-              fontWeight: 900,
-              color: '#00ff66',
-              margin: '0 0 8px 0',
-              letterSpacing: '0.15em',
-              textShadow: '0 0 15px rgba(0, 255, 102, 0.6)',
+              fontWeight: 800,
+              color: '#fff',
+              margin: '0 0 6px 0',
+              fontFamily: 'var(--font-mono, monospace)',
+              letterSpacing: '0.05em',
             }}
           >
-            [ ERİŞİM ONAYLANDI ]
+            ERİŞİM ONAYLANDI
           </h2>
           <p
             style={{
               fontSize: '12px',
-              color: 'rgba(255, 255, 255, 0.6)',
+              color: 'rgba(255, 255, 255, 0.5)',
               margin: 0,
-              letterSpacing: '0.1em',
+              fontFamily: 'var(--font-mono, monospace)',
             }}
           >
-            GÜVENLİK BARİYERİ KALDIRILIYOR...
+            Yönlendiriliyorsunuz...
           </p>
         </div>
       )}
-
-      {/* Bottom Telemetry Footer */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '12px',
-          fontSize: '10px',
-          color: 'rgba(255, 255, 255, 0.25)',
-          fontFamily: 'monospace',
-          letterSpacing: '0.15em',
-        }}
-      >
-        AVENOX OS // BUILD_2026.10 // RESTRICTED RUNTIME
-      </div>
     </div>
   );
 }
