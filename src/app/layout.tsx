@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: 'Avenox Web Stüdyosu için statik olarak dışa aktarılabilir, sektörlere özel editoryal ve modern çoklu site vitrini.',
 };
 
-import { AuthProvider } from '@/features/auth/AuthContext';
+import { AuthProvider, GateProtector } from '@/features/auth/AuthContext';
 import { AnimatedEntryGate } from '@/features/auth/AnimatedEntryGate';
 
 export default function RootLayout({
@@ -29,7 +29,9 @@ export default function RootLayout({
         <AuthProvider>
           <ThemeInit />
           <AnimatedEntryGate />
-          {children}
+          <GateProtector>
+            {children}
+          </GateProtector>
         </AuthProvider>
       </body>
     </html>

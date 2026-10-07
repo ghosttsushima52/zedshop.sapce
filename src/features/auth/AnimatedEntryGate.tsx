@@ -3,58 +3,55 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { 
-  Lock, 
   User, 
+  Lock, 
   Eye, 
   EyeOff, 
   ArrowRight, 
-  ShieldCheck, 
-  AlertCircle, 
-  Sparkles,
-  CheckCircle2,
-  KeyRound
+  CheckCircle2, 
+  AlertCircle 
 } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 
 export function AnimatedEntryGate() {
-  const { user, isAuthenticated, isMasterAdmin, isGateOpen, login, logout } = useAuth();
+  const { user, isAuthenticated, isMasterAdmin, login, logout } = useAuth();
   
-  // Phase state: 'intro' (0-2s) -> 'login' -> 'granted'
-  const [phase, setPhase] = useState<'intro' | 'login' | 'granted'>('intro');
+  // Phase: 'intro' (0-2s) -> 'login' -> 'success'
+  const [phase, setPhase] = useState<'intro' | 'login' | 'success'>('intro');
   const [progress, setProgress] = useState(0);
 
-  // Form state - ZERO HINTS
+  // Form states - ZERO HINTS
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [shake, setShake] = useState(false);
+  const [isShaking, setIsShaking] = useState(false);
 
   const router = useRouter();
   const pathname = usePathname();
 
-  // 0 - 2 Second Sleek Intro Animation
+  // 0 - 2 Saniye Açılış Animasyonu
   useEffect(() => {
     if (!isAuthenticated) {
       document.body.style.overflow = 'hidden';
       
       const startTime = Date.now();
-      const duration = 2000; // Exact 2 seconds
+      const duration = 2000; // 2 saniye
 
-      const timer = setInterval(() => {
+      const interval = setInterval(() => {
         const elapsed = Date.now() - startTime;
-        const currentProgress = Math.min(100, Math.round((elapsed / duration) * 100));
-        setProgress(currentProgress);
+        const p = Math.min(100, Math.round((elapsed / duration) * 100));
+        setProgress(p);
 
         if (elapsed >= duration) {
-          clearInterval(timer);
+          clearInterval(interval);
           setPhase('login');
         }
-      }, 30);
+      }, 25);
 
       return () => {
-        clearInterval(timer);
+        clearInterval(interval);
         document.body.style.overflow = '';
       };
     } else {
@@ -67,7 +64,7 @@ export function AnimatedEntryGate() {
     setError(null);
 
     if (!username.trim() || !password.trim()) {
-      setError('Lütfen kullanıcı adı ve parolanızı eksiksiz giriniz.');
+      setError('Lütfen kullanıcı adı ve parolanızı giriniz.');
       triggerShake();
       return;
     }
@@ -79,13 +76,13 @@ export function AnimatedEntryGate() {
       setLoading(false);
 
       if (res.success) {
-        setPhase('granted');
+        setPhase('success');
         setTimeout(() => {
           document.body.style.overflow = '';
           if (res.role === 'legend_client' && pathname !== '/sites/legendgame' && pathname !== '/legendgame') {
             router.push('/sites/legendgame');
           }
-        }, 850);
+        }, 800);
       } else {
         setError(res.message || 'Geçersiz kimlik bilgileri. Erişim engellendi.');
         triggerShake();
@@ -94,187 +91,590 @@ export function AnimatedEntryGate() {
   };
 
   const triggerShake = () => {
-    setShake(true);
-    setTimeout(() => setShake(false), 500);
+    setIsShaking(true);
+    setTimeout(() => setIsShaking(false), 500);
   };
 
-  // If already authenticated and gate is unlocked, render minimal floating status pill
+  // Kullanıcı zaten giriş yapmışsa: Sadece sağ üstte ufak oturum hapı göster
   if (isAuthenticated && phase !== 'intro') {
     return (
-      <div className="fixed top-3 right-3 z-50 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 backdrop-blur-md border border-slate-700/80 text-white text-xs shadow-xl font-mono">
-        <span className={`w-2 h-2 rounded-full ${isMasterAdmin ? 'bg-emerald-400' : 'bg-cyan-400'} animate-pulse`} />
-        <span className="font-semibold text-slate-200">{user?.username}</span>
+      <div
+        style={{
+          position: 'fixed',
+          top: '12px',
+          right: '12px',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          padding: '6px 14px',
+          borderRadius: '9999px',
+          background: 'rgba(15, 23, 42, 0.9)',
+          backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          color: '#fff',
+          fontSize: '12px',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+          fontFamily: 'var(--font-mono, monospace)',
+        }}
+      >
+        <span
+          style={{
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            background: isMasterAdmin ? '#10b981' : '#38bdf8',
+            boxShadow: `0 0 10px ${isMasterAdmin ? '#10b981' : '#38bdf8'}`,
+          }}
+        />
+        <span style={{ fontWeight: 600 }}>{user?.username}</span>
         {isMasterAdmin && (
           <a
             href="/admin"
-            className="px-2 py-0.5 rounded bg-red-600/30 text-red-300 hover:bg-red-600/50 text-[11px] font-bold transition ml-1"
+            style={{
+              padding: '2px 8px',
+              borderRadius: '6px',
+              background: 'rgba(239, 68, 68, 0.25)',
+              color: '#fca5a5',
+              textDecoration: 'none',
+              marginLeft: '4px',
+              fontSize: '11px',
+              fontWeight: 700,
+              border: '1px solid rgba(239, 68, 68, 0.4)',
+            }}
           >
             Panel
           </a>
         )}
         <button
           onClick={logout}
-          className="text-slate-400 hover:text-rose-400 transition text-[11px] ml-1.5 pl-1.5 border-l border-slate-700"
-          title="Çıkış Yap ve Ekranı Kilitle"
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'rgba(255, 255, 255, 0.5)',
+            cursor: 'pointer',
+            padding: '2px 4px',
+            fontSize: '11px',
+            textDecoration: 'underline',
+            marginLeft: '4px',
+          }}
         >
-          Kapat
+          Çıkış
         </button>
       </div>
     );
   }
 
-  // Strictly blocking gate modal
+  // Giriş yapılmamışsa: ARKADAKİ VİTRİN ASLA GÖRÜNMEZ (100% Opaque Blocking Layer)
   return (
-    <div className="fixed inset-0 z-[999999] bg-[#04060a] flex items-center justify-center p-4 select-none overflow-hidden font-sans">
-      {/* Background ambient lighting */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[25%] -left-[10%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-br from-indigo-900/20 via-cyan-900/10 to-transparent blur-3xl animate-pulse" />
-        <div className="absolute -bottom-[20%] -right-[10%] w-[55vw] h-[55vw] rounded-full bg-gradient-to-tl from-red-900/15 via-rose-900/10 to-transparent blur-3xl animate-pulse" />
-        <div className="absolute inset-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] [background-size:24px_24px] opacity-40" />
-      </div>
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 999999,
+        background: '#030712', // Katı karanlık arka plan, arkası ASLA görünmez
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px',
+        userSelect: 'none',
+        overflow: 'hidden',
+        fontFamily: 'var(--font-sans, system-ui, -apple-system, sans-serif)',
+      }}
+    >
+      <style>{`
+        @keyframes pulseRing {
+          0% { transform: scale(0.85); opacity: 0.2; }
+          50% { transform: scale(1.15); opacity: 0.8; }
+          100% { transform: scale(0.85); opacity: 0.2; }
+        }
+        @keyframes orbitSpin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes cardFadeIn {
+          0% { opacity: 0; transform: scale(0.95) translateY(12px); }
+          100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes shakeEff {
+          0%, 100% { transform: translateX(0); }
+          20%, 60% { transform: translateX(-8px); }
+          40%, 80% { transform: translateX(8px); }
+        }
+        @keyframes laserGlow {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
 
-      {/* PHASE 1: 0 - 2 Saniye Açılış Animasyonu */}
+      {/* Arka Plan Ambiyans Işıkları */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '-20%',
+          left: '-10%',
+          width: '50vw',
+          height: '50vw',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, transparent 70%)',
+          filter: 'blur(60px)',
+          pointerEvents: 'none',
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '-20%',
+          right: '-10%',
+          width: '55vw',
+          height: '55vw',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%)',
+          filter: 'blur(70px)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* ================= 1. AŞAMA: 0 - 2 SANİYE SLEEK ANİMASYON ================= */}
       {phase === 'intro' && (
-        <div className="relative z-10 flex flex-col items-center justify-center text-center max-w-sm w-full animate-in fade-in duration-700">
-          {/* Animated Central Emblem */}
-          <div className="relative w-28 h-28 mb-8 flex items-center justify-center">
-            {/* Outer rotating pulse ring */}
-            <div className="absolute inset-0 rounded-3xl border border-cyan-500/30 animate-[spin_6s_linear_infinite]" />
-            <div className="absolute inset-2 rounded-2xl border border-indigo-500/40 animate-[spin_4s_linear_infinite_reverse]" />
-            
-            {/* Center Glowing Logo Monogram */}
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-600 via-indigo-600 to-rose-600 flex items-center justify-center text-white shadow-2xl shadow-cyan-500/40 relative z-10 animate-pulse">
-              <span className="text-3xl font-black tracking-tighter">A</span>
-            </div>
-
-            {/* Glowing radial back-shadow */}
-            <div className="absolute inset-0 bg-cyan-500/20 blur-xl rounded-full" />
-          </div>
-
-          {/* Intro Text */}
-          <h2 className="text-xl sm:text-2xl font-black tracking-wider text-white mb-2 uppercase font-mono">
-            AVENOX PROTOCOL
-          </h2>
-          <p className="text-xs text-slate-400 font-mono tracking-widest uppercase mb-6">
-            GÜVENLİ ERİŞİM MERKEZİ BAŞLATILIYOR
-          </p>
-
-          {/* Sleek Minimal Progress Bar */}
-          <div className="w-56 h-1.5 bg-slate-900/80 rounded-full overflow-hidden border border-slate-800 relative">
-            <div 
-              className="h-full bg-gradient-to-r from-cyan-400 via-indigo-400 to-rose-500 rounded-full transition-all duration-75 ease-out shadow-sm shadow-cyan-400/50"
-              style={{ width: `${progress}%` }}
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 10,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            maxWidth: '380px',
+            width: '100%',
+          }}
+        >
+          {/* Lüks Holografik Yörünge Halkaları */}
+          <div
+            style={{
+              position: 'relative',
+              width: '120px',
+              height: '120px',
+              marginBottom: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            {/* Dış Yörünge */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                borderRadius: '50%',
+                border: '1.5px dashed rgba(56, 189, 248, 0.4)',
+                animation: 'orbitSpin 6s linear infinite',
+              }}
+            />
+            {/* Orta Dairesel Dalga */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: '14px',
+                borderRadius: '50%',
+                border: '1px solid rgba(129, 140, 248, 0.5)',
+                animation: 'pulseRing 2.2s ease-in-out infinite',
+              }}
+            />
+            {/* Merkez Parıldayan Çekirdek Işığı */}
+            <div
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, #38bdf8 0%, #6366f1 80%)',
+                boxShadow: '0 0 35px #38bdf8, 0 0 60px rgba(99, 102, 241, 0.8)',
+              }}
             />
           </div>
-          <div className="text-[10px] text-slate-500 font-mono mt-2.5">
+
+          <h2
+            style={{
+              fontSize: '18px',
+              fontWeight: 800,
+              letterSpacing: '0.2em',
+              color: '#fff',
+              margin: '0 0 8px 0',
+              textTransform: 'uppercase',
+              fontFamily: 'var(--font-mono, monospace)',
+            }}
+          >
+            SİSTEM BAŞLATILIYOR
+          </h2>
+          <p
+            style={{
+              fontSize: '12px',
+              color: 'rgba(255, 255, 255, 0.45)',
+              margin: '0 0 24px 0',
+              fontFamily: 'var(--font-mono, monospace)',
+              letterSpacing: '0.08em',
+            }}
+          >
+            GÜVENLİ PROTOKOL DOĞRULANIYOR
+          </p>
+
+          {/* İlerleme Çubuğu */}
+          <div
+            style={{
+              width: '240px',
+              height: '3px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '999px',
+              overflow: 'hidden',
+              position: 'relative',
+              boxShadow: '0 0 12px rgba(56, 189, 248, 0.2)',
+            }}
+          >
+            <div
+              style={{
+                height: '100%',
+                width: `${progress}%`,
+                background: 'linear-gradient(90deg, #38bdf8, #818cf8, #f43f5e)',
+                borderRadius: '999px',
+                boxShadow: '0 0 10px #38bdf8',
+                transition: 'width 0.04s linear',
+              }}
+            />
+          </div>
+
+          <div
+            style={{
+              fontSize: '11px',
+              color: 'rgba(255, 255, 255, 0.4)',
+              marginTop: '10px',
+              fontFamily: 'var(--font-mono, monospace)',
+            }}
+          >
             %{progress}
           </div>
         </div>
       )}
 
-      {/* PHASE 2: Giriş Yap Formu (SIFIR HINT / KESİNTİSİZ KİLİT) */}
+      {/* ================= 2. AŞAMA: LOGOSUZ & SIFIR HİNT GİRİŞ KARTI ================= */}
       {phase === 'login' && (
-        <div className={`relative z-10 w-full max-w-md bg-[#0a0f1d]/90 backdrop-blur-2xl border border-slate-800/90 rounded-3xl p-7 sm:p-9 shadow-2xl shadow-black/80 animate-in fade-in zoom-in-95 duration-500 ${shake ? 'animate-bounce' : ''}`}>
-          
-          {/* Header */}
-          <div className="text-center mb-7">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-indigo-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mx-auto mb-3 shadow-lg shadow-cyan-500/10">
-              <Lock className="w-5 h-5" />
-            </div>
-            <h1 className="text-2xl font-black text-white tracking-tight">
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 10,
+            maxWidth: '430px',
+            width: '100%',
+            background: 'rgba(15, 23, 42, 0.8)',
+            backdropFilter: 'blur(30px)',
+            WebkitBackdropFilter: 'blur(30px)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '24px',
+            padding: '36px 32px',
+            boxShadow: '0 30px 80px -15px rgba(0, 0, 0, 0.9), 0 0 40px rgba(56, 189, 248, 0.08)',
+            animation: isShaking ? 'shakeEff 0.45s ease-in-out' : 'cardFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        >
+          {/* Başlık Alanı - LOGOSUZ */}
+          <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+            <h1
+              style={{
+                fontSize: '24px',
+                fontWeight: 800,
+                color: '#fff',
+                letterSpacing: '-0.02em',
+                margin: '0 0 8px 0',
+              }}
+            >
               Yetkili Girişi
             </h1>
-            <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-              Devam etmek için sisteme tanımlı kullanıcı adı ve şifrenizi giriniz.
+            <p
+              style={{
+                fontSize: '13px',
+                color: 'rgba(255, 255, 255, 0.55)',
+                margin: 0,
+                lineHeight: 1.5,
+              }}
+            >
+              Devam etmek için tanımlı kullanıcı adı ve şifrenizi giriniz.
             </p>
           </div>
 
-          {/* Login Form - ZERO HINTS */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Hata Uyarısı */}
+          {error && (
+            <div
+              style={{
+                padding: '12px 14px',
+                borderRadius: '12px',
+                background: 'rgba(239, 68, 68, 0.15)',
+                border: '1px solid rgba(239, 68, 68, 0.35)',
+                color: '#fca5a5',
+                fontSize: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginBottom: '20px',
+                animation: 'cardFadeIn 0.2s ease',
+              }}
+            >
+              <AlertCircle size={16} style={{ flexShrink: 0, color: '#f87171' }} />
+              <span>{error}</span>
+            </div>
+          )}
+
+          {/* Form - HİÇBİR HİNT / İPUCU / PRESET YOKTUR */}
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5 font-mono">
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  marginBottom: '8px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  fontFamily: 'var(--font-mono, monospace)',
+                }}
+              >
                 Kullanıcı Adı
               </label>
-              <div className="relative">
-                <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <div style={{ position: 'relative' }}>
+                <User
+                  size={16}
+                  style={{
+                    position: 'absolute',
+                    left: '14px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'rgba(255, 255, 255, 0.4)',
+                  }}
+                />
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Kullanıcı Adı"
+                  required
                   autoFocus
                   autoComplete="off"
-                  className="w-full bg-[#05070e] border border-slate-800 focus:border-cyan-500/80 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none transition font-sans"
+                  style={{
+                    width: '100%',
+                    padding: '12px 14px 12px 42px',
+                    borderRadius: '12px',
+                    background: 'rgba(8, 12, 22, 0.85)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    color: '#fff',
+                    fontSize: '14px',
+                    outline: 'none',
+                    fontFamily: 'inherit',
+                    boxSizing: 'border-box',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = '#38bdf8';
+                    e.currentTarget.style.boxShadow = '0 0 15px rgba(56, 189, 248, 0.25)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5 font-mono">
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  marginBottom: '8px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  fontFamily: 'var(--font-mono, monospace)',
+                }}
+              >
                 Parola
               </label>
-              <div className="relative">
-                <KeyRound className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <div style={{ position: 'relative' }}>
+                <Lock
+                  size={16}
+                  style={{
+                    position: 'absolute',
+                    left: '14px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'rgba(255, 255, 255, 0.4)',
+                  }}
+                />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
+                  required
                   autoComplete="current-password"
-                  className="w-full bg-[#05070e] border border-slate-800 focus:border-cyan-500/80 rounded-xl pl-10 pr-10 py-3 text-sm text-white placeholder-slate-600 focus:outline-none transition font-sans"
+                  style={{
+                    width: '100%',
+                    padding: '12px 44px 12px 42px',
+                    borderRadius: '12px',
+                    background: 'rgba(8, 12, 22, 0.85)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    color: '#fff',
+                    fontSize: '14px',
+                    outline: 'none',
+                    fontFamily: 'inherit',
+                    boxSizing: 'border-box',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = '#38bdf8';
+                    e.currentTarget.style.boxShadow = '0 0 15px rgba(56, 189, 248, 0.25)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition p-1"
+                  style={{
+                    position: 'absolute',
+                    right: '14px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    cursor: 'pointer',
+                    padding: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
-            {error && (
-              <div className="p-3 bg-rose-950/60 border border-rose-800/80 rounded-xl text-rose-300 text-xs flex items-center gap-2 animate-in fade-in duration-200">
-                <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
-                <span>{error}</span>
-              </div>
-            )}
-
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 bg-gradient-to-r from-cyan-500 via-indigo-600 to-rose-600 hover:from-cyan-400 hover:via-indigo-500 hover:to-rose-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-cyan-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-50"
+              style={{
+                marginTop: '10px',
+                padding: '13px 18px',
+                borderRadius: '12px',
+                background: 'linear-gradient(135deg, #0284c7 0%, #4f46e5 100%)',
+                border: 'none',
+                color: '#fff',
+                fontSize: '14px',
+                fontWeight: 700,
+                cursor: loading ? 'wait' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                boxShadow: '0 10px 25px -4px rgba(2, 132, 199, 0.5)',
+                transition: 'transform 0.15s, opacity 0.15s, box-shadow 0.15s',
+                opacity: loading ? 0.7 : 1,
+              }}
+              onMouseEnter={(e) => {
+                if (!loading) {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 14px 30px -4px rgba(2, 132, 199, 0.65)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!loading) {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 10px 25px -4px rgba(2, 132, 199, 0.5)';
+                }
+              }}
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span>Doğrulanıyor...</span>
               ) : (
                 <>
                   <span>Giriş Yap</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight size={16} />
                 </>
               )}
             </button>
           </form>
 
-          {/* Footer Security Badge */}
-          <div className="mt-6 pt-5 border-t border-slate-800/80 flex items-center justify-center gap-2 text-[11px] text-slate-500 font-mono">
-            <ShieldCheck className="w-3.5 h-3.5 text-cyan-500/70" />
-            <span>256-Bit Uçtan Uca Şifreli Protokol</span>
+          {/* Alt Bilgi */}
+          <div
+            style={{
+              marginTop: '24px',
+              paddingTop: '16px',
+              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              textAlign: 'center',
+              fontSize: '11px',
+              color: 'rgba(255, 255, 255, 0.4)',
+              fontFamily: 'var(--font-mono, monospace)',
+            }}
+          >
+            256-Bit Uçtan Uca Şifreli Protokol
           </div>
         </div>
       )}
 
-      {/* PHASE 3: Onaylandı / Başarılı Geçiş Animasyonu */}
-      {phase === 'granted' && (
-        <div className="relative z-10 flex flex-col items-center justify-center text-center animate-in zoom-in-90 fade-in duration-300">
-          <div className="w-20 h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center text-emerald-400 mb-4 shadow-2xl shadow-emerald-500/50 animate-pulse">
-            <CheckCircle2 className="w-10 h-10" />
+      {/* ================= 3. AŞAMA: ONAYLANDI ================= */}
+      {phase === 'success' && (
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 10,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            animation: 'cardFadeIn 0.3s ease',
+          }}
+        >
+          <div
+            style={{
+              width: '72px',
+              height: '72px',
+              borderRadius: '50%',
+              background: 'rgba(16, 185, 129, 0.15)',
+              border: '2px solid #10b981',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#10b981',
+              marginBottom: '16px',
+              boxShadow: '0 0 35px rgba(16, 185, 129, 0.4)',
+            }}
+          >
+            <CheckCircle2 size={36} />
           </div>
-          <h2 className="text-2xl font-black text-white font-mono tracking-wider">
+          <h2
+            style={{
+              fontSize: '22px',
+              fontWeight: 800,
+              color: '#fff',
+              margin: '0 0 6px 0',
+              fontFamily: 'var(--font-mono, monospace)',
+              letterSpacing: '0.05em',
+            }}
+          >
             ERİŞİM ONAYLANDI
           </h2>
-          <p className="text-xs text-slate-400 font-mono mt-1">
-            Sisteme yönlendiriliyorsunuz...
+          <p
+            style={{
+              fontSize: '12px',
+              color: 'rgba(255, 255, 255, 0.5)',
+              margin: 0,
+              fontFamily: 'var(--font-mono, monospace)',
+            }}
+          >
+            Yönlendiriliyorsunuz...
           </p>
         </div>
       )}

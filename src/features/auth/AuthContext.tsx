@@ -109,3 +109,23 @@ export function useAuth() {
   }
   return context;
 }
+
+export function GateProtector({ children }: { children: ReactNode }) {
+  const { isAuthenticated } = useAuth();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return (
+    <div
+      style={{
+        display: mounted && !isAuthenticated ? 'none' : 'block',
+        visibility: mounted && !isAuthenticated ? 'hidden' : 'visible',
+      }}
+    >
+      {children}
+    </div>
+  );
+}
