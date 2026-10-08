@@ -241,30 +241,42 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-red-500 selection:text-white">
       {/* Admin Header */}
-      <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-rose-500 flex items-center justify-center text-white shadow-lg shadow-red-600/25">
-              <SlidersHorizontal className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-lg font-black tracking-tight text-white">
-                  {isMasterAdmin ? 'AVENOX MASTER PANEL' : 'VOLTA MOTOR & IBAN PANELİ'}
-                </h1>
-                <span className="text-[10px] bg-red-600/20 text-red-400 border border-red-500/30 font-mono px-2 py-0.5 rounded-full font-bold">
-                  {user?.username} ({isMasterAdmin ? 'Master Admin' : 'Volta Yetkilisi'})
-                </span>
+      <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 shadow-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 sm:py-0 sm:h-20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-rose-500 flex items-center justify-center text-white shadow-lg shadow-red-600/25 shrink-0">
+                <SlidersHorizontal className="w-5 h-5" />
               </div>
-              <p className="text-xs text-slate-400">
-                {isMasterAdmin 
-                  ? 'Canlı Ödemeler, Dekontlar, Volta Fiyatları & Çoklu Site Ekosistemi' 
-                  : 'Volta Fiyat Güncelleme, Canlı IBAN Onaylama ve Dekont Kontrolü'}
-              </p>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h1 className="text-base sm:text-lg font-black tracking-tight text-white leading-none">
+                    {isMasterAdmin ? 'AVENOX MASTER PANEL' : 'VOLTA MOTOR & IBAN PANELİ'}
+                  </h1>
+                  <span className="text-[10px] bg-red-600/20 text-red-400 border border-red-500/30 font-mono px-2 py-0.5 rounded-full font-bold">
+                    {user?.username} ({isMasterAdmin ? 'Master' : 'Volta'})
+                  </span>
+                </div>
+                <p className="text-[11px] sm:text-xs text-slate-400 mt-0.5 line-clamp-1">
+                  {isMasterAdmin 
+                    ? 'Canlı Ödemeler, Dekontlar & Volta Fiyatları' 
+                    : 'Volta Fiyat Güncelleme, Canlı IBAN ve Dekont Kontrolü'}
+                </p>
+              </div>
+            </div>
+
+            {/* Mobile quick actions */}
+            <div className="flex sm:hidden items-center gap-2 shrink-0">
+              <button
+                onClick={logout}
+                className="text-[11px] text-rose-300 bg-rose-950/80 border border-rose-800/80 px-2.5 py-1.5 rounded-lg font-bold"
+              >
+                Çıkış
+              </button>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-3">
             {isMasterAdmin ? (
               <Link 
                 href="/" 
@@ -291,29 +303,29 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Dashboard Tabs */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 overflow-x-auto border-t border-slate-800/80 py-2">
+        {/* Dashboard Tabs (Smooth horizontal scrolling on mobile) */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 overflow-x-auto border-t border-slate-800/80 py-2.5 scrollbar-none">
           <button
             onClick={() => setActiveTab('volta')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+            className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 shrink-0 ${
               activeTab === 'volta'
                 ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800 bg-slate-900/50 border border-slate-800'
             }`}
           >
-            <Zap className="w-4 h-4" />
+            <Zap className="w-4 h-4 text-red-400" />
             <span>Volta Fiyat Yönetimi</span>
           </button>
 
           <button
             onClick={() => setActiveTab('payments')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+            className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 shrink-0 ${
               activeTab === 'payments'
                 ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800 bg-slate-900/50 border border-slate-800'
             }`}
           >
-            <CreditCard className="w-4 h-4" />
+            <CreditCard className="w-4 h-4 text-emerald-400" />
             <span>Ödeme & IBAN Talepleri</span>
             {pendingCount > 0 && (
               <span className="bg-amber-400 text-slate-950 px-1.5 py-0.2 rounded-full text-[10px] font-black animate-pulse">
@@ -331,26 +343,26 @@ export default function AdminDashboardPage() {
             <>
               <button
                 onClick={() => setActiveTab('legend')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+                className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 shrink-0 ${
                   activeTab === 'legend'
                     ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800 bg-slate-900/50 border border-slate-800'
                 }`}
               >
-                <Gamepad2 className="w-4 h-4" />
-                <span>LegendGame Pazar Yeri</span>
+                <Gamepad2 className="w-4 h-4 text-cyan-400" />
+                <span>LegendGame</span>
               </button>
 
               <button
                 onClick={() => setActiveTab('sites')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+                className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 shrink-0 ${
                   activeTab === 'sites'
                     ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800 bg-slate-900/50 border border-slate-800'
                 }`}
               >
                 <Globe className="w-4 h-4" />
-                <span>Tüm Demo Siteleri (12+2)</span>
+                <span>Tüm Siteler</span>
               </button>
             </>
           )}

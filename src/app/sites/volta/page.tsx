@@ -101,7 +101,7 @@ export default function VoltaMotorPage() {
               {isMobileMenuOpen ? (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="12" x2="18" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               ) : (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -250,29 +250,29 @@ export default function VoltaMotorPage() {
           {featuredModels.map((item) => (
             <div 
               key={item.id}
-              className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-lg shadow-slate-100 flex flex-col justify-between hover:border-slate-300 hover:shadow-xl transition-all duration-300 relative group"
+              className="bg-white rounded-3xl p-5 sm:p-8 border border-slate-200/90 shadow-lg shadow-slate-100 flex flex-col justify-between hover:border-slate-300 hover:shadow-xl transition-all duration-300 relative group"
             >
               {item.advantageAmount && (
-                <div className="absolute top-5 right-5 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                <div className="absolute top-4 right-4 sm:top-5 sm:right-5 bg-red-600 text-white text-[11px] sm:text-xs font-bold px-3 py-1 rounded-full shadow-sm">
                   {item.advantageAmount.toLocaleString('tr-TR')} TL Avantaj
                 </div>
               )}
 
               <div>
                 <div className="mb-3">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-md">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-md inline-block">
                     {item.category}
                   </span>
-                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 tracking-tight">
+                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 mt-2 leading-snug tracking-tight">
                     {item.name}
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                  <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">
                     {item.tagline}
                   </p>
                 </div>
 
                 {/* Product Visual Container */}
-                <div className="relative w-full h-52 sm:h-60 my-4 rounded-2xl overflow-hidden bg-slate-50 flex items-center justify-center p-4 border border-slate-100 group-hover:scale-[1.01] transition-transform duration-300">
+                <div className="relative w-full h-48 sm:h-60 my-4 rounded-2xl overflow-hidden bg-slate-50 flex items-center justify-center p-4 border border-slate-100 group-hover:scale-[1.01] transition-transform duration-300">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img 
                     src={item.image} 
@@ -302,7 +302,7 @@ export default function VoltaMotorPage() {
                   {item.features.slice(0, 3).map((f, i) => (
                     <li key={i} className="flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-red-600 shrink-0" />
-                      <span>{f}</span>
+                      <span className="leading-snug">{f}</span>
                     </li>
                   ))}
                 </ul>
@@ -317,7 +317,7 @@ export default function VoltaMotorPage() {
                         {item.oldPrice.toLocaleString('tr-TR')},00 TL
                       </div>
                     )}
-                    <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                    <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-none">
                       {item.price.toLocaleString('tr-TR')},00 <span className="text-sm font-bold text-slate-500">TL</span>
                     </div>
                   </div>
@@ -326,7 +326,7 @@ export default function VoltaMotorPage() {
                 <div className="grid grid-cols-2 gap-2.5">
                   <button
                     onClick={() => startCheckout(item)}
-                    className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl shadow-md shadow-red-600/20 transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 active:scale-98"
+                    className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-md shadow-red-600/20 transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 active:scale-98"
                   >
                     <span>Sipariş Ver</span>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -338,7 +338,7 @@ export default function VoltaMotorPage() {
                     href={`https://wa.me/905000000000?text=Merhaba,%20Volta%20${encodeURIComponent(item.name)}%20modeli%20hakk%C4%B1nda%20bilgi%20ve%20rezervasyon%20istiyorum`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-4 rounded-xl transition text-xs sm:text-sm flex items-center justify-center gap-1.5"
+                    className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-3 sm:px-4 rounded-xl transition text-xs sm:text-sm flex items-center justify-center gap-1.5"
                   >
                     <span>Bilgi Al</span>
                   </a>
@@ -350,17 +350,17 @@ export default function VoltaMotorPage() {
       </section>
 
       {/* Full Catalog Section (100% Electric - No Petrol) */}
-      <section id="modeller" className="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+      <section id="modeller" className="py-12 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-10 gap-4">
           <div>
             <div className="text-red-600 font-bold text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-red-600" />
               <span>%100 ELEKTRİKLİ MOBİLİTE</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 leading-snug tracking-tight">
               Tüm Volta Elektrikli Modelleri
             </h2>
-            <p className="text-slate-600 text-sm sm:text-base mt-1">
+            <p className="text-slate-600 text-xs sm:text-base mt-1.5 leading-relaxed max-w-2xl">
               Benzin masrafına, egzoz dumanına ve bakım derdine son veren yeni nesil elektrikli araçlar.
             </p>
           </div>
@@ -388,7 +388,7 @@ export default function VoltaMotorPage() {
           {filteredCatalog.map((model) => (
             <div 
               key={model.id}
-              className="bg-white rounded-2xl border border-slate-200 p-6 flex flex-col justify-between hover:shadow-xl hover:border-slate-300 transition-all duration-200"
+              className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 flex flex-col justify-between hover:shadow-xl hover:border-slate-300 transition-all duration-200"
             >
               <div>
                 <div className="flex items-center justify-between text-xs text-slate-400 font-medium mb-3">
@@ -407,8 +407,8 @@ export default function VoltaMotorPage() {
                   />
                 </div>
 
-                <h3 className="text-xl font-black text-slate-900">{model.name}</h3>
-                <p className="text-xs text-slate-500 mt-1 line-clamp-2">{model.tagline}</p>
+                <h3 className="text-lg sm:text-xl font-black text-slate-900 leading-snug">{model.name}</h3>
+                <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">{model.tagline}</p>
 
                 {/* Specs List */}
                 <div className="grid grid-cols-2 gap-2 mt-4 text-xs">
@@ -430,14 +430,14 @@ export default function VoltaMotorPage() {
                       {model.oldPrice.toLocaleString('tr-TR')},00 TL
                     </div>
                   )}
-                  <div className="text-xl font-black text-slate-900">
+                  <div className="text-lg sm:text-xl font-black text-slate-900 leading-none">
                     {model.price.toLocaleString('tr-TR')},00 <span className="text-xs font-bold text-slate-500">TL</span>
                   </div>
                 </div>
 
                 <button
                   onClick={() => startCheckout(model)}
-                  className="bg-slate-900 hover:bg-red-600 text-white font-bold text-xs py-2.5 px-4 rounded-xl transition-colors flex items-center gap-1.5"
+                  className="bg-slate-900 hover:bg-red-600 text-white font-bold text-xs py-2.5 px-3.5 sm:px-4 rounded-xl transition-colors flex items-center gap-1.5"
                 >
                   <span>Sipariş</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -451,17 +451,17 @@ export default function VoltaMotorPage() {
       </section>
 
       {/* Benefits / Mobility Guarantee Section */}
-      <section id="avantajlar" className="bg-white py-16 border-y border-slate-200">
+      <section id="avantajlar" className="bg-white py-12 sm:py-16 border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900">Neden Elektrikli Volta?</h2>
-            <p className="text-slate-600 text-sm mt-2">
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 leading-snug">Neden Elektrikli Volta?</h2>
+            <p className="text-slate-600 text-xs sm:text-sm mt-1.5 leading-relaxed">
               Sıfır fosil yakıt, minimum işletme maliyeti ve sessiz konforlu sürüş deneyimi.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            <div className="bg-slate-50 p-5 sm:p-6 rounded-2xl border border-slate-200">
               <div className="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center font-bold mb-4">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="7" width="16" height="12" rx="2" />
@@ -469,32 +469,32 @@ export default function VoltaMotorPage() {
                   <path d="M10 11l-2 3h4l-2 3" />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Ev Prizinden Kolay Şarj</h3>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-2 leading-snug">Ev Prizinden Kolay Şarj</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Özel şarj istasyonuna gerek duymadan standart 220V ev prizinizden taşınabilir bataryanızı güvenle doldurun.
               </p>
             </div>
 
-            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+            <div className="bg-slate-50 p-5 sm:p-6 rounded-2xl border border-slate-200">
               <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center font-bold mb-4">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">100 Kilometrede Sadece 4 TL</h3>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-2 leading-snug">100 Kilometrede Sadece 4 TL</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Benzinli araçlara göre %90 daha düşük enerji maliyetiyle bütçenizi koruyun, çevreci sürüşün keyfini yaşayın.
               </p>
             </div>
 
-            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+            <div className="bg-slate-50 p-5 sm:p-6 rounded-2xl border border-slate-200">
               <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center font-bold mb-4">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   <path d="M9 12l2 2 4-4" />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">2 Yıl Garanti & Yaygın Servis</h3>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-2 leading-snug">2 Yıl Garanti & Yaygın Servis</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Türkiye genelinde yüzlerce yetkili servis noktası ve orijinal yedek parça desteği ile her zaman yanınızdayız.
               </p>
@@ -504,15 +504,15 @@ export default function VoltaMotorPage() {
       </section>
 
       {/* Embedded Live Dynamic Payment Section */}
-      <section id="odeme" className="py-16 sm:py-20 max-w-4xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-8">
-          <span className="text-xs font-bold uppercase tracking-wider text-red-600 bg-red-50 border border-red-200 px-3.5 py-1 rounded-full">
+      <section id="odeme" className="py-12 sm:py-20 max-w-4xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-6 sm:mb-8">
+          <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-red-600 bg-red-50 border border-red-200 px-3.5 py-1 rounded-full inline-block">
             GÜVENLİ SİPARİŞ & TAHSİLAT
           </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 mt-2.5 leading-snug tracking-tight">
             Online Rezervasyon ve Banka Tahsilat Merkezi
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-xl mx-auto">
+          <p className="text-xs sm:text-sm text-slate-600 mt-1.5 max-w-xl mx-auto leading-relaxed">
             Banka Havalesi ve FAST transferi ile siparişinizi oluşturabilir, adınıza özel tahsis edilen işlem sürenizle dekontunuzu yükleyebilirsiniz.
           </p>
         </div>
@@ -527,18 +527,18 @@ export default function VoltaMotorPage() {
       {/* Direct Payment Request Modal (from Hamburger Menu / Header Ödeme Yap button) */}
       {isPaymentModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative border border-slate-200">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl relative border border-slate-200">
             <button
               onClick={() => setIsPaymentModalOpen(false)}
-              className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition font-bold"
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition font-bold"
             >
               ✕
             </button>
 
             <div className="mb-6">
               <span className="text-xs font-bold text-red-600 uppercase tracking-wider">VOLTA SERVICE</span>
-              <h3 className="text-xl sm:text-2xl font-black text-slate-900 mt-1">Online Rezervasyon & Ödeme</h3>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900 mt-1 leading-snug">Online Rezervasyon & Ödeme</h3>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">
                 İletişim bilgilerinizi ileterek banka IBAN bilgilerinizi görüntüleyebilir ve dekont yükleme sürecini başlatabilirsiniz.
               </p>
             </div>
@@ -555,10 +555,10 @@ export default function VoltaMotorPage() {
       {/* Modal Checkout when clicked on product */}
       {isCheckoutOpen && activeCheckoutModel && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative border border-slate-200">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl relative border border-slate-200">
             <button
               onClick={() => setIsCheckoutOpen(false)}
-              className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition font-bold"
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition font-bold"
             >
               ✕
             </button>
@@ -570,8 +570,8 @@ export default function VoltaMotorPage() {
               </div>
               <div>
                 <span className="text-xs font-bold text-red-600 uppercase">{activeCheckoutModel.category}</span>
-                <h3 className="text-xl sm:text-2xl font-black text-slate-900">{activeCheckoutModel.name}</h3>
-                <p className="text-sm font-black text-slate-800">
+                <h3 className="text-lg sm:text-2xl font-black text-slate-900 leading-snug">{activeCheckoutModel.name}</h3>
+                <p className="text-sm sm:text-base font-black text-slate-800 leading-none mt-0.5">
                   {activeCheckoutModel.price.toLocaleString('tr-TR')},00 TL
                 </p>
               </div>
@@ -604,7 +604,7 @@ export default function VoltaMotorPage() {
       </div>
 
       {/* Official Footer */}
-      <footer className="bg-[#14212d] text-slate-400 py-12 text-xs border-t border-slate-800">
+      <footer className="bg-[#14212d] text-slate-400 py-10 sm:py-12 text-xs border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
             <div className="flex items-center gap-3">
