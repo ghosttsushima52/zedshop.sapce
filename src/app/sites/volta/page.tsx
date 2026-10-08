@@ -45,251 +45,312 @@ export default function VoltaMotorPage() {
     ? models 
     : models.filter(m => m.category === selectedCategory);
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
   const startCheckout = (model: VoltaModel) => {
     setActiveCheckoutModel(model);
     setIsCheckoutOpen(true);
   };
 
-  return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased selection:bg-red-500 selection:text-white">
-      {/* Top Notification Bar */}
-      <div className="bg-red-600 text-white text-xs sm:text-sm font-medium py-2 px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="bg-white/20 px-2 py-0.5 rounded text-[11px] font-bold tracking-wider uppercase">FIRSAT</span>
-            <span className="truncate">Yeni Nesil Elektrikli Mobilite Araçları & Avantajlı Fiyatlar</span>
-          </div>
-          <div className="hidden md:flex items-center gap-6 text-xs text-red-100 font-medium">
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-white/80" /> 2 Yıl Resmi Garanti
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-white/80" /> %100 Elektrikli Sıfır Emisyon
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-white/80" /> Aynı Gün Kargo & Yetkili Teslimat
-            </span>
-          </div>
-        </div>
-      </div>
+  const openDirectPayment = () => {
+    setIsMobileMenuOpen(false);
+    setIsPaymentModalOpen(true);
+  };
 
-      {/* Main Header / Navigation */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center gap-4">
+  return (
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-red-600 selection:text-white">
+      {/* Official Clean Header / Navigation */}
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between">
+          {/* Official Volta Logo */}
+          <div className="flex items-center gap-3">
             <Link href="/sites/volta" className="flex items-center gap-2.5 group">
-              <div className="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center text-white font-extrabold text-2xl shadow-md shadow-red-500/20 group-hover:scale-105 transition-transform">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-600 flex items-center justify-center text-white font-extrabold text-xl sm:text-2xl shadow-md shadow-red-600/20 group-hover:scale-105 transition-transform">
                 V
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-black tracking-tight text-slate-900 leading-none">VOLTA</span>
-                <span className="text-[10px] font-bold tracking-widest text-red-600 uppercase">Elektrikli Araçlar</span>
+                <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 leading-none">VOLTA</span>
+                <span className="text-[9px] sm:text-[10px] font-bold tracking-widest text-red-600 uppercase">Elektrikli Araçlar</span>
               </div>
             </Link>
           </div>
 
-          {/* Navigation */}
-          <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-700">
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-700">
+            <a href="#modeller" className="hover:text-red-600 transition-colors">Modeller</a>
             <a href="#featured" className="hover:text-red-600 transition-colors">Öne Çıkanlar</a>
-            <a href="#modeller" className="hover:text-red-600 transition-colors">Tüm Modeller</a>
             <a href="#avantajlar" className="hover:text-red-600 transition-colors">Elektrikli Mobilite</a>
-            <a href="#odeme" className="hover:text-red-600 transition-colors">IBAN ile Kolay Ödeme</a>
+            <button 
+              onClick={() => setIsPaymentModalOpen(true)}
+              className="text-red-600 hover:text-red-700 font-bold transition-colors flex items-center gap-1.5"
+            >
+              <span>IBAN Ödeme & Talep</span>
+            </button>
           </nav>
 
-          {/* Right Header Actions */}
-          <div className="flex items-center gap-3">
-            {user ? (
-              <div className="flex items-center gap-2">
-                <div className="hidden sm:flex items-center gap-1.5 bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>{user.username}</span>
-                </div>
-                <Link 
-                  href="/admin" 
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition shadow-sm"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-400">
-                    <line x1="4" y1="21" x2="4" y2="14" />
-                    <line x1="4" y1="10" x2="4" y2="3" />
-                    <line x1="12" y1="21" x2="12" y2="12" />
-                    <line x1="12" y1="8" x2="12" y2="3" />
-                    <line x1="20" y1="21" x2="20" y2="16" />
-                    <line x1="20" y1="12" x2="20" y2="3" />
-                    <line x1="1" y1="14" x2="7" y2="14" />
-                    <line x1="9" y1="8" x2="15" y2="8" />
-                    <line x1="17" y1="16" x2="23" y2="16" />
-                  </svg>
-                  <span>Admin Paneli</span>
-                </Link>
-                <button
-                  onClick={logout}
-                  className="text-xs text-slate-500 hover:text-red-600 px-2 py-1 transition font-semibold"
-                >
-                  Çıkış
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={openGate}
-                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-100 transition"
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-                Giriş
-              </button>
-            )}
-
-            <a 
-              href="https://wa.me/905000000000?text=Merhaba,%20Volta%20modelleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-sm transition-all shadow-emerald-600/20 active:scale-95"
+          {/* Top Right: Hamburger Menu (3 Çizgi) */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsPaymentModalOpen(true)}
+              className="hidden sm:inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-xl shadow-md shadow-red-600/20 transition-all active:scale-95"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.821 2.791.821 3.181 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.807-5.767-5.807zm3.398 8.163c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.782-.401-1.393-.578-2.316-1.996-2.386-2.09-.07-.094-.567-.756-.567-1.442 0-.686.357-1.023.484-1.164.127-.141.278-.176.371-.176.094 0 .188.001.27.006.088.004.206-.034.322.247.12.289.412 1.009.447 1.082.035.073.059.158.01.256-.048.098-.073.159-.145.244-.073.085-.154.19-.22.256-.073.073-.15.153-.064.3.086.147.383.633.821 1.023.564.502 1.04.657 1.188.73.148.073.235.061.322-.039.088-.099.373-.434.472-.584.099-.15.198-.125.33-.075.132.05 838.414 1.004.496.166.082.278.125.318.191.041.066.041.385-.103.79z" />
-                <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.398C8.423 21.493 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.273c-1.636 0-3.16-.492-4.44-1.336l-.318-.207-2.955.827.842-2.885-.227-.333C3.993 14.978 3.5 13.535 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.273-8.5 8.273z" />
+              <span>Ödeme Yap</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
               </svg>
-              <span>WhatsApp Destek</span>
-            </a>
+            </button>
+
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 flex items-center justify-center transition border border-slate-200/80 active:scale-95"
+              aria-label="Menü"
+            >
+              {isMobileMenuOpen ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+              )}
+            </button>
           </div>
         </div>
       </header>
 
-      {/* Main Campaign Hero Banner */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-red-50/60 via-white to-slate-50 border-b border-slate-200/80 py-12 lg:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 border border-red-200 text-red-700 text-xs font-bold mb-4">
-              <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-              <span>ELEKTRİKLİ MOBİLİTE FIRSATLARI</span>
+      {/* Slide-over / Dropdown Menu (3 Çizgi Menüsü) */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div 
+            className="w-full max-w-sm bg-white h-full shadow-2xl p-6 flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right duration-250 border-l border-slate-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div>
+              {/* Menu Header */}
+              <div className="flex items-center justify-between pb-5 border-b border-slate-100 mb-6">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white font-black text-base">
+                    V
+                  </div>
+                  <span className="font-black text-slate-900 text-lg">VOLTA MENÜ</span>
+                </div>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-sm font-bold transition"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Action Button: Ödeme Yap */}
+              <div className="mb-6">
+                <button
+                  onClick={openDirectPayment}
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-red-600/25 transition-all text-sm flex items-center justify-center gap-2"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                    <line x1="1" y1="10" x2="23" y2="10" />
+                  </svg>
+                  <span>Ödeme Bilgisi Al & Talep Et</span>
+                </button>
+              </div>
+
+              {/* Menu Links */}
+              <nav className="flex flex-col gap-2">
+                <a
+                  href="#modeller"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center justify-between transition border border-transparent hover:border-slate-200"
+                >
+                  <span>Tüm Elektrikli Modeller</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </a>
+                <a
+                  href="#featured"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center justify-between transition border border-transparent hover:border-slate-200"
+                >
+                  <span>Öne Çıkan Modeller</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </a>
+                <a
+                  href="#avantajlar"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center justify-between transition border border-transparent hover:border-slate-200"
+                >
+                  <span>Elektrikli Mobilite & Garanti</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </a>
+                <a
+                  href="#odeme"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center justify-between transition border border-transparent hover:border-slate-200"
+                >
+                  <span>IBAN Havale & Dekont Yükleme</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </a>
+              </nav>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-4">
-              Elektrikli mobilite avantajlarını keşfedin.
-            </h1>
-            <p className="text-lg sm:text-xl text-slate-600 font-medium">
-              Size uygun Volta modelini şimdi keşfedin.
-            </p>
-          </div>
 
-          {/* Campaign Featured Banner / Two Prominent Products */}
-          <div id="featured" className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 max-w-5xl mx-auto">
-            {featuredModels.map((item) => (
-              <div 
-                key={item.id}
-                className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xl shadow-slate-200/50 flex flex-col justify-between hover:border-red-400 hover:shadow-2xl hover:shadow-red-500/10 transition-all duration-300 relative group"
+            {/* Bottom Section */}
+            <div className="pt-6 border-t border-slate-100">
+              {user && (
+                <div className="bg-slate-50 p-3 rounded-xl mb-3 border border-slate-200">
+                  <div className="flex items-center justify-between text-xs mb-2">
+                    <span className="text-slate-500 font-medium">Giriş Yapıldı:</span>
+                    <span className="font-mono font-bold text-slate-800">{user.username}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href="/admin"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex-1 bg-slate-900 text-white text-xs font-bold py-2 rounded-lg text-center hover:bg-slate-800 transition"
+                    >
+                      Yönetim Paneli
+                    </Link>
+                    <button
+                      onClick={() => { logout(); setIsMobileMenuOpen(false); }}
+                      className="px-3 py-2 text-xs font-bold text-slate-600 hover:text-red-600 transition"
+                    >
+                      Çıkış
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <a
+                href="https://wa.me/905000000000?text=Merhaba,%20Volta%20modelleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition text-xs flex items-center justify-center gap-2"
               >
-                {/* Advantage Badge */}
-                {item.advantageAmount && (
-                  <div className="absolute top-5 right-5 bg-gradient-to-r from-red-600 to-rose-600 text-white text-xs sm:text-sm font-black px-3.5 py-1.5 rounded-full shadow-md shadow-red-500/30">
-                    {item.advantageAmount.toLocaleString('tr-TR')} TL Fiyat Avantajı
-                  </div>
-                )}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.821 2.791.821 3.181 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.807-5.767-5.807zm3.398 8.163c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.782-.401-1.393-.578-2.316-1.996-2.386-2.09-.07-.094-.567-.756-.567-1.442 0-.686.357-1.023.484-1.164.127-.141.278-.176.371-.176.094 0 .188.001.27.006.088.004.206-.034.322.247.12.289.412 1.009.447 1.082.035.073.059.158.01.256-.048.098-.073.159-.145.244-.073.085-.154.19-.22.256-.073.073-.15.153-.064.3.086.147.383.633.821 1.023.564.502 1.04.657 1.188.73.148.073.235.061.322-.039.088-.099.373-.434.472-.584.099-.15.198-.125.33-.075.132.05 838.414 1.004.496.166.082.278.125.318.191.041.066.041.385-.103.79z" />
+                  <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.398C8.423 21.493 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.273c-1.636 0-3.16-.492-4.44-1.336l-.318-.207-2.955.827.842-2.885-.227-.333C3.993 14.978 3.5 13.535 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.273-8.5 8.273z" />
+                </svg>
+                <span>WhatsApp Danışma Hattı</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
-                <div>
-                  <div className="mb-4">
-                    <span className="text-xs font-bold uppercase tracking-wider text-red-600 bg-red-50 px-2.5 py-1 rounded-md">
-                      {item.category}
-                    </span>
-                    <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2">
-                      {item.name}
-                    </h2>
-                    <p className="text-xs sm:text-sm text-slate-500 mt-1 line-clamp-1">
-                      {item.tagline}
-                    </p>
-                  </div>
+      {/* Featured Vehicle Showcase Section (Clean Luxury Grid - Directly Under Navbar) */}
+      <section id="featured" className="py-8 sm:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
+          {featuredModels.map((item) => (
+            <div 
+              key={item.id}
+              className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-lg shadow-slate-100 flex flex-col justify-between hover:border-slate-300 hover:shadow-xl transition-all duration-300 relative group"
+            >
+              {item.advantageAmount && (
+                <div className="absolute top-5 right-5 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                  {item.advantageAmount.toLocaleString('tr-TR')} TL Avantaj
+                </div>
+              )}
 
-                  {/* Product Visual Container */}
-                  <div className="relative w-full h-56 sm:h-64 my-4 rounded-2xl overflow-hidden bg-slate-50 flex items-center justify-center p-4 border border-slate-100 group-hover:scale-[1.02] transition-transform duration-300">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img 
-                      src={item.image} 
-                      alt={item.name} 
-                      className="max-h-full max-w-full object-contain drop-shadow-lg"
-                    />
-                  </div>
-
-                  {/* Key Highlights */}
-                  <div className="grid grid-cols-3 gap-2 py-3 border-y border-slate-100 my-4 text-center">
-                    <div className="bg-slate-50 p-2 rounded-xl">
-                      <div className="text-[11px] text-slate-400 font-medium">Motor</div>
-                      <div className="text-xs sm:text-sm font-bold text-slate-800">{item.specs.engine.split(' ')[0]}</div>
-                    </div>
-                    <div className="bg-slate-50 p-2 rounded-xl">
-                      <div className="text-[11px] text-slate-400 font-medium">Menzil</div>
-                      <div className="text-xs sm:text-sm font-bold text-slate-800">{item.specs.range.split(' ')[0]}</div>
-                    </div>
-                    <div className="bg-slate-50 p-2 rounded-xl">
-                      <div className="text-[11px] text-slate-400 font-medium">Hız</div>
-                      <div className="text-xs sm:text-sm font-bold text-slate-800">{item.specs.speed.split(' ')[0]}</div>
-                    </div>
-                  </div>
-
-                  {/* Bullet points */}
-                  <ul className="space-y-1.5 text-xs text-slate-600 mb-6">
-                    {item.features.slice(0, 3).map((f, i) => (
-                      <li key={i} className="flex items-center gap-2">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                        <span>{f}</span>
-                      </li>
-                    ))}
-                  </ul>
+              <div>
+                <div className="mb-3">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-red-600 bg-red-50 px-2.5 py-1 rounded-md">
+                    {item.category}
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 tracking-tight">
+                    {item.name}
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                    {item.tagline}
+                  </p>
                 </div>
 
-                {/* Price and Action Section */}
-                <div className="pt-4 border-t border-slate-100">
-                  <div className="flex items-end justify-between mb-4">
-                    <div>
-                      {item.oldPrice && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm sm:text-base text-slate-400 line-through font-semibold">
-                            {item.oldPrice.toLocaleString('tr-TR')},00 TL
-                          </span>
-                          {item.discountRate && (
-                            <span className="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">
-                              %{item.discountRate} İndirim
-                            </span>
-                          )}
-                        </div>
-                      )}
-                      <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                        {item.price.toLocaleString('tr-TR')},00 <span className="text-base sm:text-lg font-bold text-slate-600">TL</span>
+                {/* Product Visual Container */}
+                <div className="relative w-full h-52 sm:h-60 my-4 rounded-2xl overflow-hidden bg-slate-50 flex items-center justify-center p-4 border border-slate-100 group-hover:scale-[1.01] transition-transform duration-300">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img 
+                    src={item.image} 
+                    alt={item.name} 
+                    className="max-h-full max-w-full object-contain"
+                  />
+                </div>
+
+                {/* Key Highlights */}
+                <div className="grid grid-cols-3 gap-2 py-3 border-y border-slate-100 my-4 text-center">
+                  <div className="bg-slate-50 p-2 rounded-xl">
+                    <div className="text-[10px] text-slate-400 font-medium">Motor</div>
+                    <div className="text-xs sm:text-sm font-bold text-slate-800">{item.specs.engine.split(' ')[0]}</div>
+                  </div>
+                  <div className="bg-slate-50 p-2 rounded-xl">
+                    <div className="text-[10px] text-slate-400 font-medium">Menzil</div>
+                    <div className="text-xs sm:text-sm font-bold text-slate-800">{item.specs.range.split(' ')[0]}</div>
+                  </div>
+                  <div className="bg-slate-50 p-2 rounded-xl">
+                    <div className="text-[10px] text-slate-400 font-medium">Hız</div>
+                    <div className="text-xs sm:text-sm font-bold text-slate-800">{item.specs.speed.split(' ')[0]}</div>
+                  </div>
+                </div>
+
+                {/* Bullet points */}
+                <ul className="space-y-1.5 text-xs text-slate-600 mb-5">
+                  {item.features.slice(0, 3).map((f, i) => (
+                    <li key={i} className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-600 shrink-0" />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Price and Action Section */}
+              <div className="pt-4 border-t border-slate-100">
+                <div className="flex items-end justify-between mb-4">
+                  <div>
+                    {item.oldPrice && (
+                      <div className="text-xs text-slate-400 line-through font-semibold mb-0.5">
+                        {item.oldPrice.toLocaleString('tr-TR')},00 TL
                       </div>
+                    )}
+                    <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                      {item.price.toLocaleString('tr-TR')},00 <span className="text-sm font-bold text-slate-500">TL</span>
                     </div>
                   </div>
+                </div>
 
-                  <div className="grid grid-cols-2 gap-2.5">
-                    <button
-                      onClick={() => startCheckout(item)}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-red-600/25 transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 group/btn"
-                    >
-                      <span>Hemen Satın Al</span>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover/btn:translate-x-0.5 transition-transform">
-                        <line x1="5" y1="12" x2="19" y2="12" />
-                        <polyline points="12 5 19 12 12 19" />
-                      </svg>
-                    </button>
-                    <a
-                      href={`https://wa.me/905000000000?text=Merhaba,%20Volta%20${encodeURIComponent(item.name)}%20modeli%20hakk%C4%B1nda%20bilgi%20ve%20rezervasyon%20istiyorum`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-4 rounded-xl transition text-xs sm:text-sm flex items-center justify-center gap-2"
-                    >
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="#10b981">
-                        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.821 2.791.821 3.181 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.807-5.767-5.807zm3.398 8.163c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.782-.401-1.393-.578-2.316-1.996-2.386-2.09-.07-.094-.567-.756-.567-1.442 0-.686.357-1.023.484-1.164.127-.141.278-.176.371-.176.094 0 .188.001.27.006.088.004.206-.034.322.247.12.289.412 1.009.447 1.082.035.073.059.158.01.256-.048.098-.073.159-.145.244-.073.085-.154.19-.22.256-.073.073-.15.153-.064.3.086.147.383.633.821 1.023.564.502 1.04.657 1.188.73.148.073.235.061.322-.039.088-.099.373-.434.472-.584.099-.15.198-.125.33-.075.132.05 838.414 1.004.496.166.082.278.125.318.191.041.066.041.385-.103.79z" />
-                        <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.398C8.423 21.493 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.273c-1.636 0-3.16-.492-4.44-1.336l-.318-.207-2.955.827.842-2.885-.227-.333C3.993 14.978 3.5 13.535 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.273-8.5 8.273z" />
-                      </svg>
-                      <span>WhatsApp</span>
-                    </a>
-                  </div>
+                <div className="grid grid-cols-2 gap-2.5">
+                  <button
+                    onClick={() => startCheckout(item)}
+                    className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl shadow-md shadow-red-600/20 transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5"
+                  >
+                    <span>Sipariş Ver</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  </button>
+                  <a
+                    href={`https://wa.me/905000000000?text=Merhaba,%20Volta%20${encodeURIComponent(item.name)}%20modeli%20hakk%C4%B1nda%20bilgi%20ve%20rezervasyon%20istiyorum`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-4 rounded-xl transition text-xs sm:text-sm flex items-center justify-center gap-1.5"
+                  >
+                    <span>Bilgi Al</span>
+                  </a>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -467,6 +528,34 @@ export default function VoltaMotorPage() {
           initialAmount={activeCheckoutModel ? `${activeCheckoutModel.price.toLocaleString('tr-TR')} TL` : '24.990 TL'}
         />
       </section>
+
+      {/* Direct Payment Request Modal (from Hamburger Menu / Header Ödeme Yap button) */}
+      {isPaymentModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative border border-slate-200">
+            <button
+              onClick={() => setIsPaymentModalOpen(false)}
+              className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition font-bold"
+            >
+              ✕
+            </button>
+
+            <div className="mb-6">
+              <span className="text-xs font-bold text-red-600 uppercase">VOLTA ELEKTRİKLİ ARAÇLAR</span>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900 mt-1">Ödeme Bilgisi & Havale Talebi</h3>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                İletişim bilgilerinizi ileterek dinamik IBAN ve dekont yükleme sürecini başlatabilirsiniz.
+              </p>
+            </div>
+
+            <PaymentFlow 
+              targetSite="Volta Motor" 
+              productTitle="Volta Elektrikli Araç Ödeme / Rezervasyon"
+              initialAmount="24.990 TL"
+            />
+          </div>
+        </div>
+      )}
 
       {/* Modal Checkout when clicked on product */}
       {isCheckoutOpen && activeCheckoutModel && (
