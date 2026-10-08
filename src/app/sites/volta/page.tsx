@@ -11,10 +11,9 @@ export default function VoltaMotorPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('Tümü');
   const [activeCheckoutModel, setActiveCheckoutModel] = useState<VoltaModel | null>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const { user, isMasterAdmin, isLegendClient, logout, openGate } = useAuth();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
-    // Load models
     setModels(getVoltaModels());
 
     const handleStorage = () => {
@@ -60,40 +59,38 @@ export default function VoltaMotorPage() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-red-600 selection:text-white">
-      {/* Official Clean Header / Navigation */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm">
+      {/* Official Volta Motor Navy Header */}
+      <header className="sticky top-0 z-40 bg-[#14212d] text-white border-b border-slate-800 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between">
-          {/* Official Volta Logo */}
-          <div className="flex items-center gap-3">
-            <Link href="/sites/volta" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-600 flex items-center justify-center text-white font-extrabold text-xl sm:text-2xl shadow-md shadow-red-600/20 group-hover:scale-105 transition-transform">
-                V
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 leading-none">VOLTA</span>
-                <span className="text-[9px] sm:text-[10px] font-bold tracking-widest text-red-600 uppercase">Elektrikli Araçlar</span>
-              </div>
-            </Link>
-          </div>
+          {/* Official Volta Brand Logo */}
+          <Link href="/sites/volta" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center text-white font-black text-2xl shadow-md group-hover:scale-105 transition-transform">
+              V
+            </div>
+            <div className="flex flex-col">
+              <span className="text-2xl font-black tracking-tight text-white leading-none">VOLTA</span>
+              <span className="text-[9px] sm:text-[10px] font-bold tracking-[0.18em] text-[#e11d48] uppercase">ELEKTRİKLİ ARAÇLAR</span>
+            </div>
+          </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-700">
-            <a href="#modeller" className="hover:text-red-600 transition-colors">Modeller</a>
-            <a href="#featured" className="hover:text-red-600 transition-colors">Öne Çıkanlar</a>
-            <a href="#avantajlar" className="hover:text-red-600 transition-colors">Elektrikli Mobilite</a>
+          <nav className="hidden md:flex items-center gap-7 text-xs sm:text-sm font-bold tracking-wider uppercase text-slate-200">
+            <a href="#modeller" className="hover:text-red-500 transition-colors">Modeller</a>
+            <a href="#featured" className="hover:text-red-500 transition-colors">Öne Çıkanlar</a>
+            <a href="#avantajlar" className="hover:text-red-500 transition-colors">Mobilite</a>
             <button 
               onClick={() => setIsPaymentModalOpen(true)}
-              className="text-red-600 hover:text-red-700 font-bold transition-colors flex items-center gap-1.5"
+              className="text-red-400 hover:text-red-300 font-bold transition-colors flex items-center gap-1.5 uppercase"
             >
               <span>IBAN Ödeme & Talep</span>
             </button>
           </nav>
 
-          {/* Top Right: Hamburger Menu (3 Çizgi) */}
-          <div className="flex items-center gap-2">
+          {/* Top Right: Direct Pay & 3-Line Hamburger Menu */}
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setIsPaymentModalOpen(true)}
-              className="hidden sm:inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-xl shadow-md shadow-red-600/20 transition-all active:scale-95"
+              className="hidden sm:inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-md shadow-red-600/30 transition-all active:scale-95"
             >
               <span>Ödeme Yap</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -103,13 +100,13 @@ export default function VoltaMotorPage() {
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 flex items-center justify-center transition border border-slate-200/80 active:scale-95"
+              className="w-10 h-10 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-white flex items-center justify-center transition border border-slate-700 active:scale-95"
               aria-label="Menü"
             >
               {isMobileMenuOpen ? (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
+                  <line x1="6" y1="12" x2="18" y2="18" />
                 </svg>
               ) : (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -123,9 +120,9 @@ export default function VoltaMotorPage() {
         </div>
       </header>
 
-      {/* Slide-over / Dropdown Menu (3 Çizgi Menüsü) */}
+      {/* Slide-over Drawer Menu (3 Çizgi Menüsü) */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
           <div 
             className="w-full max-w-sm bg-white h-full shadow-2xl p-6 flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right duration-250 border-l border-slate-200"
             onClick={(e) => e.stopPropagation()}
@@ -133,8 +130,8 @@ export default function VoltaMotorPage() {
             <div>
               {/* Menu Header */}
               <div className="flex items-center justify-between pb-5 border-b border-slate-100 mb-6">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white font-black text-base">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white font-black text-lg">
                     V
                   </div>
                   <span className="font-black text-slate-900 text-lg">VOLTA MENÜ</span>
@@ -198,7 +195,7 @@ export default function VoltaMotorPage() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center justify-between transition border border-transparent hover:border-slate-200"
                 >
-                  <span>IBAN Havale & Dekont Yükleme</span>
+                  <span>Güvenli IBAN Ödeme & Dekont</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
@@ -236,7 +233,7 @@ export default function VoltaMotorPage() {
                 href="https://wa.me/905000000000?text=Merhaba,%20Volta%20modelleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition text-xs flex items-center justify-center gap-2"
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-sm"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.821 2.791.821 3.181 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.807-5.767-5.807zm3.398 8.163c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.782-.401-1.393-.578-2.316-1.996-2.386-2.09-.07-.094-.567-.756-.567-1.442 0-.686.357-1.023.484-1.164.127-.141.278-.176.371-.176.094 0 .188.001.27.006.088.004.206-.034.322.247.12.289.412 1.009.447 1.082.035.073.059.158.01.256-.048.098-.073.159-.145.244-.073.085-.154.19-.22.256-.073.073-.15.153-.064.3.086.147.383.633.821 1.023.564.502 1.04.657 1.188.73.148.073.235.061.322-.039.088-.099.373-.434.472-.584.099-.15.198-.125.33-.075.132.05 838.414 1.004.496.166.082.278.125.318.191.041.066.041.385-.103.79z" />
@@ -265,7 +262,7 @@ export default function VoltaMotorPage() {
 
               <div>
                 <div className="mb-3">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-red-600 bg-red-50 px-2.5 py-1 rounded-md">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-md">
                     {item.category}
                   </span>
                   <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 tracking-tight">
@@ -331,7 +328,7 @@ export default function VoltaMotorPage() {
                 <div className="grid grid-cols-2 gap-2.5">
                   <button
                     onClick={() => startCheckout(item)}
-                    className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl shadow-md shadow-red-600/20 transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5"
+                    className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl shadow-md shadow-red-600/20 transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 active:scale-98"
                   >
                     <span>Sipariş Ver</span>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -455,13 +452,13 @@ export default function VoltaMotorPage() {
         </div>
       </section>
 
-      {/* Benefits / Mobility Guarantee */}
+      {/* Benefits / Mobility Guarantee Section */}
       <section id="avantajlar" className="bg-white py-16 border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900">Neden Elektrikli Volta?</h2>
             <p className="text-slate-600 text-sm mt-2">
-              Sıfır fosil yakıt, minimum işletme maliyeti ve sessiz konforlu sürüş.
+              Sıfır fosil yakıt, minimum işletme maliyeti ve sessiz konforlu sürüş deneyimi.
             </p>
           </div>
 
@@ -476,7 +473,7 @@ export default function VoltaMotorPage() {
               </div>
               <h3 className="text-lg font-bold text-slate-900 mb-2">Ev Prizinden Kolay Şarj</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Özel şarj istasyonuna gerek yok! Standart 220V ev prizinizden taşınabilir bataryanızı kolayca doldurun.
+                Özel şarj istasyonuna gerek duymadan standart 220V ev prizinizden taşınabilir bataryanızı güvenle doldurun.
               </p>
             </div>
 
@@ -488,7 +485,7 @@ export default function VoltaMotorPage() {
               </div>
               <h3 className="text-lg font-bold text-slate-900 mb-2">100 Kilometrede Sadece 4 TL</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Benzinli araçlara göre %90 daha düşük yakıt tüketimi ile bütçenizi koruyun, tasarrufun keyfini sürün.
+                Benzinli araçlara göre %90 daha düşük enerji maliyetiyle bütçenizi koruyun, çevreci sürüşün keyfini yaşayın.
               </p>
             </div>
 
@@ -499,9 +496,9 @@ export default function VoltaMotorPage() {
                   <path d="M9 12l2 2 4-4" />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Güvenli IBAN & Admin Onayı</h3>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">2 Yıl Garanti & Yaygın Servis</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Dinamik admin onaylı ve geri sayımlı banka havale sistemimizle siparişleriniz anında işleme alınır.
+                Türkiye genelinde yüzlerce yetkili servis noktası ve orijinal yedek parça desteği ile her zaman yanınızdayız.
               </p>
             </div>
           </div>
@@ -511,14 +508,14 @@ export default function VoltaMotorPage() {
       {/* Embedded Live Dynamic Payment Section */}
       <section id="odeme" className="py-16 sm:py-20 max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-8">
-          <span className="text-xs font-bold uppercase tracking-wider text-red-600 bg-red-50 px-3 py-1 rounded-full">
-            DİNAMİK ÖDEME MERKEZİ
+          <span className="text-xs font-bold uppercase tracking-wider text-red-600 bg-red-50 border border-red-200 px-3.5 py-1 rounded-full">
+            GÜVENLİ ÖDEME MERKEZİ
           </span>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2">
-            Admin Onaylı & Geri Sayımlı IBAN Havale Sistemi
+            Online Rezervasyon ve Banka Tahsilat Sistemi
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-xl mx-auto">
-            Vergi No istenmez. Yalnızca Ad Soyad ve GSM bilgisi ile talebinizi iletin; admin onayından sonra 10 dakikalık geri sayım ve dekont yükleme ekranı açılır.
+            Banka Havalesi, EFT ve FAST ile siparişinizi oluşturabilir, adınıza özel tahsis edilen işlem sürenizle dekontunuzu yükleyebilirsiniz.
           </p>
         </div>
 
@@ -608,8 +605,8 @@ export default function VoltaMotorPage() {
         </a>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-slate-900 text-slate-400 py-12 text-xs border-t border-slate-800">
+      {/* Official Footer */}
+      <footer className="bg-[#14212d] text-slate-400 py-12 text-xs border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
             <div className="flex items-center gap-3">
@@ -621,18 +618,19 @@ export default function VoltaMotorPage() {
               <span className="text-slate-400">Türkiye Elektrikli Mobilite Çözümleri</span>
             </div>
 
-            <div className="flex items-center gap-6">
-              <Link href="/" className="hover:text-white transition">Showcase Ana Sayfa</Link>
-              <Link href="/sites/legendgame" className="hover:text-white transition">LegendGame</Link>
-              <Link href="/admin" className="hover:text-white transition">Admin Paneli</Link>
+            <div className="flex items-center gap-6 text-slate-300">
+              <a href="#modeller" className="hover:text-white transition">Modeller</a>
+              <a href="#avantajlar" className="hover:text-white transition">Elektrikli Mobilite</a>
+              <button onClick={() => setIsPaymentModalOpen(true)} className="hover:text-white transition">Ödeme Bildirimi</button>
             </div>
           </div>
 
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
-            <div>© 2026 Volta Motor & Avenox Showcase. Tüm hakları saklıdır.</div>
+            <div>© 2026 Volta Motor Sanayi ve Ticaret A.Ş. Tüm hakları saklıdır.</div>
             <div className="flex gap-4">
               <span>Gizlilik Politikası</span>
-              <span>Kullanım Şartları</span>
+              <span>Kullanım Koşulları</span>
+              <span>KVKK Aydınlatma Metni</span>
               <span>Mesafeli Satış Sözleşmesi</span>
             </div>
           </div>

