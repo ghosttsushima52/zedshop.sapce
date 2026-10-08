@@ -62,28 +62,23 @@ export default function VoltaMotorPage() {
       {/* Official Volta Motor Navy Header */}
       <header className="sticky top-0 z-40 bg-[#14212d] text-white border-b border-slate-800 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between">
-          {/* Official Volta Brand Logo */}
+          {/* Official Volta Service Brand Logo */}
           <Link href="/sites/volta" className="flex items-center gap-3 group">
             <div className="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center text-white font-black text-2xl shadow-md group-hover:scale-105 transition-transform">
               V
             </div>
             <div className="flex flex-col">
               <span className="text-2xl font-black tracking-tight text-white leading-none">VOLTA</span>
-              <span className="text-[9px] sm:text-[10px] font-bold tracking-[0.18em] text-[#e11d48] uppercase">ELEKTRİKLİ ARAÇLAR</span>
+              <span className="text-[9px] sm:text-[10px] font-bold tracking-[0.2em] text-[#e11d48] uppercase">VOLTA SERVICE</span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-7 text-xs sm:text-sm font-bold tracking-wider uppercase text-slate-200">
-            <a href="#modeller" className="hover:text-red-500 transition-colors">Modeller</a>
-            <a href="#featured" className="hover:text-red-500 transition-colors">Öne Çıkanlar</a>
-            <a href="#avantajlar" className="hover:text-red-500 transition-colors">Mobilite</a>
-            <button 
-              onClick={() => setIsPaymentModalOpen(true)}
-              className="text-red-400 hover:text-red-300 font-bold transition-colors flex items-center gap-1.5 uppercase"
-            >
-              <span>IBAN Ödeme & Talep</span>
-            </button>
+          <nav className="hidden md:flex items-center gap-8 text-xs sm:text-sm font-bold tracking-wider uppercase text-slate-200">
+            <a href="#modeller" className="hover:text-red-400 transition-colors">Modeller</a>
+            <a href="#featured" className="hover:text-red-400 transition-colors">Öne Çıkanlar</a>
+            <a href="#avantajlar" className="hover:text-red-400 transition-colors">Elektrikli Mobilite</a>
+            <a href="#odeme" className="hover:text-red-400 transition-colors">Sipariş & Ödeme</a>
           </nav>
 
           {/* Top Right: Direct Pay & 3-Line Hamburger Menu */}
@@ -92,7 +87,7 @@ export default function VoltaMotorPage() {
               onClick={() => setIsPaymentModalOpen(true)}
               className="hidden sm:inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-md shadow-red-600/30 transition-all active:scale-95"
             >
-              <span>Ödeme Yap</span>
+              <span>Online Sipariş Ver</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="9 18 15 12 9 6" />
               </svg>
@@ -134,7 +129,10 @@ export default function VoltaMotorPage() {
                   <div className="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white font-black text-lg">
                     V
                   </div>
-                  <span className="font-black text-slate-900 text-lg">VOLTA MENÜ</span>
+                  <div>
+                    <span className="font-black text-slate-900 text-lg leading-none block">VOLTA</span>
+                    <span className="text-[9px] font-bold text-red-600 tracking-wider">VOLTA SERVICE</span>
+                  </div>
                 </div>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -144,7 +142,7 @@ export default function VoltaMotorPage() {
                 </button>
               </div>
 
-              {/* Action Button: Ödeme Yap */}
+              {/* Action Button: Sipariş & Ödeme */}
               <div className="mb-6">
                 <button
                   onClick={openDirectPayment}
@@ -154,7 +152,7 @@ export default function VoltaMotorPage() {
                     <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
                     <line x1="1" y1="10" x2="23" y2="10" />
                   </svg>
-                  <span>Ödeme Bilgisi Al & Talep Et</span>
+                  <span>Online Sipariş & Rezervasyon</span>
                 </button>
               </div>
 
@@ -195,7 +193,7 @@ export default function VoltaMotorPage() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center justify-between transition border border-transparent hover:border-slate-200"
                 >
-                  <span>Güvenli IBAN Ödeme & Dekont</span>
+                  <span>Banka Havalesi & Dekont Bildirimi</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
@@ -509,13 +507,13 @@ export default function VoltaMotorPage() {
       <section id="odeme" className="py-16 sm:py-20 max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-8">
           <span className="text-xs font-bold uppercase tracking-wider text-red-600 bg-red-50 border border-red-200 px-3.5 py-1 rounded-full">
-            GÜVENLİ ÖDEME MERKEZİ
+            GÜVENLİ SİPARİŞ & TAHSİLAT
           </span>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2">
-            Online Rezervasyon ve Banka Tahsilat Sistemi
+            Online Rezervasyon ve Banka Tahsilat Merkezi
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-xl mx-auto">
-            Banka Havalesi, EFT ve FAST ile siparişinizi oluşturabilir, adınıza özel tahsis edilen işlem sürenizle dekontunuzu yükleyebilirsiniz.
+            Banka Havalesi ve FAST transferi ile siparişinizi oluşturabilir, adınıza özel tahsis edilen işlem sürenizle dekontunuzu yükleyebilirsiniz.
           </p>
         </div>
 
@@ -538,10 +536,10 @@ export default function VoltaMotorPage() {
             </button>
 
             <div className="mb-6">
-              <span className="text-xs font-bold text-red-600 uppercase">VOLTA ELEKTRİKLİ ARAÇLAR</span>
-              <h3 className="text-xl sm:text-2xl font-black text-slate-900 mt-1">Ödeme Bilgisi & Havale Talebi</h3>
+              <span className="text-xs font-bold text-red-600 uppercase tracking-wider">VOLTA SERVICE</span>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900 mt-1">Online Rezervasyon & Ödeme</h3>
               <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                İletişim bilgilerinizi ileterek dinamik IBAN ve dekont yükleme sürecini başlatabilirsiniz.
+                İletişim bilgilerinizi ileterek banka IBAN bilgilerinizi görüntüleyebilir ve dekont yükleme sürecini başlatabilirsiniz.
               </p>
             </div>
 
@@ -615,7 +613,7 @@ export default function VoltaMotorPage() {
               </div>
               <span className="text-lg font-black text-white">VOLTA</span>
               <span className="text-slate-500">|</span>
-              <span className="text-slate-400">Türkiye Elektrikli Mobilite Çözümleri</span>
+              <span className="text-slate-400">VOLTA SERVICE & MOBILITY</span>
             </div>
 
             <div className="flex items-center gap-6 text-slate-300">
