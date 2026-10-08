@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { ArrowUpRight, Layers3, Sparkles, SlidersHorizontal } from 'lucide-react';
 import { SiteShell } from '@/core/layout';
 import { SHOWCASE_SITES } from '@/lib/showcase';
 import { VISUAL_SYSTEMS, PALETTES } from '@/core/theme/tokens';
@@ -37,16 +36,16 @@ export default function HomePage() {
           </p>
           <div className="showcase-intro__meta">
             <span>
-              <Layers3 size={16} /> {SHOWCASE_SITES.reduce((total, site) => total + site.pages.length, 0)} ana sayfa
+              <strong>{SHOWCASE_SITES.reduce((total, site) => total + site.pages.length, 0)}</strong> ana sayfa
             </span>
             <span>
-              <Sparkles size={16} /> {SHOWCASE_SITES.reduce((total, site) => total + site.details.length, 0)} detay kaydı
+              <strong>{SHOWCASE_SITES.reduce((total, site) => total + site.details.length, 0)}</strong> detay kaydı
             </span>
             <span>
-              <SlidersHorizontal size={16} /> {VISUAL_SYSTEMS.length} görsel sistem
+              <strong>{VISUAL_SYSTEMS.length}</strong> görsel sistem
             </span>
             <span>
-              {PALETTES.length} renk harmonisi
+              <strong>{PALETTES.length}</strong> renk harmonisi
             </span>
           </div>
         </div>
@@ -123,7 +122,10 @@ export default function HomePage() {
             </p>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 'var(--text-xs)', fontWeight: 600, color: '#dc2626' }}>
               <span>Model ve Kampanyaları İncele →</span>
-              <ArrowUpRight size={16} />
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="7" y1="17" x2="17" y2="7" />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
             </div>
           </a>
 
@@ -163,7 +165,10 @@ export default function HomePage() {
             </p>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 'var(--text-xs)', fontWeight: 600, color: '#06b6d4' }}>
               <span>İlanları ve Pazar Yerini Aç →</span>
-              <ArrowUpRight size={16} />
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="7" y1="17" x2="17" y2="7" />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
             </div>
           </a>
         </div>
@@ -192,7 +197,10 @@ export default function HomePage() {
                 <span>
                   {site.pages.length} sayfa · {site.inventoryLabel}
                 </span>
-                <ArrowUpRight size={18} />
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="7" y1="17" x2="17" y2="7" />
+                  <polyline points="7 7 17 7 17 17" />
+                </svg>
               </footer>
             </div>
           </a>

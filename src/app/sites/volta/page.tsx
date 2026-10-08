@@ -2,25 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { 
-  Zap, 
-  BatteryCharging, 
-  ShieldCheck, 
-  Phone, 
-  MessageCircle, 
-  Sparkles, 
-  ArrowRight, 
-  CheckCircle2, 
-  Clock, 
-  CreditCard, 
-  HelpCircle, 
-  ExternalLink,
-  ChevronRight,
-  Gauge,
-  SlidersHorizontal,
-  Lock,
-  Layers
-} from 'lucide-react';
 import { getVoltaModels, VoltaModel } from '@/content/volta';
 import { PaymentFlow } from '@/features/payment/PaymentFlow';
 import { useAuth } from '@/features/auth/AuthContext';
@@ -78,10 +59,16 @@ export default function VoltaMotorPage() {
             <span className="bg-white/20 px-2 py-0.5 rounded text-[11px] font-bold tracking-wider uppercase">FIRSAT</span>
             <span className="truncate">Ekim Ayına Özel Elektrikli Mobilite Kampanyası Başladı!</span>
           </div>
-          <div className="hidden md:flex items-center gap-6 text-xs text-red-100">
-            <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" /> 2 Yıl Resmi Garanti</span>
-            <span className="flex items-center gap-1.5"><Zap className="w-3.5 h-3.5" /> %100 Elektrikli Sıfır Emisyon</span>
-            <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Aynı Gün Kargo & Yetkili Teslimat</span>
+          <div className="hidden md:flex items-center gap-6 text-xs text-red-100 font-medium">
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-white/80" /> 2 Yıl Resmi Garanti
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-white/80" /> %100 Elektrikli Sıfır Emisyon
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-white/80" /> Aynı Gün Kargo & Yetkili Teslimat
+            </span>
           </div>
         </div>
       </div>
@@ -102,7 +89,7 @@ export default function VoltaMotorPage() {
             </Link>
           </div>
 
-          {/* Navigation - Note: Kampanya, Bayiler, Servisler, Yedek Parça are REMOVED as requested */}
+          {/* Navigation */}
           <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-700">
             <a href="#featured" className="hover:text-red-600 transition-colors">Öne Çıkanlar</a>
             <a href="#modeller" className="hover:text-red-600 transition-colors">Tüm Modeller</a>
@@ -122,7 +109,17 @@ export default function VoltaMotorPage() {
                   href="/admin" 
                   className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition shadow-sm"
                 >
-                  <SlidersHorizontal className="w-3.5 h-3.5 text-red-400" />
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-400">
+                    <line x1="4" y1="21" x2="4" y2="14" />
+                    <line x1="4" y1="10" x2="4" y2="3" />
+                    <line x1="12" y1="21" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12" y2="3" />
+                    <line x1="20" y1="21" x2="20" y2="16" />
+                    <line x1="20" y1="12" x2="20" y2="3" />
+                    <line x1="1" y1="14" x2="7" y2="14" />
+                    <line x1="9" y1="8" x2="15" y2="8" />
+                    <line x1="17" y1="16" x2="23" y2="16" />
+                  </svg>
                   <span>Admin Paneli</span>
                 </Link>
                 <button
@@ -137,7 +134,10 @@ export default function VoltaMotorPage() {
                 onClick={openGate}
                 className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-100 transition"
               >
-                <Lock className="w-3 h-3 text-slate-400" />
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
                 Giriş
               </button>
             )}
@@ -148,19 +148,22 @@ export default function VoltaMotorPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-sm transition-all shadow-emerald-600/20 active:scale-95"
             >
-              <MessageCircle className="w-4 h-4 fill-white" />
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.821 2.791.821 3.181 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.807-5.767-5.807zm3.398 8.163c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.782-.401-1.393-.578-2.316-1.996-2.386-2.09-.07-.094-.567-.756-.567-1.442 0-.686.357-1.023.484-1.164.127-.141.278-.176.371-.176.094 0 .188.001.27.006.088.004.206-.034.322.247.12.289.412 1.009.447 1.082.035.073.059.158.01.256-.048.098-.073.159-.145.244-.073.085-.154.19-.22.256-.073.073-.15.153-.064.3.086.147.383.633.821 1.023.564.502 1.04.657 1.188.73.148.073.235.061.322-.039.088-.099.373-.434.472-.584.099-.15.198-.125.33-.075.132.05 838.414 1.004.496.166.082.278.125.318.191.041.066.041.385-.103.79z" />
+                <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.398C8.423 21.493 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.273c-1.636 0-3.16-.492-4.44-1.336l-.318-.207-2.955.827.842-2.885-.227-.333C3.993 14.978 3.5 13.535 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.273-8.5 8.273z" />
+              </svg>
               <span>WhatsApp Destek</span>
             </a>
           </div>
         </div>
       </header>
 
-      {/* Main Campaign Hero Banner - Exact visual text requirement */}
+      {/* Main Campaign Hero Banner */}
       <section className="relative overflow-hidden bg-gradient-to-b from-red-50/60 via-white to-slate-50 border-b border-slate-200/80 py-12 lg:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 border border-red-200 text-red-700 text-xs font-bold mb-4 animate-pulse">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 border border-red-200 text-red-700 text-xs font-bold mb-4">
+              <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
               <span>2026 EKİM ÖZEL KAMPANYASI</span>
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-4">
@@ -171,7 +174,7 @@ export default function VoltaMotorPage() {
             </p>
           </div>
 
-          {/* Campaign Featured Banner / Two Prominent Products (Matching User Reference Image) */}
+          {/* Campaign Featured Banner / Two Prominent Products */}
           <div id="featured" className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 max-w-5xl mx-auto">
             {featuredModels.map((item) => (
               <div 
@@ -228,7 +231,9 @@ export default function VoltaMotorPage() {
                   <ul className="space-y-1.5 text-xs text-slate-600 mb-6">
                     {item.features.slice(0, 3).map((f, i) => (
                       <li key={i} className="flex items-center gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-red-500 shrink-0" />
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
                         <span>{f}</span>
                       </li>
                     ))}
@@ -263,16 +268,22 @@ export default function VoltaMotorPage() {
                       className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-red-600/25 transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 group/btn"
                     >
                       <span>Hemen Satın Al</span>
-                      <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-0.5 transition-transform" />
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover/btn:translate-x-0.5 transition-transform">
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                      </svg>
                     </button>
                     <a
                       href={`https://wa.me/905000000000?text=Merhaba,%20Volta%20${encodeURIComponent(item.name)}%20modeli%20hakk%C4%B1nda%20bilgi%20ve%20rezervasyon%20istiyorum`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-4 rounded-xl transition text-xs sm:text-sm flex items-center justify-center gap-1.5"
+                      className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-4 rounded-xl transition text-xs sm:text-sm flex items-center justify-center gap-2"
                     >
-                      <MessageCircle className="w-4 h-4 text-emerald-600" />
-                      <span>WhatsApp Bilgi</span>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="#10b981">
+                        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.821 2.791.821 3.181 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.807-5.767-5.807zm3.398 8.163c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.782-.401-1.393-.578-2.316-1.996-2.386-2.09-.07-.094-.567-.756-.567-1.442 0-.686.357-1.023.484-1.164.127-.141.278-.176.371-.176.094 0 .188.001.27.006.088.004.206-.034.322.247.12.289.412 1.009.447 1.082.035.073.059.158.01.256-.048.098-.073.159-.145.244-.073.085-.154.19-.22.256-.073.073-.15.153-.064.3.086.147.383.633.821 1.023.564.502 1.04.657 1.188.73.148.073.235.061.322-.039.088-.099.373-.434.472-.584.099-.15.198-.125.33-.075.132.05 838.414 1.004.496.166.082.278.125.318.191.041.066.041.385-.103.79z" />
+                        <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.398C8.423 21.493 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.273c-1.636 0-3.16-.492-4.44-1.336l-.318-.207-2.955.827.842-2.885-.227-.333C3.993 14.978 3.5 13.535 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.273-8.5 8.273z" />
+                      </svg>
+                      <span>WhatsApp</span>
                     </a>
                   </div>
                 </div>
@@ -287,7 +298,8 @@ export default function VoltaMotorPage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
           <div>
             <div className="text-red-600 font-bold text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <Zap className="w-4 h-4" /> %100 ELEKTRİKLİ MOBİLİTE
+              <span className="w-2 h-2 rounded-full bg-red-600" />
+              <span>%100 ELEKTRİKLİ MOBİLİTE</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
               Tüm Volta Elektrikli Modelleri
@@ -369,10 +381,12 @@ export default function VoltaMotorPage() {
 
                 <button
                   onClick={() => startCheckout(model)}
-                  className="bg-slate-900 hover:bg-red-600 text-white font-bold text-xs py-2.5 px-4 rounded-xl transition-colors flex items-center gap-1"
+                  className="bg-slate-900 hover:bg-red-600 text-white font-bold text-xs py-2.5 px-4 rounded-xl transition-colors flex items-center gap-1.5"
                 >
                   <span>Sipariş</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
                 </button>
               </div>
             </div>
@@ -393,7 +407,11 @@ export default function VoltaMotorPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
               <div className="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center font-bold mb-4">
-                <BatteryCharging className="w-6 h-6" />
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="7" width="16" height="12" rx="2" />
+                  <path d="M22 11v4" />
+                  <path d="M10 11l-2 3h4l-2 3" />
+                </svg>
               </div>
               <h3 className="text-lg font-bold text-slate-900 mb-2">Ev Prizinden Kolay Şarj</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
@@ -403,7 +421,9 @@ export default function VoltaMotorPage() {
 
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
               <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center font-bold mb-4">
-                <Zap className="w-6 h-6" />
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
               </div>
               <h3 className="text-lg font-bold text-slate-900 mb-2">100 Kilometrede Sadece 4 TL</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
@@ -413,7 +433,10 @@ export default function VoltaMotorPage() {
 
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
               <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center font-bold mb-4">
-                <ShieldCheck className="w-6 h-6" />
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <path d="M9 12l2 2 4-4" />
+                </svg>
               </div>
               <h3 className="text-lg font-bold text-slate-900 mb-2">Güvenli IBAN & Admin Onayı</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
@@ -451,7 +474,7 @@ export default function VoltaMotorPage() {
           <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative border border-slate-200">
             <button
               onClick={() => setIsCheckoutOpen(false)}
-              className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition"
+              className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition font-bold"
             >
               ✕
             </button>
@@ -488,7 +511,10 @@ export default function VoltaMotorPage() {
           className="flex items-center gap-2.5 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-3 rounded-full shadow-2xl shadow-emerald-500/40 hover:scale-105 active:scale-95 transition-all group font-bold text-sm"
           title="WhatsApp ile İletişime Geçin"
         >
-          <MessageCircle className="w-6 h-6 fill-white" />
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.821 2.791.821 3.181 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.807-5.767-5.807zm3.398 8.163c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.782-.401-1.393-.578-2.316-1.996-2.386-2.09-.07-.094-.567-.756-.567-1.442 0-.686.357-1.023.484-1.164.127-.141.278-.176.371-.176.094 0 .188.001.27.006.088.004.206-.034.322.247.12.289.412 1.009.447 1.082.035.073.059.158.01.256-.048.098-.073.159-.145.244-.073.085-.154.19-.22.256-.073.073-.15.153-.064.3.086.147.383.633.821 1.023.564.502 1.04.657 1.188.73.148.073.235.061.322-.039.088-.099.373-.434.472-.584.099-.15.198-.125.33-.075.132.05 838.414 1.004.496.166.082.278.125.318.191.041.066.041.385-.103.79z" />
+            <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.398C8.423 21.493 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.273c-1.636 0-3.16-.492-4.44-1.336l-.318-.207-2.955.827.842-2.885-.227-.333C3.993 14.978 3.5 13.535 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.273-8.5 8.273z" />
+          </svg>
           <span className="hidden sm:inline">WhatsApp Danışmanı</span>
         </a>
       </div>
