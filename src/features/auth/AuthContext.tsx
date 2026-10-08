@@ -67,7 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           username: LEGEND_CREDENTIALS.username,
           name: LEGEND_CREDENTIALS.name,
           role: 'legend_client' as const,
-          accessibleSites: ['legendgame'],
+          accessibleSites: ['volta', 'admin'],
         },
       };
     }

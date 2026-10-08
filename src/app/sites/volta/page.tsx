@@ -30,7 +30,7 @@ export default function VoltaMotorPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('Tümü');
   const [activeCheckoutModel, setActiveCheckoutModel] = useState<VoltaModel | null>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const { isMasterAdmin, openGate } = useAuth();
+  const { user, isMasterAdmin, isLegendClient, logout, openGate } = useAuth();
 
   useEffect(() => {
     // Load models
@@ -112,14 +112,26 @@ export default function VoltaMotorPage() {
 
           {/* Right Header Actions */}
           <div className="flex items-center gap-3">
-            {isMasterAdmin ? (
-              <Link 
-                href="/admin" 
-                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition"
-              >
-                <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-400" />
-                Admin Paneli
-              </Link>
+            {user ? (
+              <div className="flex items-center gap-2">
+                <div className="hidden sm:flex items-center gap-1.5 bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>{user.username}</span>
+                </div>
+                <Link 
+                  href="/admin" 
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition shadow-sm"
+                >
+                  <SlidersHorizontal className="w-3.5 h-3.5 text-red-400" />
+                  <span>Admin Paneli</span>
+                </Link>
+                <button
+                  onClick={logout}
+                  className="text-xs text-slate-500 hover:text-red-600 px-2 py-1 transition font-semibold"
+                >
+                  Çıkış
+                </button>
+              </div>
             ) : (
               <button
                 onClick={openGate}

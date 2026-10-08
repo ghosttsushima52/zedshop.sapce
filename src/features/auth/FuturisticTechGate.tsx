@@ -52,7 +52,7 @@ export function FuturisticTechGate() {
           login(username, password);
           document.body.style.overflow = '';
           if (check.role === 'legend_client') {
-            window.location.href = '/sites/legendgame/';
+            window.location.href = '/sites/volta/';
           }
         }, 600);
       } else {

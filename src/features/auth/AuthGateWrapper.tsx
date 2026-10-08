@@ -17,11 +17,15 @@ export function AuthGateWrapper({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (mounted && isAuthenticated && isLegendClient) {
-      if (pathname === '/' || pathname === '') {
-        router.push('/sites/legendgame');
+      if (
+        pathname === '/' ||
+        pathname === '' ||
+        pathname.includes('legendgame')
+      ) {
+        window.location.href = '/sites/volta/';
       }
     }
-  }, [mounted, isAuthenticated, isLegendClient, pathname, router]);
+  }, [mounted, isAuthenticated, isLegendClient, pathname]);
 
   // Before client hydration or if not authenticated:
   // Render ONLY the single page Futuristic Tech Gate!

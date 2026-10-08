@@ -40,8 +40,8 @@ import { getLegendListings, saveLegendListing, GameListing } from '@/content/leg
 import { SHOWCASE_SITES } from '@/lib/showcase';
 
 export default function AdminDashboardPage() {
-  const { user, isMasterAdmin, login, logout, openGate } = useAuth();
-  const [activeTab, setActiveTab] = useState<'payments' | 'volta' | 'legend' | 'sites'>('payments');
+  const { user, isMasterAdmin, isLegendClient, login, logout, openGate } = useAuth();
+  const [activeTab, setActiveTab] = useState<'payments' | 'volta' | 'legend' | 'sites'>('volta');
   
   // Login form state (if accessed directly without being logged in)
   const [loginUser, setLoginUser] = useState('');
@@ -165,8 +165,8 @@ export default function AdminDashboardPage() {
     }
   };
 
-  // If not logged in as Master Admin
-  if (!isMasterAdmin) {
+  // If not logged in as Master Admin or Volta Admin
+  if (!isMasterAdmin && !isLegendClient) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 text-white">
         <div className="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl">
@@ -176,7 +176,7 @@ export default function AdminDashboardPage() {
             </div>
             <div>
               <h1 className="text-xl font-black">Yönetici Paneli</h1>
-              <p className="text-xs text-slate-400">Master Admin Kimlik Doğrulaması Gerekir</p>
+              <p className="text-xs text-slate-400">Yetkili Girişi Gerekir (Master Admin / Volta Yetkilisi)</p>
             </div>
           </div>
 
@@ -249,26 +249,42 @@ export default function AdminDashboardPage() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-black tracking-tight text-white">AVENOX MASTER PANEL</h1>
+                <h1 className="text-lg font-black tracking-tight text-white">
+                  {isMasterAdmin ? 'AVENOX MASTER PANEL' : 'VOLTA MOTOR & IBAN PANELİ'}
+                </h1>
                 <span className="text-[10px] bg-red-600/20 text-red-400 border border-red-500/30 font-mono px-2 py-0.5 rounded-full font-bold">
-                  qwacy (Master Admin)
+                  {user?.username} ({isMasterAdmin ? 'Master Admin' : 'Volta Yetkilisi'})
                 </span>
               </div>
-              <p className="text-xs text-slate-400">Canlı Ödemeler, Dekontlar, Volta Fiyatları & Çoklu Site Ekosistemi</p>
+              <p className="text-xs text-slate-400">
+                {isMasterAdmin 
+                  ? 'Canlı Ödemeler, Dekontlar, Volta Fiyatları & Çoklu Site Ekosistemi' 
+                  : 'Volta Fiyat Güncelleme, Canlı IBAN Onaylama ve Dekont Kontrolü'}
+              </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <Link 
-              href="/" 
-              className="text-xs text-slate-400 hover:text-white bg-slate-800 px-3 py-2 rounded-xl transition flex items-center gap-1.5"
-            >
-              <Globe className="w-3.5 h-3.5" />
-              <span>Showcase</span>
-            </Link>
+            {isMasterAdmin ? (
+              <Link 
+                href="/" 
+                className="text-xs text-slate-400 hover:text-white bg-slate-800 px-3 py-2 rounded-xl transition flex items-center gap-1.5"
+              >
+                <Globe className="w-3.5 h-3.5" />
+                <span>Showcase</span>
+              </Link>
+            ) : (
+              <Link 
+                href="/sites/volta" 
+                className="text-xs text-slate-300 hover:text-white bg-slate-800 px-3 py-2 rounded-xl transition flex items-center gap-1.5 border border-slate-700 font-semibold"
+              >
+                <Zap className="w-3.5 h-3.5 text-red-400" />
+                <span>Volta Sitesine Git</span>
+              </Link>
+            )}
             <button
               onClick={logout}
-              className="text-xs text-rose-300 hover:text-white bg-rose-950/60 hover:bg-rose-900 border border-rose-800/60 px-3 py-2 rounded-xl transition"
+              className="text-xs text-rose-300 hover:text-white bg-rose-950/60 hover:bg-rose-900 border border-rose-800/60 px-3 py-2 rounded-xl transition font-semibold"
             >
               Çıkış Yap
             </button>
@@ -277,28 +293,6 @@ export default function AdminDashboardPage() {
 
         {/* Dashboard Tabs */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 overflow-x-auto border-t border-slate-800/80 py-2">
-          <button
-            onClick={() => setActiveTab('payments')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
-              activeTab === 'payments'
-                ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-            }`}
-          >
-            <CreditCard className="w-4 h-4" />
-            <span>Ödeme Talepleri</span>
-            {pendingCount > 0 && (
-              <span className="bg-amber-400 text-slate-950 px-1.5 py-0.2 rounded-full text-[10px] font-black animate-pulse">
-                {pendingCount}
-              </span>
-            )}
-            {receiptCount > 0 && (
-              <span className="bg-emerald-400 text-slate-950 px-1.5 py-0.2 rounded-full text-[10px] font-black">
-                {receiptCount} Dekont
-              </span>
-            )}
-          </button>
-
           <button
             onClick={() => setActiveTab('volta')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
@@ -312,28 +306,54 @@ export default function AdminDashboardPage() {
           </button>
 
           <button
-            onClick={() => setActiveTab('legend')}
+            onClick={() => setActiveTab('payments')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
-              activeTab === 'legend'
+              activeTab === 'payments'
                 ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
                 : 'text-slate-400 hover:text-white hover:bg-slate-800'
             }`}
           >
-            <Gamepad2 className="w-4 h-4" />
-            <span>LegendGame Pazar Yeri</span>
+            <CreditCard className="w-4 h-4" />
+            <span>Ödeme & IBAN Talepleri</span>
+            {pendingCount > 0 && (
+              <span className="bg-amber-400 text-slate-950 px-1.5 py-0.2 rounded-full text-[10px] font-black animate-pulse">
+                {pendingCount}
+              </span>
+            )}
+            {receiptCount > 0 && (
+              <span className="bg-emerald-400 text-slate-950 px-1.5 py-0.2 rounded-full text-[10px] font-black">
+                {receiptCount} Dekont
+              </span>
+            )}
           </button>
 
-          <button
-            onClick={() => setActiveTab('sites')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
-              activeTab === 'sites'
-                ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-            }`}
-          >
-            <Globe className="w-4 h-4" />
-            <span>Tüm Demo Siteleri (12+2)</span>
-          </button>
+          {isMasterAdmin && (
+            <>
+              <button
+                onClick={() => setActiveTab('legend')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+                  activeTab === 'legend'
+                    ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                }`}
+              >
+                <Gamepad2 className="w-4 h-4" />
+                <span>LegendGame Pazar Yeri</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('sites')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+                  activeTab === 'sites'
+                    ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                }`}
+              >
+                <Globe className="w-4 h-4" />
+                <span>Tüm Demo Siteleri (12+2)</span>
+              </button>
+            </>
+          )}
         </div>
       </header>
 

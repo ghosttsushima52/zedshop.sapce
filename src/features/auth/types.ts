@@ -18,6 +18,6 @@ export const MASTER_CREDENTIALS = {
 export const LEGEND_CREDENTIALS = {
   username: 'ggLegendGamer3339',
   password: 'ggLegendGamer3339itemsatıs',
-  name: 'Legend Gamer Müşteri Portalı',
+  name: 'Volta & IBAN Yönetim Portalı',
   role: 'legend_client' as UserRole,
 };
