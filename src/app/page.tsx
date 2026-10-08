@@ -118,7 +118,7 @@ export default function HomePage() {
               Volta Motor & Elektrikli Mobilite
             </h3>
             <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-fg-muted)', marginBlockEnd: 'var(--sp-4)', lineHeight: 1.5 }}>
-              Ekim ayına özel VSM ve VB2 PRO modelleri, %100 elektrikli sıfır emisyon filosu ve canlı admin onaylı IBAN havale sistemi.
+              Popüler VSM ve VB2 PRO modelleri, %100 elektrikli sıfır emisyon filosu ve canlı admin onaylı IBAN havale sistemi.
             </p>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 'var(--text-xs)', fontWeight: 600, color: '#dc2626' }}>
               <span>Model ve Kampanyaları İncele →</span>

@@ -713,7 +713,7 @@ export default function AdminDashboardPage() {
                 </div>
                 <h4 className="text-base font-bold text-white">Elektrikli Mobilite & Resmi E-Ticaret</h4>
                 <p className="text-xs text-slate-400 mt-1">
-                  Ekim kampanyası, VSM & VB2 PRO, %100 elektrikli modeller, admin fiyat özelleştirme ve IBAN ödeme.
+                  VSM & VB2 PRO, %100 elektrikli modeller, admin fiyat özelleştirme ve IBAN ödeme.
                 </p>
               </Link>
 

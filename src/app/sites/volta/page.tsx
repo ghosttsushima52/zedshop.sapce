@@ -57,7 +57,7 @@ export default function VoltaMotorPage() {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="bg-white/20 px-2 py-0.5 rounded text-[11px] font-bold tracking-wider uppercase">FIRSAT</span>
-            <span className="truncate">Ekim Ayına Özel Elektrikli Mobilite Kampanyası Başladı!</span>
+            <span className="truncate">Yeni Nesil Elektrikli Mobilite Araçları & Avantajlı Fiyatlar</span>
           </div>
           <div className="hidden md:flex items-center gap-6 text-xs text-red-100 font-medium">
             <span className="flex items-center gap-1.5">
@@ -164,10 +164,10 @@ export default function VoltaMotorPage() {
           <div className="text-center max-w-3xl mx-auto mb-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 border border-red-200 text-red-700 text-xs font-bold mb-4">
               <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-              <span>2026 EKİM ÖZEL KAMPANYASI</span>
+              <span>ELEKTRİKLİ MOBİLİTE FIRSATLARI</span>
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-4">
-              Ekim ayına özel avantajları kaçırmayın.
+              Elektrikli mobilite avantajlarını keşfedin.
             </h1>
             <p className="text-lg sm:text-xl text-slate-600 font-medium">
               Size uygun Volta modelini şimdi keşfedin.
