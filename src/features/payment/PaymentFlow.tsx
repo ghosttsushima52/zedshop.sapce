@@ -149,20 +149,23 @@ export function PaymentFlow({
       {/* Top Header */}
       <div className="bg-[#14212d] text-white p-5 sm:p-6 flex items-center justify-between border-b border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center text-white font-black text-xl shadow-md">
-            V
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img 
+            src="/volta-service-logo.png" 
+            alt="Volta Dönüşüm Servisi" 
+            className="w-11 h-11 object-contain rounded-xl drop-shadow-sm shrink-0"
+          />
           <div>
-            <div className="text-xs text-red-400 font-bold uppercase tracking-wider">IBAN Havale & FAST Ödeme</div>
-            <h3 className="text-base sm:text-lg font-black text-white">{effectiveBrandTitle}</h3>
+            <div className="text-xs text-emerald-400 font-bold uppercase tracking-wider">Volta Dönüşüm & Garanti Servisi</div>
+            <h3 className="text-base sm:text-lg font-black text-white leading-snug">{effectiveBrandTitle}</h3>
           </div>
         </div>
-        <div className="flex items-center gap-1.5 text-[11px] text-slate-300 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700">
+        <div className="flex items-center gap-1.5 text-[11px] text-slate-300 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700 shrink-0">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
-          <span className="font-semibold">Resmi Tahsilat Güvencesi</span>
+          <span className="font-semibold">Resmi Tahsilat</span>
         </div>
       </div>
 

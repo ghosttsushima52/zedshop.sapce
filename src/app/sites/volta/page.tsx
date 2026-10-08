@@ -62,23 +62,26 @@ export default function VoltaMotorPage() {
       {/* Official Volta Motor Navy Header */}
       <header className="sticky top-0 z-40 bg-[#14212d] text-white border-b border-slate-800 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between">
-          {/* Official Volta Service Brand Logo */}
+          {/* User Requested Custom Volta Dönüşüm Servisi Logo */}
           <Link href="/sites/volta" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center text-white font-black text-2xl shadow-md group-hover:scale-105 transition-transform">
-              V
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img 
+              src="/volta-service-logo.png" 
+              alt="Volta Dönüşüm Servisi" 
+              className="w-10 h-10 sm:w-12 sm:h-12 object-contain rounded-xl drop-shadow-md group-hover:scale-105 transition-transform"
+            />
             <div className="flex flex-col">
-              <span className="text-2xl font-black tracking-tight text-white leading-none">VOLTA</span>
-              <span className="text-[9px] sm:text-[10px] font-bold tracking-[0.2em] text-[#e11d48] uppercase">VOLTA SERVICE</span>
+              <span className="text-xl sm:text-2xl font-black tracking-tight text-white leading-none">VOLTA</span>
+              <span className="text-[9px] sm:text-[10px] font-bold tracking-[0.16em] text-emerald-400 uppercase">DÖNÜŞÜM SERVİSİ</span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8 text-xs sm:text-sm font-bold tracking-wider uppercase text-slate-200">
-            <a href="#modeller" className="hover:text-red-400 transition-colors">Modeller</a>
-            <a href="#featured" className="hover:text-red-400 transition-colors">Öne Çıkanlar</a>
-            <a href="#avantajlar" className="hover:text-red-400 transition-colors">Elektrikli Mobilite</a>
-            <a href="#odeme" className="hover:text-red-400 transition-colors">Sipariş & Ödeme</a>
+            <a href="#modeller" className="hover:text-emerald-400 transition-colors">Modeller</a>
+            <a href="#featured" className="hover:text-emerald-400 transition-colors">Öne Çıkanlar</a>
+            <a href="#avantajlar" className="hover:text-emerald-400 transition-colors">Elektrikli Mobilite</a>
+            <a href="#odeme" className="hover:text-emerald-400 transition-colors">Sipariş & Ödeme</a>
           </nav>
 
           {/* Top Right: Direct Pay & 3-Line Hamburger Menu */}
@@ -101,7 +104,7 @@ export default function VoltaMotorPage() {
               {isMobileMenuOpen ? (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
+                  <line x1="6" y1="12" x2="18" y2="18" />
                 </svg>
               ) : (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -125,13 +128,16 @@ export default function VoltaMotorPage() {
             <div>
               {/* Menu Header */}
               <div className="flex items-center justify-between pb-5 border-b border-slate-100 mb-6">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white font-black text-lg">
-                    V
-                  </div>
+                <div className="flex items-center gap-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img 
+                    src="/volta-service-logo.png" 
+                    alt="Volta Dönüşüm Servisi" 
+                    className="w-10 h-10 object-contain rounded-lg shadow-sm"
+                  />
                   <div>
                     <span className="font-black text-slate-900 text-lg leading-none block">VOLTA</span>
-                    <span className="text-[9px] font-bold text-red-600 tracking-wider">VOLTA SERVICE</span>
+                    <span className="text-[9px] font-bold text-emerald-600 tracking-wider">DÖNÜŞÜM SERVİSİ</span>
                   </div>
                 </div>
                 <button
@@ -535,12 +541,17 @@ export default function VoltaMotorPage() {
               ✕
             </button>
 
-            <div className="mb-6">
-              <span className="text-xs font-bold text-red-600 uppercase tracking-wider">VOLTA SERVICE</span>
-              <h3 className="text-xl sm:text-2xl font-black text-slate-900 mt-1 leading-snug">Online Rezervasyon & Ödeme</h3>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">
-                İletişim bilgilerinizi ileterek banka IBAN bilgilerinizi görüntüleyebilir ve dekont yükleme sürecini başlatabilirsiniz.
-              </p>
+            <div className="mb-6 flex items-center gap-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
+                src="/volta-service-logo.png" 
+                alt="Volta Dönüşüm Servisi" 
+                className="w-12 h-12 object-contain rounded-xl shadow-sm"
+              />
+              <div>
+                <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider">VOLTA DÖNÜŞÜM SERVİSİ</span>
+                <h3 className="text-xl sm:text-2xl font-black text-slate-900 leading-snug">Online Rezervasyon & Ödeme</h3>
+              </div>
             </div>
 
             <PaymentFlow 
@@ -608,12 +619,15 @@ export default function VoltaMotorPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white font-black text-lg">
-                V
-              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
+                src="/volta-service-logo.png" 
+                alt="Volta Dönüşüm Servisi" 
+                className="w-10 h-10 object-contain rounded-lg"
+              />
               <span className="text-lg font-black text-white">VOLTA</span>
               <span className="text-slate-500">|</span>
-              <span className="text-slate-400">VOLTA SERVICE & MOBILITY</span>
+              <span className="text-slate-300 font-semibold">VOLTA DÖNÜŞÜM & GARANTİ SERVİSİ</span>
             </div>
 
             <div className="flex items-center gap-6 text-slate-300">
@@ -624,7 +638,7 @@ export default function VoltaMotorPage() {
           </div>
 
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
-            <div>© 2026 Volta Motor Sanayi ve Ticaret A.Ş. Tüm hakları saklıdır.</div>
+            <div>© 2026 Volta Motor & Dönüşüm Servisi Sanayi ve Ticaret A.Ş. Tüm hakları saklıdır.</div>
             <div className="flex gap-4">
               <span>Gizlilik Politikası</span>
               <span>Kullanım Koşulları</span>
