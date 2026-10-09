@@ -77,7 +77,6 @@ export default function VoltaMotorPage() {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   const startCheckout = (model: VoltaModel) => {
-    setSelectedProductDetail(null);
     setActiveCheckoutModel(model);
     setIsCheckoutOpen(true);
   };
@@ -85,13 +84,11 @@ export default function VoltaMotorPage() {
   const openProductDetail = (model: VoltaModel) => {
     setSelectedProductDetail(model);
     setActiveGalleryIndex(0);
-    // Smooth scroll top of detail view
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const openDirectPayment = () => {
     setIsMobileMenuOpen(false);
-    setSelectedProductDetail(null);
     setIsPaymentModalOpen(true);
   };
 
@@ -100,6 +97,389 @@ export default function VoltaMotorPage() {
     setActiveInfoModal(type);
   };
 
+  // ================= RENDER TRUE FULL-SCREEN PRODUCT DETAIL VIEW =================
+  if (selectedProductDetail) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-red-600 selection:text-white pb-24 sm:pb-16">
+        {/* Sticky Top Header on Full-Screen Detail Page */}
+        <header className="sticky top-0 z-40 bg-[#14212d] text-white border-b border-slate-800 shadow-md">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+            <button
+              onClick={() => setSelectedProductDetail(null)}
+              className="flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-200 hover:text-white bg-slate-800/90 hover:bg-slate-700 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl transition border border-slate-700 active:scale-95 shadow-sm"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+              </svg>
+              <span>Tüm Modeller / Kataloğa Dön</span>
+            </button>
+
+            <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
+                src="/volta-service-logo.png" 
+                alt="Volta Dönüşüm Servisi" 
+                className="w-9 h-9 sm:w-11 sm:h-11 object-contain rounded-xl drop-shadow-md"
+              />
+              <div className="hidden md:flex flex-col">
+                <span className="text-lg font-black tracking-tight text-white leading-none">VOLTA</span>
+                <span className="text-[9px] font-bold tracking-[0.16em] text-emerald-400 uppercase">DÖNÜŞÜM SERVİSİ</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 sm:gap-3">
+              <button
+                onClick={() => startCheckout(selectedProductDetail)}
+                className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-md shadow-red-600/30 transition flex items-center gap-1.5 active:scale-95"
+              >
+                <span>Sipariş Ver</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+              <button
+                onClick={() => setSelectedProductDetail(null)}
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold transition"
+                title="Ana Sayfaya Dön"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        </header>
+
+        {/* Main Full-Screen Content Area */}
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+          {/* Breadcrumbs */}
+          <div className="flex items-center gap-2 text-xs text-slate-500 mb-6 font-medium">
+            <button onClick={() => setSelectedProductDetail(null)} className="hover:text-slate-900 transition">Ana Sayfa</button>
+            <span>/</span>
+            <button onClick={() => setSelectedProductDetail(null)} className="hover:text-slate-900 transition">Modeller</button>
+            <span>/</span>
+            <span className="text-slate-700">{selectedProductDetail.category}</span>
+            <span>/</span>
+            <span className="text-red-600 font-bold">Volta {selectedProductDetail.name}</span>
+          </div>
+
+          {/* Product Hero 2-Column Showroom Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-12">
+            {/* Left Column: Giant Multi-Angle Photo Gallery */}
+            <div className="lg:col-span-7">
+              <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-xl shadow-slate-100 relative overflow-hidden flex flex-col items-center justify-center min-h-[380px] sm:min-h-[480px]">
+                {/* Badges Over Image */}
+                <div className="absolute top-5 left-5 flex flex-wrap gap-2 z-10">
+                  <span className="text-xs font-bold text-slate-800 bg-slate-100/95 border border-slate-200 px-3 py-1 rounded-lg backdrop-blur-sm">
+                    {selectedProductDetail.category}
+                  </span>
+                  {selectedProductDetail.discountRate ? (
+                    <span className="text-xs font-bold text-white bg-red-600 px-3 py-1 rounded-lg shadow-sm">
+                      %{selectedProductDetail.discountRate} İndirim
+                    </span>
+                  ) : null}
+                  {selectedProductDetail.advantageAmount ? (
+                    <span className="text-xs font-bold text-emerald-800 bg-emerald-100 border border-emerald-200 px-3 py-1 rounded-lg">
+                      {selectedProductDetail.advantageAmount.toLocaleString('tr-TR')} TL Avantaj
+                    </span>
+                  ) : null}
+                </div>
+
+                <div className="absolute top-5 right-5 text-xs text-slate-400 font-bold bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-100">
+                  Açı {activeGalleryIndex + 1} / {(selectedProductDetail.images?.length || 1)}
+                </div>
+
+                {/* Main High-Resolution Photo */}
+                <div className="w-full h-72 sm:h-96 flex items-center justify-center p-4 transition-all duration-300">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img 
+                    src={selectedProductDetail.images?.[activeGalleryIndex] || selectedProductDetail.image} 
+                    alt={selectedProductDetail.name} 
+                    className="max-h-full max-w-full object-contain hover:scale-105 transition-transform duration-300 drop-shadow-md"
+                  />
+                </div>
+              </div>
+
+              {/* Gallery Thumbnails List (Multiple Real Angles) */}
+              {selectedProductDetail.images && selectedProductDetail.images.length > 1 && (
+                <div className="flex items-center gap-3 mt-4 overflow-x-auto pb-2 scrollbar-none">
+                  {selectedProductDetail.images.map((imgSrc, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setActiveGalleryIndex(idx)}
+                      className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-2 p-2 bg-white shrink-0 transition shadow-sm ${
+                        activeGalleryIndex === idx 
+                          ? 'border-red-600 shadow-md ring-2 ring-red-100 scale-105' 
+                          : 'border-slate-200 opacity-70 hover:opacity-100 hover:border-slate-300'
+                      }`}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={imgSrc} alt={`Görsel ${idx + 1}`} className="w-full h-full object-contain" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Right Column: Commercial & Purchase Box */}
+            <div className="lg:col-span-5 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">Stokta Mevcut • Hızlı Sevkiyat</span>
+                </div>
+
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+                  Volta {selectedProductDetail.name}
+                </h1>
+                <p className="text-sm sm:text-base text-slate-600 mt-2 leading-relaxed">
+                  {selectedProductDetail.tagline}
+                </p>
+
+                {/* Pricing Banner */}
+                <div className="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-md my-6">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Doğrudan Fabrika & Satış Fiyatı</span>
+                  <div className="flex items-baseline gap-3 mt-1.5 flex-wrap">
+                    <span className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight font-mono">
+                      {selectedProductDetail.price.toLocaleString('tr-TR')},00 <span className="text-lg font-bold text-slate-500">TL</span>
+                    </span>
+                    {selectedProductDetail.oldPrice ? (
+                      <span className="text-base text-slate-400 line-through font-semibold font-mono">
+                        {selectedProductDetail.oldPrice.toLocaleString('tr-TR')} TL
+                      </span>
+                    ) : null}
+                  </div>
+
+                  {selectedProductDetail.advantageAmount ? (
+                    <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                      <span className="text-slate-600 font-medium">Toplam Tasarruf:</span>
+                      <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
+                        {selectedProductDetail.advantageAmount.toLocaleString('tr-TR')} TL Doğrudan Avantaj
+                      </span>
+                    </div>
+                  ) : null}
+                </div>
+
+                {/* Quick Highlight Cards */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-6">
+                  <div className="bg-white p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <span className="text-[10px] text-slate-400 block font-medium">Motor</span>
+                    <strong className="text-xs sm:text-sm text-slate-900 font-bold mt-0.5 block">{selectedProductDetail.specs.engine.split(' ')[0]}</strong>
+                  </div>
+                  <div className="bg-white p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <span className="text-[10px] text-slate-400 block font-medium">Menzil</span>
+                    <strong className="text-xs sm:text-sm text-slate-900 font-bold mt-0.5 block">{selectedProductDetail.specs.range.split(' ')[0]}</strong>
+                  </div>
+                  <div className="bg-white p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <span className="text-[10px] text-slate-400 block font-medium">Azami Hız</span>
+                    <strong className="text-xs sm:text-sm text-slate-900 font-bold mt-0.5 block">{selectedProductDetail.specs.speed.split(' ')[0]}</strong>
+                  </div>
+                  <div className="bg-white p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <span className="text-[10px] text-slate-400 block font-medium">Akü / Batarya</span>
+                    <strong className="text-xs sm:text-sm text-slate-900 font-bold mt-0.5 block">{selectedProductDetail.specs.battery.split(' ')[0]}</strong>
+                  </div>
+                </div>
+
+                {/* Features Checklist */}
+                <div className="bg-white p-5 rounded-3xl border border-slate-200 mb-6">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-red-600" />
+                    <span>Öne Çıkan Standart Donanımlar</span>
+                  </h3>
+                  <ul className="space-y-2 text-xs sm:text-sm text-slate-700">
+                    {selectedProductDetail.features.map((f, i) => (
+                      <li key={i} className="flex items-start gap-2.5">
+                        <span className="text-emerald-600 font-bold text-base leading-none">✓</span>
+                        <span className="leading-snug">{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-3 pt-2">
+                <button
+                  onClick={() => startCheckout(selectedProductDetail)}
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 px-6 rounded-2xl shadow-xl shadow-red-600/30 transition-all text-base flex items-center justify-center gap-2 active:scale-98"
+                >
+                  <span>Online Sipariş Ver & Rezervasyon Yap</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </button>
+
+                <a
+                  href={`https://wa.me/905000000000?text=Merhaba,%20Volta%20${encodeURIComponent(selectedProductDetail.name)}%20modeli%20hakk%C4%B1nda%20teknik%20bilgi%20ve%20stok%20durumu%20almak%20istiyorum`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-md shadow-emerald-600/20 transition text-sm flex items-center justify-center gap-2"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.821 2.791.821 3.181 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.807-5.767-5.807zm3.398 8.163c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.782-.401-1.393-.578-2.316-1.996-2.386-2.09-.07-.094-.567-.756-.567-1.442 0-.686.357-1.023.484-1.164.127-.141.278-.176.371-.176.094 0 .188.001.27.006.088.004.206-.034.322.247.12.289.412 1.009.447 1.082.035.073.059.158.01.256-.048.098-.073.159-.145.244-.073.085-.154.19-.22.256-.073.073-.15.153-.064.3.086.147.383.633.821 1.023.564.502 1.04.657 1.188.73.148.073.235.061.322-.039.088-.099.373-.434.472-.584.099-.15.198-.125.33-.075.132.05 838.414 1.004.496.166.082.278.125.318.191.041.066.041.385-.103.79z" />
+                    <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.398C8.423 21.493 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.273c-1.636 0-3.16-.492-4.44-1.336l-.318-.207-2.955.827.842-2.885-.227-.333C3.993 14.978 3.5 13.535 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.273-8.5 8.273z" />
+                  </svg>
+                  <span>WhatsApp Satış Danışmanı ile Görüş</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Full-Screen Detailed Technical Specs Grid */}
+          {selectedProductDetail.detailedSpecs && selectedProductDetail.detailedSpecs.length > 0 && (
+            <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-lg mb-12">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                    Kapsamlı Teknik Özellikler Tablosu
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                    Volta {selectedProductDetail.name} modeline ait resmi fabrika verileri ve mühendislik parametreleri
+                  </p>
+                </div>
+                <span className="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-xl self-start sm:self-auto">
+                  TSE & CE Onaylı
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
+                {selectedProductDetail.detailedSpecs.map((spec, i) => (
+                  <div key={i} className="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-100 transition">
+                    <span className="text-slate-500 font-semibold">{spec.label}:</span>
+                    <strong className="text-slate-900 text-right font-bold max-w-[60%]">{spec.value}</strong>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Guarantees Pillars */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold shrink-0">
+                🛡
+              </div>
+              <div>
+                <h4 className="font-bold text-slate-900 text-sm">2 Yıl Resmi Garanti</h4>
+                <p className="text-xs text-slate-500 mt-0.5">Fabrika garantisi ve 10 yıl parça temin güvencesi</p>
+              </div>
+            </div>
+
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold shrink-0">
+                ⚡
+              </div>
+              <div>
+                <h4 className="font-bold text-slate-900 text-sm">100 km &apos;de 4 TL</h4>
+                <p className="text-xs text-slate-500 mt-0.5">Standart ev prizinden ultra ekonomik şarj imkanı</p>
+              </div>
+            </div>
+
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold shrink-0">
+                🚚
+              </div>
+              <div>
+                <h4 className="font-bold text-slate-900 text-sm">Ücretsiz Sevkiyat</h4>
+                <p className="text-xs text-slate-500 mt-0.5">Adresinize veya en yakın bayiye montajı yapılmış teslimat</p>
+              </div>
+            </div>
+
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center font-bold shrink-0">
+                🔧
+              </div>
+              <div>
+                <h4 className="font-bold text-slate-900 text-sm">81 İlde Servis</h4>
+                <p className="text-xs text-slate-500 mt-0.5">500+ TSE onaylı yetkili servis ve mobil destek ağı</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Other Models Section */}
+          <div className="mt-12 pt-8 border-t border-slate-200">
+            <h3 className="text-xl font-black text-slate-900 mb-6">Diğer Elektrikli Modelleri Keşfedin</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {models.filter(m => m.id !== selectedProductDetail.id).map(m => (
+                <div
+                  key={m.id}
+                  onClick={() => openProductDetail(m)}
+                  className="bg-white p-4 rounded-2xl border border-slate-200 hover:border-slate-300 hover:shadow-lg transition cursor-pointer flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="w-full h-32 bg-slate-50 rounded-xl flex items-center justify-center p-2 mb-3">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={m.image} alt={m.name} className="max-h-full max-w-full object-contain" />
+                    </div>
+                    <span className="text-[10px] font-bold text-red-600 uppercase">{m.category}</span>
+                    <h4 className="font-black text-slate-900 text-base">{m.name}</h4>
+                  </div>
+                  <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
+                    <span className="font-mono font-bold text-slate-900 text-sm">{m.price.toLocaleString('tr-TR')} TL</span>
+                    <span className="text-xs text-red-600 font-bold">İncele →</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </main>
+
+        {/* Sticky Mobile Bottom Bar */}
+        <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 flex items-center justify-between gap-3 shadow-2xl">
+          <div>
+            <span className="text-[10px] text-slate-500 font-bold block">{selectedProductDetail.name}</span>
+            <span className="text-base font-black text-slate-900 font-mono">
+              {selectedProductDetail.price.toLocaleString('tr-TR')} TL
+            </span>
+          </div>
+          <button
+            onClick={() => startCheckout(selectedProductDetail)}
+            className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-red-600/25"
+          >
+            <span>Sipariş Ver</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Checkout Modal when clicked on full-screen detail view */}
+        {isCheckoutOpen && activeCheckoutModel && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl relative border border-slate-200">
+              <button
+                onClick={() => setIsCheckoutOpen(false)}
+                className="absolute top-4 right-4 sm:top-5 sm:right-5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition font-bold"
+              >
+                ✕
+              </button>
+
+              <div className="mb-6 flex items-center gap-4">
+                <div className="w-16 h-16 bg-slate-50 rounded-xl p-2 border border-slate-100 shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={activeCheckoutModel.image} alt={activeCheckoutModel.name} className="w-full h-full object-contain" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-red-600 uppercase">{activeCheckoutModel.category}</span>
+                  <h3 className="text-lg sm:text-2xl font-black text-slate-900 leading-snug">{activeCheckoutModel.name}</h3>
+                  <p className="text-sm sm:text-base font-black text-slate-800 leading-none mt-0.5">
+                    {activeCheckoutModel.price.toLocaleString('tr-TR')},00 TL
+                  </p>
+                </div>
+              </div>
+
+              <PaymentFlow 
+                targetSite="Volta Motor" 
+                productTitle={`Volta ${activeCheckoutModel.name} - ${activeCheckoutModel.category}`}
+                initialAmount={`${activeCheckoutModel.price.toLocaleString('tr-TR')} TL`}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ================= MAIN HOME / CATALOG PAGE =================
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-red-600 selection:text-white">
       {/* Official Volta Motor Navy Header */}
@@ -701,348 +1081,7 @@ export default function VoltaMotorPage() {
         />
       </section>
 
-      {/* ================= FULL-SCREEN PRODUCT DETAIL VIEW (TAM EKRAN SAYFA) ================= */}
-      {selectedProductDetail && (
-        <div className="fixed inset-0 z-50 bg-[#f8fafc] overflow-y-auto min-h-screen text-slate-900 animate-in fade-in duration-200 pb-24 sm:pb-16">
-          {/* Top Sticky Product Navigation Bar */}
-          <div className="sticky top-0 z-40 bg-[#14212d] text-white border-b border-slate-800 shadow-md">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between">
-              <button
-                onClick={() => setSelectedProductDetail(null)}
-                className="flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-200 hover:text-white bg-slate-800/80 hover:bg-slate-700 px-3.5 py-2 rounded-xl transition border border-slate-700 active:scale-95"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="19" y1="12" x2="5" y2="12" />
-                  <polyline points="12 19 5 12 12 5" />
-                </svg>
-                <span>Tüm Modeller / Kataloğa Dön</span>
-              </button>
-
-              <div className="hidden md:flex items-center gap-3">
-                <span className="text-xs font-bold text-slate-400">Volta {selectedProductDetail.name}</span>
-                <span className="text-slate-600">•</span>
-                <span className="text-base font-black text-white font-mono">
-                  {selectedProductDetail.price.toLocaleString('tr-TR')},00 TL
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => startCheckout(selectedProductDetail)}
-                  className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-md shadow-red-600/30 transition flex items-center gap-1.5 active:scale-95"
-                >
-                  <span>Hemen Sipariş Ver</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </button>
-                <button
-                  onClick={() => setSelectedProductDetail(null)}
-                  className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold transition"
-                  aria-label="Kapat"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Full-Screen Page Container */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-            {/* Breadcrumb Navigation */}
-            <div className="flex items-center gap-2 text-xs text-slate-500 mb-6 font-medium">
-              <button onClick={() => setSelectedProductDetail(null)} className="hover:text-slate-900 transition">Ana Sayfa</button>
-              <span>/</span>
-              <button onClick={() => setSelectedProductDetail(null)} className="hover:text-slate-900 transition">Modeller</button>
-              <span>/</span>
-              <span className="text-slate-700">{selectedProductDetail.category}</span>
-              <span>/</span>
-              <span className="text-red-600 font-bold">Volta {selectedProductDetail.name}</span>
-            </div>
-
-            {/* Product Hero 2-Column Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-12">
-              {/* Left Column: Huge Interactive Gallery */}
-              <div className="lg:col-span-7">
-                <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-xl shadow-slate-100 relative overflow-hidden flex flex-col items-center justify-center min-h-[380px] sm:min-h-[480px]">
-                  {/* Badges Over Image */}
-                  <div className="absolute top-5 left-5 flex flex-wrap gap-2 z-10">
-                    <span className="text-xs font-bold text-slate-800 bg-slate-100/95 border border-slate-200 px-3 py-1 rounded-lg backdrop-blur-sm">
-                      {selectedProductDetail.category}
-                    </span>
-                    {selectedProductDetail.discountRate ? (
-                      <span className="text-xs font-bold text-white bg-red-600 px-3 py-1 rounded-lg shadow-sm">
-                        %{selectedProductDetail.discountRate} İndirim
-                      </span>
-                    ) : null}
-                    {selectedProductDetail.advantageAmount ? (
-                      <span className="text-xs font-bold text-emerald-800 bg-emerald-100 border border-emerald-200 px-3 py-1 rounded-lg">
-                        {selectedProductDetail.advantageAmount.toLocaleString('tr-TR')} TL Avantaj
-                      </span>
-                    ) : null}
-                  </div>
-
-                  <div className="absolute top-5 right-5 text-xs text-slate-400 font-bold bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-100">
-                    Görsel {activeGalleryIndex + 1} / {(selectedProductDetail.images?.length || 1)}
-                  </div>
-
-                  {/* Main High-Resolution Photo */}
-                  <div className="w-full h-72 sm:h-96 flex items-center justify-center p-4 transition-all duration-300">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img 
-                      src={selectedProductDetail.images?.[activeGalleryIndex] || selectedProductDetail.image} 
-                      alt={selectedProductDetail.name} 
-                      className="max-h-full max-w-full object-contain hover:scale-105 transition-transform duration-300 drop-shadow-md"
-                    />
-                  </div>
-                </div>
-
-                {/* Gallery Thumbnails List */}
-                {selectedProductDetail.images && selectedProductDetail.images.length > 1 && (
-                  <div className="flex items-center gap-3 mt-4 overflow-x-auto pb-2 scrollbar-none">
-                    {selectedProductDetail.images.map((imgSrc, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setActiveGalleryIndex(idx)}
-                        className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-2 p-2 bg-white shrink-0 transition shadow-sm ${
-                          activeGalleryIndex === idx 
-                            ? 'border-red-600 shadow-md ring-2 ring-red-100 scale-105' 
-                            : 'border-slate-200 opacity-70 hover:opacity-100 hover:border-slate-300'
-                        }`}
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={imgSrc} alt={`Görsel ${idx + 1}`} className="w-full h-full object-contain" />
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Right Column: Commercial & Technical Information Box */}
-              <div className="lg:col-span-5 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">Stokta Mevcut • Hızlı Teslimat</span>
-                  </div>
-
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-                    Volta {selectedProductDetail.name}
-                  </h1>
-                  <p className="text-sm sm:text-base text-slate-600 mt-2 leading-relaxed">
-                    {selectedProductDetail.tagline}
-                  </p>
-
-                  {/* Pricing Banner */}
-                  <div className="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-md my-6">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Doğrudan Fabrika & Satış Fiyatı</span>
-                    <div className="flex items-baseline gap-3 mt-1.5 flex-wrap">
-                      <span className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight font-mono">
-                        {selectedProductDetail.price.toLocaleString('tr-TR')},00 <span className="text-lg font-bold text-slate-500">TL</span>
-                      </span>
-                      {selectedProductDetail.oldPrice ? (
-                        <span className="text-base text-slate-400 line-through font-semibold font-mono">
-                          {selectedProductDetail.oldPrice.toLocaleString('tr-TR')} TL
-                        </span>
-                      ) : null}
-                    </div>
-
-                    {selectedProductDetail.advantageAmount ? (
-                      <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                        <span className="text-slate-600 font-medium">Toplam Tasarruf:</span>
-                        <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
-                          {selectedProductDetail.advantageAmount.toLocaleString('tr-TR')} TL Doğrudan Avantaj
-                        </span>
-                      </div>
-                    ) : null}
-                  </div>
-
-                  {/* Quick Highlight Cards */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-6">
-                    <div className="bg-white p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
-                      <span className="text-[10px] text-slate-400 block font-medium">Motor</span>
-                      <strong className="text-xs sm:text-sm text-slate-900 font-bold mt-0.5 block">{selectedProductDetail.specs.engine.split(' ')[0]}</strong>
-                    </div>
-                    <div className="bg-white p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
-                      <span className="text-[10px] text-slate-400 block font-medium">Menzil</span>
-                      <strong className="text-xs sm:text-sm text-slate-900 font-bold mt-0.5 block">{selectedProductDetail.specs.range.split(' ')[0]}</strong>
-                    </div>
-                    <div className="bg-white p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
-                      <span className="text-[10px] text-slate-400 block font-medium">Azami Hız</span>
-                      <strong className="text-xs sm:text-sm text-slate-900 font-bold mt-0.5 block">{selectedProductDetail.specs.speed.split(' ')[0]}</strong>
-                    </div>
-                    <div className="bg-white p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
-                      <span className="text-[10px] text-slate-400 block font-medium">Akü / Batarya</span>
-                      <strong className="text-xs sm:text-sm text-slate-900 font-bold mt-0.5 block">{selectedProductDetail.specs.battery.split(' ')[0]}</strong>
-                    </div>
-                  </div>
-
-                  {/* Standard Highlights Bullet List */}
-                  <div className="bg-white p-5 rounded-3xl border border-slate-200 mb-6">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3 flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-red-600" />
-                      <span>Öne Çıkan Standart Donanımlar</span>
-                    </h3>
-                    <ul className="space-y-2 text-xs sm:text-sm text-slate-700">
-                      {selectedProductDetail.features.map((f, i) => (
-                        <li key={i} className="flex items-start gap-2.5">
-                          <span className="text-emerald-600 font-bold text-base leading-none">✓</span>
-                          <span className="leading-snug">{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                {/* CTA Action Buttons */}
-                <div className="space-y-3 pt-2">
-                  <button
-                    onClick={() => startCheckout(selectedProductDetail)}
-                    className="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 px-6 rounded-2xl shadow-xl shadow-red-600/30 transition-all text-base flex items-center justify-center gap-2 active:scale-98"
-                  >
-                    <span>Online Sipariş Ver & Rezervasyon Yap</span>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="9 18 15 12 9 6" />
-                    </svg>
-                  </button>
-
-                  <a
-                    href={`https://wa.me/905000000000?text=Merhaba,%20Volta%20${encodeURIComponent(selectedProductDetail.name)}%20modeli%20hakk%C4%B1nda%20teknik%20bilgi%20ve%20stok%20durumu%20almak%20istiyorum`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-md shadow-emerald-600/20 transition text-sm flex items-center justify-center gap-2"
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.821 2.791.821 3.181 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.807-5.767-5.807zm3.398 8.163c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.782-.401-1.393-.578-2.316-1.996-2.386-2.09-.07-.094-.567-.756-.567-1.442 0-.686.357-1.023.484-1.164.127-.141.278-.176.371-.176.094 0 .188.001.27.006.088.004.206-.034.322.247.12.289.412 1.009.447 1.082.035.073.059.158.01.256-.048.098-.073.159-.145.244-.073.085-.154.19-.22.256-.073.073-.15.153-.064.3.086.147.383.633.821 1.023.564.502 1.04.657 1.188.73.148.073.235.061.322-.039.088-.099.373-.434.472-.584.099-.15.198-.125.33-.075.132.05 838.414 1.004.496.166.082.278.125.318.191.041.066.041.385-.103.79z" />
-                      <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.398C8.423 21.493 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.273c-1.636 0-3.16-.492-4.44-1.336l-.318-.207-2.955.827.842-2.885-.227-.333C3.993 14.978 3.5 13.535 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.273-8.5 8.273z" />
-                    </svg>
-                    <span>WhatsApp Satış Danışmanı ile Görüş</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Detailed Technical Specifications Table (Tam Ekran Tablosu) */}
-            {selectedProductDetail.detailedSpecs && selectedProductDetail.detailedSpecs.length > 0 && (
-              <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-lg mb-12">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100">
-                  <div>
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                      Kapsamlı Teknik Özellikler Tablosu
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                      Volta {selectedProductDetail.name} modeline ait resmi fabrika verileri ve mühendislik parametreleri
-                    </p>
-                  </div>
-                  <span className="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-xl self-start sm:self-auto">
-                    TSE & CE Onaylı
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
-                  {selectedProductDetail.detailedSpecs.map((spec, i) => (
-                    <div key={i} className="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-100 transition">
-                      <span className="text-slate-500 font-semibold">{spec.label}:</span>
-                      <strong className="text-slate-900 text-right font-bold max-w-[60%]">{spec.value}</strong>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Guarantees & Service Pillars */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold shrink-0">
-                  🛡
-                </div>
-                <div>
-                  <h4 className="font-bold text-slate-900 text-sm">2 Yıl Resmi Garanti</h4>
-                  <p className="text-xs text-slate-500 mt-0.5">Fabrika garantisi ve 10 yıl parça temin güvencesi</p>
-                </div>
-              </div>
-
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold shrink-0">
-                  ⚡
-                </div>
-                <div>
-                  <h4 className="font-bold text-slate-900 text-sm">100 km &apos;de 4 TL</h4>
-                  <p className="text-xs text-slate-500 mt-0.5">Standart ev prizinden ultra ekonomik şarj imkanı</p>
-                </div>
-              </div>
-
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold shrink-0">
-                  🚚
-                </div>
-                <div>
-                  <h4 className="font-bold text-slate-900 text-sm">Ücretsiz Sevkiyat</h4>
-                  <p className="text-xs text-slate-500 mt-0.5">Adresinize veya en yakın bayiye montajı yapılmış teslimat</p>
-                </div>
-              </div>
-
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center font-bold shrink-0">
-                  🔧
-                </div>
-                <div>
-                  <h4 className="font-bold text-slate-900 text-sm">81 İlde Servis</h4>
-                  <p className="text-xs text-slate-500 mt-0.5">500+ TSE onaylı yetkili servis ve mobil destek ağı</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Other Models Quick Switcher */}
-            <div className="mt-12 pt-8 border-t border-slate-200">
-              <h3 className="text-xl font-black text-slate-900 mb-6">Diğer Elektrikli Modelleri Keşfedin</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {models.filter(m => m.id !== selectedProductDetail.id).map(m => (
-                  <div
-                    key={m.id}
-                    onClick={() => openProductDetail(m)}
-                    className="bg-white p-4 rounded-2xl border border-slate-200 hover:border-slate-300 hover:shadow-lg transition cursor-pointer flex flex-col justify-between"
-                  >
-                    <div>
-                      <div className="w-full h-32 bg-slate-50 rounded-xl flex items-center justify-center p-2 mb-3">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={m.image} alt={m.name} className="max-h-full max-w-full object-contain" />
-                      </div>
-                      <span className="text-[10px] font-bold text-red-600 uppercase">{m.category}</span>
-                      <h4 className="font-black text-slate-900 text-base">{m.name}</h4>
-                    </div>
-                    <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
-                      <span className="font-mono font-bold text-slate-900 text-sm">{m.price.toLocaleString('tr-TR')} TL</span>
-                      <span className="text-xs text-red-600 font-bold">İncele →</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Sticky Mobile Bottom Bar for Immediate Order */}
-          <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 flex items-center justify-between gap-3 shadow-2xl">
-            <div>
-              <span className="text-[10px] text-slate-500 font-bold block">{selectedProductDetail.name}</span>
-              <span className="text-base font-black text-slate-900 font-mono">
-                {selectedProductDetail.price.toLocaleString('tr-TR')} TL
-              </span>
-            </div>
-            <button
-              onClick={() => startCheckout(selectedProductDetail)}
-              className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-red-600/25"
-            >
-              <span>Sipariş Ver</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ================= MODAL 2: DIRECT PAYMENT MODAL ================= */}
+      {/* ================= MODAL: DIRECT PAYMENT MODAL ================= */}
       {isPaymentModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl relative border border-slate-200">
@@ -1075,7 +1114,7 @@ export default function VoltaMotorPage() {
         </div>
       )}
 
-      {/* ================= MODAL 3: CHECKOUT MODAL ================= */}
+      {/* ================= MODAL: CHECKOUT MODAL ================= */}
       {isCheckoutOpen && activeCheckoutModel && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl relative border border-slate-200">
@@ -1109,7 +1148,7 @@ export default function VoltaMotorPage() {
         </div>
       )}
 
-      {/* ================= MODAL 4: CORPORATE / INFO MODALS ================= */}
+      {/* ================= MODAL: CORPORATE / INFO MODALS ================= */}
       {activeInfoModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative border border-slate-200">

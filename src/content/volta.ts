@@ -34,11 +34,12 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     oldPrice: 28900,
     discountRate: 13,
     advantageAmount: 3910,
-    image: '/images/volta/vsm.jpg',
+    image: '/images/volta/vsm-sag-capraz-1_3e81a39e-8153-453e-aeaa-6bf7df6aef88.png',
     images: [
-      '/images/volta/vsm.jpg',
-      '/images/volta/vsm.jpg',
-      '/images/volta/vb2_pro.jpg',
+      '/images/volta/vsm-sag-capraz-1_3e81a39e-8153-453e-aeaa-6bf7df6aef88.png',
+      '/images/volta/vsm-sag-yan-1.png',
+      '/images/volta/vsm-on-1.png',
+      '/images/volta/vsm-gidon.png'
     ],
     specs: {
       engine: '220W Verimli Motor',
@@ -80,11 +81,12 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     oldPrice: 36950,
     discountRate: 10,
     advantageAmount: 3960,
-    image: '/images/volta/vb2_pro.jpg',
+    image: '/images/volta/vb2-pro-sag-capraz-5-photoroom_d260796b-3652-4ce2-9c55-d340d096164a.png',
     images: [
-      '/images/volta/vb2_pro.jpg',
-      '/images/volta/vb2_pro.jpg',
-      '/images/volta/vsm.jpg',
+      '/images/volta/vb2-pro-sag-capraz-5-photoroom_d260796b-3652-4ce2-9c55-d340d096164a.png',
+      '/images/volta/vb2-pro-sag-yan-4-photoroom.png',
+      '/images/volta/vb2-pro-sol-yan-4-photoroom.png',
+      '/images/volta/vb2-pro-on-kopya-photoroom.png'
     ],
     specs: {
       engine: '250W Yüksek Torklu Motor',
@@ -126,10 +128,11 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     oldPrice: 48500,
     discountRate: 9,
     advantageAmount: 4600,
-    image: '/images/volta/vsm.jpg',
+    image: '/images/volta/vs1_ca91ac4d-0a91-4e8f-99b8-050592bd7037.png',
     images: [
-      '/images/volta/vsm.jpg',
-      '/images/volta/vb2_pro.jpg'
+      '/images/volta/vs1_ca91ac4d-0a91-4e8f-99b8-050592bd7037.png',
+      '/images/volta/vs1-3.png',
+      '/images/volta/vsx_9d818676-5040-4fb7-b431-50600cf5c1b5.png'
     ],
     specs: {
       engine: '1500W Bosch Motor',
@@ -167,10 +170,11 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     oldPrice: 59900,
     discountRate: 8,
     advantageAmount: 5000,
-    image: '/images/volta/vsm.jpg',
+    image: '/images/volta/Volta_VM2_3_Tekerli_Elektrikli.png',
     images: [
-      '/images/volta/vsm.jpg',
-      '/images/volta/vb2_pro.jpg'
+      '/images/volta/Volta_VM2_3_Tekerli_Elektrikli.png',
+      '/images/volta/vm2-photoroom-kopya.png',
+      '/images/volta/vm5-neo-dekupe-2_d68e7c80-f9d0-4391-bcf0-a7672eb3f166.png'
     ],
     specs: {
       engine: '1000W Diferansiyelli Motor',
@@ -206,10 +210,12 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     oldPrice: 30500,
     discountRate: 8,
     advantageAmount: 2600,
-    image: '/images/volta/vb2_pro.jpg',
+    image: '/images/volta/vb5_4bed783a-8a8f-4393-8d1e-076f232036b9.png',
     images: [
-      '/images/volta/vb2_pro.jpg',
-      '/images/volta/vsm.jpg'
+      '/images/volta/vb5_4bed783a-8a8f-4393-8d1e-076f232036b9.png',
+      '/images/volta/vb5-2.png',
+      '/images/volta/vb5-3.png',
+      '/images/volta/vb5-4.png'
     ],
     specs: {
       engine: '250W Fırçasız Motor',
