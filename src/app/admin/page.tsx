@@ -69,6 +69,9 @@ export default function AdminDashboardPage() {
   const [editingVoltaId, setEditingVoltaId] = useState<string | null>(null);
   const [editPrice, setEditPrice] = useState<number>(0);
   const [editOldPrice, setEditOldPrice] = useState<number>(0);
+  const [editDiscountRate, setEditDiscountRate] = useState<number>(0);
+  const [editAdvantageAmount, setEditAdvantageAmount] = useState<number>(0);
+  const [editIsFeatured, setEditIsFeatured] = useState<boolean>(false);
   const [voltaSaveMsg, setVoltaSaveMsg] = useState<string | null>(null);
 
   // Legend Listings State
@@ -144,15 +147,43 @@ export default function AdminDashboardPage() {
     setEditingVoltaId(model.id);
     setEditPrice(model.price);
     setEditOldPrice(model.oldPrice || model.price);
+    setEditDiscountRate(model.discountRate || 0);
+    setEditAdvantageAmount(model.advantageAmount || 0);
+    setEditIsFeatured(!!model.isFeaturedCampaign);
+  };
+
+  const handlePriceChange = (newPrice: number) => {
+    setEditPrice(newPrice);
+    if (editOldPrice > newPrice) {
+      const discount = Math.round(((editOldPrice - newPrice) / editOldPrice) * 100);
+      const advantage = editOldPrice - newPrice;
+      setEditDiscountRate(discount);
+      setEditAdvantageAmount(advantage);
+    }
+  };
+
+  const handleOldPriceChange = (newOldPrice: number) => {
+    setEditOldPrice(newOldPrice);
+    if (newOldPrice > editPrice) {
+      const discount = Math.round(((newOldPrice - editPrice) / newOldPrice) * 100);
+      const advantage = newOldPrice - editPrice;
+      setEditDiscountRate(discount);
+      setEditAdvantageAmount(advantage);
+    }
   };
 
   const saveVoltaEdit = (id: string) => {
-    const discount = editOldPrice > editPrice ? Math.round(((editOldPrice - editPrice) / editOldPrice) * 100) : 0;
-    const advantage = editOldPrice > editPrice ? editOldPrice - editPrice : 0;
-    saveVoltaPriceOverride(id, editPrice, editOldPrice, discount, advantage);
+    saveVoltaPriceOverride(
+      id, 
+      editPrice, 
+      editOldPrice, 
+      editDiscountRate, 
+      editAdvantageAmount,
+      editIsFeatured
+    );
     setVoltaModels(getVoltaModels());
     setEditingVoltaId(null);
-    setVoltaSaveMsg('Fiyat başarıyla güncellendi ve tüm pencerelere yansıtıldı!');
+    setVoltaSaveMsg('Fiyat, indirim oranı ve avantaj tutarı başarıyla güncellendi!');
     setTimeout(() => setVoltaSaveMsg(null), 3500);
   };
 
@@ -587,41 +618,83 @@ export default function AdminDashboardPage() {
                       <div className="text-xl font-black text-white font-mono">
                         {m.price.toLocaleString('tr-TR')} TL
                       </div>
-                      {m.discountRate && (
-                        <span className="text-[10px] font-bold text-red-400 bg-red-950/60 px-2 py-0.5 rounded">
-                          %{m.discountRate} İndirim
-                        </span>
-                      )}
+                      <div className="flex items-center gap-1.5 justify-end mt-1 flex-wrap">
+                        {m.discountRate ? (
+                          <span className="text-[10px] font-bold text-red-400 bg-red-950/60 border border-red-800/40 px-2 py-0.5 rounded">
+                            %{m.discountRate} İndirim
+                          </span>
+                        ) : null}
+                        {m.advantageAmount ? (
+                          <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded">
+                            {m.advantageAmount.toLocaleString('tr-TR')} TL Avantaj
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
 
                   {editingVoltaId === m.id ? (
-                    <div className="mt-4 pt-4 border-t border-slate-800 space-y-3 bg-slate-950/60 p-4 rounded-xl">
-                      <div className="grid grid-cols-2 gap-3">
+                    <div className="mt-4 pt-4 border-t border-slate-800 space-y-3 bg-slate-950/80 p-4 rounded-xl border border-slate-800">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                           <label className="block text-[11px] text-slate-400 font-semibold mb-1">Satış Fiyatı (TL)</label>
                           <input
                             type="number"
                             value={editPrice}
-                            onChange={(e) => setEditPrice(Number(e.target.value))}
+                            onChange={(e) => handlePriceChange(Number(e.target.value))}
                             className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-red-500 focus:outline-none"
                           />
                         </div>
                         <div>
-                          <label className="block text-[11px] text-slate-400 font-semibold mb-1">Eski / Çizili Fiyat (TL)</label>
+                          <label className="block text-[11px] text-slate-400 font-semibold mb-1">Eski / Liste Fiyatı (TL)</label>
                           <input
                             type="number"
                             value={editOldPrice}
-                            onChange={(e) => setEditOldPrice(Number(e.target.value))}
+                            onChange={(e) => handleOldPriceChange(Number(e.target.value))}
                             className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-red-500 focus:outline-none"
                           />
                         </div>
                       </div>
 
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[11px] text-slate-400 font-semibold mb-1">İndirim Oranı (%)</label>
+                          <input
+                            type="number"
+                            value={editDiscountRate}
+                            onChange={(e) => setEditDiscountRate(Number(e.target.value))}
+                            placeholder="Örn: 13"
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-red-500 focus:outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] text-slate-400 font-semibold mb-1">Avantaj Tutarı (TL)</label>
+                          <input
+                            type="number"
+                            value={editAdvantageAmount}
+                            onChange={(e) => setEditAdvantageAmount(Number(e.target.value))}
+                            placeholder="Örn: 3960"
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-red-500 focus:outline-none"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="pt-1">
+                        <label className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={editIsFeatured}
+                            onChange={(e) => setEditIsFeatured(e.target.checked)}
+                            className="w-4 h-4 rounded text-red-600 focus:ring-red-500 bg-slate-900 border-slate-700"
+                          />
+                          <span>Ana Sayfa Öne Çıkan Vitrininde Göster</span>
+                        </label>
+                      </div>
+
                       <div className="flex items-center gap-2 pt-2">
                         <button
                           onClick={() => saveVoltaEdit(m.id)}
-                          className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg text-xs transition"
+                          className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg text-xs transition shadow-lg shadow-emerald-600/20"
                         >
                           Kaydet ve Yayınla
                         </button>
@@ -642,7 +715,7 @@ export default function AdminDashboardPage() {
                         onClick={() => startEditVolta(m)}
                         className="bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs px-3 py-1.5 rounded-lg transition"
                       >
-                        Fiyatı Düzenle
+                        Fiyat & Avantajı Düzenle
                       </button>
                     </div>
                   )}

@@ -8,6 +8,7 @@ export interface VoltaModel {
   discountRate?: number;
   advantageAmount?: number;
   image: string;
+  images?: string[];
   specs: {
     engine: string;
     range: string;
@@ -15,8 +16,11 @@ export interface VoltaModel {
     battery: string;
     brakes?: string;
     weight?: string;
+    chargeTime?: string;
+    capacity?: string;
   };
   features: string[];
+  detailedSpecs?: { label: string; value: string }[];
   isFeaturedCampaign?: boolean;
 }
 
@@ -31,20 +35,39 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     discountRate: 13,
     advantageAmount: 3910,
     image: '/images/volta/vsm.jpg',
+    images: [
+      '/images/volta/vsm.jpg',
+      '/images/volta/vsm.jpg',
+      '/images/volta/vb2_pro.jpg',
+    ],
     specs: {
       engine: '220W Verimli Motor',
       range: '40 km Menzil',
       speed: '25 km/s Azami Hız',
       battery: '48V 14Ah VRLA Jel Akü',
       brakes: 'Ön / Arka Kampana Fren',
-      weight: '52 kg'
+      weight: '52 kg',
+      chargeTime: '6 - 8 Saat (220V Standart Priz)',
+      capacity: '130 kg Azami Taşıma Kapasitesi'
     },
+    detailedSpecs: [
+      { label: 'Motor Gücü', value: '220W Yüksek Verimli Fırçasız DC Motor' },
+      { label: 'Batarya & Akü', value: '48V 14Ah VRLA Derin Döngülü Jel Akü' },
+      { label: 'Menzil', value: '40 km (Sürüş moduna ve yüke göre değişken)' },
+      { label: 'Azami Hız', value: '25 km/s (Yasal Şehir İçi Hız Sınırı)' },
+      { label: 'Şarj Süresi', value: 'Standart 220V Ev Prizinden 6-8 Saat' },
+      { label: 'Fren Sistemi', value: 'Mekanik Kampana Ön ve Arka Fren' },
+      { label: 'Aydınlatma', value: 'Geniş Açılı LED Ön Far ve Entegre Arka Stop' },
+      { label: 'Taşıma & Ağırlık', value: '52 kg Boş Ağırlık / 130 kg Taşıma Kapasitesi' },
+      { label: 'Ehliyet Durumu', value: 'Ehliyetsiz & B Sınıfı ile Kullanıma Uygun' },
+      { label: 'Garanti', value: '2 Yıl Volta Motor Resmi Fabrika Garantisi' }
+    ],
     features: [
-      'Çıkarılabilir Taşınabilir Akü Kutusu',
-      'Pedallı Sürüş Asistanı & Şehir İçi Ulaşım',
-      'LED Ön Far & Arka Stop Lambası',
+      'Çıkarılabilir Taşınabilir Akü Kutusu (Evde / Ofiste Kolay Şarj)',
+      'Pedallı Sürüş Asistanı & Şehir İçi Ulaşım Kolaylığı',
+      'LED Ön Far & Arka Güvenlik Stop Lambası',
       'B Sınıfı Ehliyet veya Ehliyetsiz Kullanım İmkanı',
-      'Geniş Ön Sepet ve Konforlu Sele'
+      'Geniş Ön Sepet ve Ergonomik Süngerli Konfor Sele'
     ],
     isFeaturedCampaign: true
   },
@@ -58,20 +81,39 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     discountRate: 10,
     advantageAmount: 3960,
     image: '/images/volta/vb2_pro.jpg',
+    images: [
+      '/images/volta/vb2_pro.jpg',
+      '/images/volta/vb2_pro.jpg',
+      '/images/volta/vsm.jpg',
+    ],
     specs: {
       engine: '250W Yüksek Torklu Motor',
       range: '50-80 km Destek Menzili',
       speed: '25 km/s Yasal Hız Sınırı',
       battery: '36V 10.4Ah Lityum-İyon Entegre Akü',
       brakes: 'Ön / Arka Mekanik Disk Fren',
-      weight: '22 kg'
+      weight: '22 kg',
+      chargeTime: '4 - 6 Saat',
+      capacity: '120 kg'
     },
+    detailedSpecs: [
+      { label: 'Motor Gücü', value: '250W Arka Göbek Fırçasız Motor' },
+      { label: 'Batarya', value: '36V 10.4Ah Kilitlenebilir Taşınabilir Lityum-İyon' },
+      { label: 'Destek Menzili', value: '50 - 80 km (Pedal Asistan Desteği ile)' },
+      { label: 'Vites Sistemi', value: 'Shimano 6 İleri Vites Aktarma Mekanizması' },
+      { label: 'Kadro & Gövde', value: 'Hafif ve Mukavemetli Katlanabilir Alüminyum Kadro' },
+      { label: 'Gösterge Ekranı', value: 'Akıllı LCD Dijital Hız, Batarya ve Kademe Ekranı' },
+      { label: 'Fren Sistemi', value: 'Yüksek Performanslı Ön & Arka Disk Fren' },
+      { label: 'Süspansiyon', value: 'Kilitlenebilir Ön Amortisörlü Maşa' },
+      { label: 'Ağırlık', value: '22 kg (Batarya dahil süper hafif tasarım)' },
+      { label: 'Garanti', value: '2 Yıl Volta Motor Resmi Garantisi' }
+    ],
     features: [
-      'Hafif Katlanabilir Alüminyum Kadro',
-      'Entegre Akıllı LCD Bilgi Ekranı',
-      'Shimano 6 Vites Aktarma Sistemi',
+      'Hafif Katlanabilir Alüminyum Kadro (Araç Bagajına Sığar)',
+      'Entegre Akıllı LCD Bilgi & Hız Ekranı',
+      'Shimano 6 Vites Profesyonel Aktarma Sistemi',
       'Kadro İçi Gizli Kilitlenebilir Lityum Batarya',
-      'Süspansiyonlu Ön Maşa ile Pürüzsüz Sürüş'
+      'Süspansiyonlu Ön Maşa ile Pürüzsüz & Sarsıntısız Sürüş'
     ],
     isFeaturedCampaign: true
   },
@@ -85,19 +127,35 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     discountRate: 9,
     advantageAmount: 4600,
     image: '/images/volta/vsm.jpg',
+    images: [
+      '/images/volta/vsm.jpg',
+      '/images/volta/vb2_pro.jpg'
+    ],
     specs: {
       engine: '1500W Bosch Motor',
       range: '55 km Menzil',
-      speed: '45 km/s',
+      speed: '45 km/s Azami Hız',
       battery: '60V 20Ah Jel Akü',
       brakes: 'Ön Disk / Arka Kampana',
-      weight: '68 kg'
+      weight: '68 kg',
+      chargeTime: '6 - 7 Saat',
+      capacity: '150 kg'
     },
+    detailedSpecs: [
+      { label: 'Motor Gücü', value: '1500W Yüksek Verimli Bosch Elektrikli Motor' },
+      { label: 'Batarya', value: '60V 20Ah Derin Deşarjlı Jel Batarya Paketi' },
+      { label: 'Menzil', value: '55 km Şehir İçi Optimum Kullanım' },
+      { label: 'Azami Hız', value: '45 km/s Hız Limiti' },
+      { label: 'Gösterge', value: 'Geniş Renkli Dijital TFT Gösterge Paneli' },
+      { label: 'Aydınlatma', value: 'Full LED Gündüz Farları ve Arka Stop' },
+      { label: 'Ekstralar', value: 'USB Şarj Çıkışı & Kask Askısı' },
+      { label: 'Garanti', value: '2 Yıl Resmi Volta Fabrika Garantisi' }
+    ],
     features: [
-      'Geniş Dijital Gösterge Paneli',
-      'Gündüz LED Farları ve Dinamik Aydınlatma',
-      'USB Şarj Portu ile Cihaz Şarjı',
-      'Yüksek Taşıma Kapasitesi'
+      'Geniş Dijital Gösterge Paneli ve Hız Uyarıları',
+      'Gündüz LED Farları ve Dinamik Projektör Aydınlatma',
+      'USB Şarj Portu ile Telefon ve Cihaz Şarjı',
+      'Yüksek Taşıma Kapasitesi ve Çift Kişilik Konforlu Sele'
     ]
   },
   {
@@ -110,14 +168,28 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     discountRate: 8,
     advantageAmount: 5000,
     image: '/images/volta/vsm.jpg',
+    images: [
+      '/images/volta/vsm.jpg',
+      '/images/volta/vb2_pro.jpg'
+    ],
     specs: {
       engine: '1000W Diferansiyelli Motor',
       range: '45 km Menzil',
-      speed: '25 km/s',
+      speed: '25 km/s Güvenli Hız',
       battery: '60V 20Ah Jel Akü',
       brakes: 'Ön & Arka Hidrolik Kampana',
-      weight: '98 kg'
+      weight: '98 kg',
+      chargeTime: '7 - 8 Saat',
+      capacity: '180 kg'
     },
+    detailedSpecs: [
+      { label: 'Motor', value: '1000W Güçlendirilmiş Diferansiyelli Elektrik Motoru' },
+      { label: 'Batarya', value: '60V 20Ah Yüksek Kapasiteli Jel Akü' },
+      { label: 'Güvenlik', value: 'Geri Vites Sesli İkazı & Denge Destek Tekerlekleri' },
+      { label: 'Koltuk Düzeni', value: 'Kolçaklı, İleri-Geri Ayarlanabilir Ortopedik Koltuk' },
+      { label: 'Depolama', value: 'Geniş Arka Bagaj Sepeti ve Ön Saklama Bölmesi' },
+      { label: 'Garanti', value: '2 Yıl Resmi Üretici Garantisi' }
+    ],
     features: [
       'Geri Vites ve Sesli İkaz Sistemi',
       'Kolçaklı ve İleri-Geri Ayarlı Lüks Koltuk',
@@ -135,19 +207,33 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     discountRate: 8,
     advantageAmount: 2600,
     image: '/images/volta/vb2_pro.jpg',
+    images: [
+      '/images/volta/vb2_pro.jpg',
+      '/images/volta/vsm.jpg'
+    ],
     specs: {
       engine: '250W Fırçasız Motor',
       range: '40-60 km Menzil',
       speed: '25 km/s',
       battery: '36V 8.8Ah Lityum Akü',
       brakes: 'V-Fren & Kampana',
-      weight: '20 kg'
+      weight: '20 kg',
+      chargeTime: '4 - 5 Saat',
+      capacity: '110 kg'
     },
+    detailedSpecs: [
+      { label: 'Motor Gücü', value: '250W Entegre Göbek Motoru' },
+      { label: 'Batarya', value: '36V 8.8Ah Çıkarılabilir Taşınabilir Lityum Batarya' },
+      { label: 'Menzil', value: '40 - 60 km Pedal Destekli Menzil' },
+      { label: 'Kadro', value: 'Alüminyum Alaşımlı Şehir Kadrosu' },
+      { label: 'Bagaj', value: 'Geniş Arka Taşıma Rafı' },
+      { label: 'Garanti', value: '2 Yıl Resmi Volta Garantisi' }
+    ],
     features: [
-      'Ergonomik Şehir Geometrisi',
-      'Çıkarılabilir Lityum Batarya',
-      'Geniş Arka Bagaj Taşıyıcı',
-      'Ayarlanabilir Gidon ve Sele'
+      'Ergonomik Şehir Geometrisi ve Kolay İniş-Biniş Kadro',
+      'Çıkarılabilir Hafif Lityum Batarya',
+      'Geniş Arka Bagaj Taşıyıcı Raf',
+      'Ayarlanabilir Ergonomik Gidon ve Jel Destekli Sele'
     ]
   }
 ];
@@ -172,6 +258,7 @@ export function getVoltaModels(): VoltaModel[] {
         oldPrice: override.oldPrice ?? model.oldPrice,
         discountRate: override.discountRate ?? model.discountRate,
         advantageAmount: override.advantageAmount ?? model.advantageAmount,
+        isFeaturedCampaign: override.isFeaturedCampaign !== undefined ? override.isFeaturedCampaign : model.isFeaturedCampaign,
       };
     });
   } catch {
@@ -184,18 +271,31 @@ export function saveVoltaPriceOverride(
   price: number,
   oldPrice?: number,
   discountRate?: number,
-  advantageAmount?: number
+  advantageAmount?: number,
+  isFeaturedCampaign?: boolean
 ) {
   if (typeof window === 'undefined') return;
   try {
     const raw = localStorage.getItem(VOLTA_CUSTOM_PRICES_KEY);
     const overrides: Record<string, Partial<VoltaModel>> = raw ? JSON.parse(raw) : {};
+    
+    // Auto calculate if not supplied
+    const calculatedDiscount = (oldPrice && oldPrice > price) 
+      ? Math.round(((oldPrice - price) / oldPrice) * 100) 
+      : undefined;
+      
+    const calculatedAdvantage = (oldPrice && oldPrice > price) 
+      ? oldPrice - price 
+      : undefined;
+
     overrides[id] = {
       price,
       oldPrice,
-      discountRate,
-      advantageAmount: advantageAmount ?? (oldPrice ? oldPrice - price : undefined),
+      discountRate: discountRate !== undefined && discountRate > 0 ? discountRate : calculatedDiscount,
+      advantageAmount: advantageAmount !== undefined && advantageAmount > 0 ? advantageAmount : calculatedAdvantage,
+      isFeaturedCampaign: isFeaturedCampaign !== undefined ? isFeaturedCampaign : overrides[id]?.isFeaturedCampaign,
     };
+    
     localStorage.setItem(VOLTA_CUSTOM_PRICES_KEY, JSON.stringify(overrides));
     
     // Broadcast change
