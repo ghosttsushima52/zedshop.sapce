@@ -204,29 +204,14 @@ export function ReceiptUpload({ requestId, onUploadSuccess }: ReceiptUploadProps
         <button
           type="submit"
           disabled={uploading}
-          style={{
-            width: '100%',
-            marginTop: '14px',
-            padding: '12px',
-            borderRadius: '12px',
-            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-            border: 'none',
-            color: '#fff',
-            fontSize: '14px',
-            fontWeight: 700,
-            cursor: uploading ? 'wait' : 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            boxShadow: '0 4px 14px rgba(16, 185, 129, 0.4)',
-          }}
+          className="w-full mt-3.5 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-2 shadow-sm hover:shadow active:scale-98"
+          style={{ cursor: uploading ? 'wait' : 'pointer' }}
         >
           {uploading ? (
             <span>Dekont Yükleniyor...</span>
           ) : (
             <>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 6L9 17l-5-5" />
               </svg>
               <span>Dekontu Onaya Gönder</span>

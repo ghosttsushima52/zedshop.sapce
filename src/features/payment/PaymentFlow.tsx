@@ -201,10 +201,10 @@ export function PaymentFlow({
 
             <button
               onClick={handleStartRequest}
-              className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-red-600/20 transition-all text-sm active:scale-98"
+              className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-xl shadow-sm hover:shadow transition-all text-xs sm:text-sm active:scale-98"
             >
               <span>IBAN Bilgilerini Görüntüle</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />
               </svg>
@@ -271,20 +271,20 @@ export function PaymentFlow({
                 />
               </div>
 
-              <div className="flex gap-3 pt-3">
+              <div className="flex gap-2.5 pt-3">
                 <button
                   type="button"
                   onClick={() => setStatus('idle')}
-                  className="flex-1 py-3 px-4 rounded-xl border border-slate-300 text-slate-700 font-bold text-sm hover:bg-slate-50 transition"
+                  className="flex-1 py-2.5 px-4 rounded-xl border border-slate-300 text-slate-700 font-semibold text-xs sm:text-sm hover:bg-slate-50 transition"
                 >
                   Geri
                 </button>
                 <button
                   type="submit"
-                  className="flex-2 py-3 px-4 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-lg shadow-red-600/20 transition flex items-center justify-center gap-2"
+                  className="flex-2 py-2.5 px-4 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-xs sm:text-sm shadow-sm hover:shadow transition flex items-center justify-center gap-1.5 active:scale-98"
                 >
                   <span>IBAN Bilgilerini Göster</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="5" y1="12" x2="19" y2="12" />
                     <polyline points="12 5 19 12 12 19" />
                   </svg>
@@ -370,7 +370,7 @@ export function PaymentFlow({
                 <button
                   type="button"
                   onClick={() => handleCopyIban(request.iban || '')}
-                  className={`px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shrink-0 ${
+                  className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 shrink-0 ${
                     copiedIban ? 'bg-emerald-600 text-white' : 'bg-red-600 hover:bg-red-700 text-white'
                   }`}
                 >
@@ -403,7 +403,7 @@ export function PaymentFlow({
                   <button
                     type="button"
                     onClick={() => handleCopyRef(refCode)}
-                    className="text-[11px] font-bold text-red-600 hover:text-red-700 underline"
+                    className="text-[11px] font-semibold text-red-600 hover:text-red-700 underline"
                   >
                     {copiedRef ? 'Kopyalandı' : 'Kopyala'}
                   </button>
@@ -455,7 +455,7 @@ export function PaymentFlow({
 
             <button
               onClick={handleReset}
-              className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl text-sm transition"
+              className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-6 rounded-xl text-xs sm:text-sm transition shadow-sm"
             >
               Yeni Talep Oluştur
             </button>
@@ -497,18 +497,22 @@ export function PaymentFlow({
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5">
               <a
                 href={`https://wa.me/905000000000?text=Merhaba,%20${refCode}%20referansl%C4%B1%20sipari%C5%9Fim%20i%C3%A7in%20dekontumu%20y%C3%BCkledim.`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-5 rounded-xl text-xs transition"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 px-5 rounded-xl text-xs transition shadow-sm active:scale-98"
               >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.821 2.791.821 3.181 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.807-5.767-5.807zm3.398 8.163c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.782-.401-1.393-.578-2.316-1.996-2.386-2.09-.07-.094-.567-.756-.567-1.442 0-.686.357-1.023.484-1.164.127-.141.278-.176.371-.176.094 0 .188.001.27.006.088.004.206-.034.322.247.12.289.412 1.009.447 1.082.035.073.059.158.01.256-.048.098-.073.159-.145.244-.073.085-.154.19-.22.256-.073.073-.15.153-.064.3.086.147.383.633.821 1.023.564.502 1.04.657 1.188.73.148.073.235.061.322-.039.088-.099.373-.434.472-.584.099-.15.198-.125.33-.075.132.05 838.414 1.004.496.166.082.278.125.318.191.041.066.041.385-.103.79z" />
+                  <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.398C8.423 21.493 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.273c-1.636 0-3.16-.492-4.44-1.336l-.318-.207-2.955.827.842-2.885-.227-.333C3.993 14.978 3.5 13.535 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.273-8.5 8.273z" />
+                </svg>
                 <span>WhatsApp ile Onay Durumu Öğren</span>
               </a>
               <button
                 onClick={handleReset}
-                className="w-full sm:w-auto py-3 px-5 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 transition"
+                className="w-full sm:w-auto py-2.5 px-5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-xs hover:bg-slate-50 transition"
               >
                 Yeni Sipariş / İşlem
               </button>

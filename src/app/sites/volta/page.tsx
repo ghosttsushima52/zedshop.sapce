@@ -20,6 +20,14 @@ type InfoModalType =
   | 'mesafeli' 
   | null;
 
+// Reusable Minimal WhatsApp Icon Component
+const WhatsAppIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.821 2.791.821 3.181 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.807-5.767-5.807zm3.398 8.163c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.782-.401-1.393-.578-2.316-1.996-2.386-2.09-.07-.094-.567-.756-.567-1.442 0-.686.357-1.023.484-1.164.127-.141.278-.176.371-.176.094 0 .188.001.27.006.088.004.206-.034.322.247.12.289.412 1.009.447 1.082.035.073.059.158.01.256-.048.098-.073.159-.145.244-.073.085-.154.19-.22.256-.073.073-.15.153-.064.3.086.147.383.633.821 1.023.564.502 1.04.657 1.188.73.148.073.235.061.322-.039.088-.099.373-.434.472-.584.099-.15.198-.125.33-.075.132.05 838.414 1.004.496.166.082.278.125.318.191.041.066.041.385-.103.79z" />
+    <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.398C8.423 21.493 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.273c-1.636 0-3.16-.492-4.44-1.336l-.318-.207-2.955.827.842-2.885-.227-.333C3.993 14.978 3.5 13.535 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.273-8.5 8.273z" />
+  </svg>
+);
+
 export default function VoltaMotorPage() {
   const [models, setModels] = useState<VoltaModel[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('Tümü');
@@ -106,13 +114,13 @@ export default function VoltaMotorPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
             <button
               onClick={() => setSelectedProductDetail(null)}
-              className="flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-200 hover:text-white bg-slate-800/90 hover:bg-slate-700 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl transition border border-slate-700 active:scale-95 shadow-sm"
+              className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition border border-slate-700/80 active:scale-95"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="19" y1="12" x2="5" y2="12" />
                 <polyline points="12 19 5 12 12 5" />
               </svg>
-              <span>Tüm Modeller / Kataloğa Dön</span>
+              <span>Kataloğa Dön</span>
             </button>
 
             <div className="flex items-center gap-3">
@@ -129,18 +137,30 @@ export default function VoltaMotorPage() {
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3">
+              <a
+                href={`https://wa.me/905000000000?text=Merhaba,%20Volta%20${encodeURIComponent(selectedProductDetail.name)}%20modeli%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm px-3.5 py-2.5 rounded-xl transition shadow-sm active:scale-95"
+                title="WhatsApp Destek"
+              >
+                <WhatsAppIcon className="w-4 h-4" />
+                <span>WhatsApp</span>
+              </a>
+
               <button
                 onClick={() => startCheckout(selectedProductDetail)}
-                className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-md shadow-red-600/30 transition flex items-center gap-1.5 active:scale-95"
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-sm hover:shadow transition flex items-center gap-1.5 active:scale-95"
               >
                 <span>Sipariş Ver</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="9 18 15 12 9 6" />
                 </svg>
               </button>
+
               <button
                 onClick={() => setSelectedProductDetail(null)}
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold transition"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-semibold transition border border-slate-700/80"
                 title="Ana Sayfaya Dön"
               >
                 ✕
@@ -297,13 +317,13 @@ export default function VoltaMotorPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="space-y-3 pt-2">
+              <div className="space-y-2.5 pt-2">
                 <button
                   onClick={() => startCheckout(selectedProductDetail)}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 px-6 rounded-2xl shadow-xl shadow-red-600/30 transition-all text-base flex items-center justify-center gap-2 active:scale-98"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3.5 px-6 rounded-2xl shadow-sm hover:shadow-md transition-all text-sm sm:text-base flex items-center justify-center gap-2 active:scale-98"
                 >
                   <span>Online Sipariş Ver & Rezervasyon Yap</span>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </button>
@@ -312,12 +332,9 @@ export default function VoltaMotorPage() {
                   href={`https://wa.me/905000000000?text=Merhaba,%20Volta%20${encodeURIComponent(selectedProductDetail.name)}%20modeli%20hakk%C4%B1nda%20teknik%20bilgi%20ve%20stok%20durumu%20almak%20istiyorum`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-md shadow-emerald-600/20 transition text-sm flex items-center justify-center gap-2"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-2xl transition text-sm flex items-center justify-center gap-2 shadow-sm active:scale-98"
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.821 2.791.821 3.181 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.807-5.767-5.807zm3.398 8.163c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.782-.401-1.393-.578-2.316-1.996-2.386-2.09-.07-.094-.567-.756-.567-1.442 0-.686.357-1.023.484-1.164.127-.141.278-.176.371-.176.094 0 .188.001.27.006.088.004.206-.034.322.247.12.289.412 1.009.447 1.082.035.073.059.158.01.256-.048.098-.073.159-.145.244-.073.085-.154.19-.22.256-.073.073-.15.153-.064.3.086.147.383.633.821 1.023.564.502 1.04.657 1.188.73.148.073.235.061.322-.039.088-.099.373-.434.472-.584.099-.15.198-.125.33-.075.132.05 838.414 1.004.496.166.082.278.125.318.191.041.066.041.385-.103.79z" />
-                    <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.398C8.423 21.493 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.273c-1.636 0-3.16-.492-4.44-1.336l-.318-.207-2.955.827.842-2.885-.227-.333C3.993 14.978 3.5 13.535 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.273-8.5 8.273z" />
-                  </svg>
+                  <WhatsAppIcon className="w-4 h-4" />
                   <span>WhatsApp Satış Danışmanı ile Görüş</span>
                 </a>
               </div>
@@ -403,19 +420,19 @@ export default function VoltaMotorPage() {
                 <div
                   key={m.id}
                   onClick={() => openProductDetail(m)}
-                  className="bg-white p-4 rounded-2xl border border-slate-200 hover:border-slate-300 hover:shadow-lg transition cursor-pointer flex flex-col justify-between"
+                  className="bg-white p-4 rounded-2xl border border-slate-200 hover:border-slate-300 hover:shadow-md transition cursor-pointer flex flex-col justify-between group"
                 >
                   <div>
                     <div className="w-full h-32 bg-slate-50 rounded-xl flex items-center justify-center p-2 mb-3">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={m.image} alt={m.name} className="max-h-full max-w-full object-contain" />
+                      <img src={m.image} alt={m.name} className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" />
                     </div>
                     <span className="text-[10px] font-bold text-red-600 uppercase">{m.category}</span>
                     <h4 className="font-black text-slate-900 text-base">{m.name}</h4>
                   </div>
                   <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
                     <span className="font-mono font-bold text-slate-900 text-sm">{m.price.toLocaleString('tr-TR')} TL</span>
-                    <span className="text-xs text-red-600 font-bold">İncele →</span>
+                    <span className="text-xs text-red-600 font-semibold group-hover:underline">İncele →</span>
                   </div>
                 </div>
               ))}
@@ -423,23 +440,48 @@ export default function VoltaMotorPage() {
           </div>
         </main>
 
+        {/* Floating WhatsApp Action Button (FAB) on Detail Page */}
+        <div className="fixed bottom-20 sm:bottom-6 right-5 sm:right-6 z-40">
+          <a 
+            href={`https://wa.me/905000000000?text=Merhaba,%20Volta%20${encodeURIComponent(selectedProductDetail.name)}%20modeli%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full shadow-lg hover:shadow-xl transition-all font-semibold text-xs sm:text-sm active:scale-95"
+            title="WhatsApp ile İletişime Geçin"
+          >
+            <WhatsAppIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span>WhatsApp Danışmanı</span>
+          </a>
+        </div>
+
         {/* Sticky Mobile Bottom Bar */}
-        <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 flex items-center justify-between gap-3 shadow-2xl">
+        <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2.5 flex items-center justify-between gap-3 shadow-lg">
           <div>
-            <span className="text-[10px] text-slate-500 font-bold block">{selectedProductDetail.name}</span>
-            <span className="text-base font-black text-slate-900 font-mono">
+            <span className="text-[10px] text-slate-500 font-medium block leading-none">{selectedProductDetail.name}</span>
+            <span className="text-sm font-black text-slate-900 font-mono mt-0.5 block">
               {selectedProductDetail.price.toLocaleString('tr-TR')} TL
             </span>
           </div>
-          <button
-            onClick={() => startCheckout(selectedProductDetail)}
-            className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-red-600/25"
-          >
-            <span>Sipariş Ver</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
+          <div className="flex items-center gap-2">
+            <a
+              href={`https://wa.me/905000000000?text=Merhaba,%20Volta%20${encodeURIComponent(selectedProductDetail.name)}%20modeli%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition"
+              title="WhatsApp Danışmanı"
+            >
+              <WhatsAppIcon className="w-4 h-4" />
+            </a>
+            <button
+              onClick={() => startCheckout(selectedProductDetail)}
+              className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-4 rounded-xl text-xs flex items-center gap-1.5 shadow-sm"
+            >
+              <span>Sipariş Ver</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Checkout Modal when clicked on full-screen detail view */}
@@ -528,29 +570,40 @@ export default function VoltaMotorPage() {
           </nav>
 
           {/* Top Right: Direct Pay & 3-Line Hamburger Menu */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <a
+              href="https://wa.me/905000000000?text=Merhaba,%20Volta%20modelleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden md:inline-flex items-center gap-1.5 bg-emerald-600/90 hover:bg-emerald-600 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl transition shadow-sm active:scale-95"
+              title="WhatsApp Danışmanı"
+            >
+              <WhatsAppIcon className="w-4 h-4" />
+              <span>WhatsApp</span>
+            </a>
+
             <button
               onClick={openDirectPayment}
-              className="hidden sm:inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-md shadow-red-600/30 transition-all active:scale-95"
+              className="hidden sm:inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-xl shadow-sm hover:shadow transition-all active:scale-95"
             >
               <span>Ödeme Yap</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="9 18 15 12 9 6" />
               </svg>
             </button>
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="w-10 h-10 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-white flex items-center justify-center transition border border-slate-700 active:scale-95"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white flex items-center justify-center transition border border-slate-700/80 active:scale-95"
               aria-label="Menü"
             >
               {isMobileMenuOpen ? (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18" />
                   <line x1="6" y1="12" x2="18" y2="18" />
                 </svg>
               ) : (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="3" y1="6" x2="21" y2="6" />
                   <line x1="3" y1="12" x2="21" y2="12" />
                   <line x1="3" y1="18" x2="21" y2="18" />
@@ -570,7 +623,7 @@ export default function VoltaMotorPage() {
           >
             <div>
               {/* Menu Header */}
-              <div className="flex items-center justify-between pb-5 border-b border-slate-100 mb-6">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
                 <div className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img 
@@ -591,31 +644,40 @@ export default function VoltaMotorPage() {
                 </button>
               </div>
 
-              {/* Action Button: Ödeme Yap */}
-              <div className="mb-6">
+              {/* Action Button: Ödeme Yap & WhatsApp */}
+              <div className="grid grid-cols-2 gap-2 mb-5">
                 <button
                   onClick={openDirectPayment}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-red-600/25 transition-all text-sm flex items-center justify-center gap-2 active:scale-98"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-3 rounded-xl shadow-sm hover:shadow transition-all text-xs flex items-center justify-center gap-1.5 active:scale-98"
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
                     <line x1="1" y1="10" x2="23" y2="10" />
                   </svg>
                   <span>Ödeme Yap</span>
                 </button>
+                <a
+                  href="https://wa.me/905000000000?text=Merhaba,%20Volta%20modelleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-3 rounded-xl transition text-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-98"
+                >
+                  <WhatsAppIcon className="w-4 h-4" />
+                  <span>WhatsApp</span>
+                </a>
               </div>
 
               {/* Menu Navigation Links */}
-              <nav className="flex flex-col gap-1.5">
+              <nav className="flex flex-col gap-1">
                 <button
                   onClick={() => openInfoModal('kurumsal')}
-                  className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center justify-between transition border border-transparent hover:border-slate-200"
+                  className="w-full text-left px-3.5 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold text-xs sm:text-sm flex items-center justify-between transition"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                     <span>KURUMSAL</span>
                   </div>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </button>
@@ -623,91 +685,91 @@ export default function VoltaMotorPage() {
                 <a
                   href="#modeller"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center justify-between transition border border-transparent hover:border-slate-200"
+                  className="px-3.5 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold text-xs sm:text-sm flex items-center justify-between transition"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-red-500" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
                     <span>MODELLER</span>
                   </div>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </a>
 
                 <button
                   onClick={() => openInfoModal('garanti')}
-                  className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center justify-between transition border border-transparent hover:border-slate-200"
+                  className="w-full text-left px-3.5 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold text-xs sm:text-sm flex items-center justify-between transition"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-blue-500" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                     <span>GARANTİ</span>
                   </div>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </button>
 
                 <button
                   onClick={() => openInfoModal('kampanyalar')}
-                  className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center justify-between transition border border-transparent hover:border-slate-200"
+                  className="w-full text-left px-3.5 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold text-xs sm:text-sm flex items-center justify-between transition"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-amber-500" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                     <span>KAMPANYALAR</span>
                   </div>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </button>
 
                 <button
                   onClick={() => openInfoModal('bayiler')}
-                  className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center justify-between transition border border-transparent hover:border-slate-200"
+                  className="w-full text-left px-3.5 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold text-xs sm:text-sm flex items-center justify-between transition"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-indigo-500" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
                     <span>BAYİLER</span>
                   </div>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </button>
 
                 <button
                   onClick={() => openInfoModal('servisler')}
-                  className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center justify-between transition border border-transparent hover:border-slate-200"
+                  className="w-full text-left px-3.5 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold text-xs sm:text-sm flex items-center justify-between transition"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-teal-500" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
                     <span>SERVİSLER</span>
                   </div>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </button>
 
                 <button
                   onClick={() => openInfoModal('yedekparca')}
-                  className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center justify-between transition border border-transparent hover:border-slate-200"
+                  className="w-full text-left px-3.5 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold text-xs sm:text-sm flex items-center justify-between transition"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-slate-500" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
                     <span>YEDEK PARÇA</span>
                   </div>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </button>
 
                 <button
                   onClick={() => openInfoModal('iletisim')}
-                  className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center justify-between transition border border-transparent hover:border-slate-200"
+                  className="w-full text-left px-3.5 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold text-xs sm:text-sm flex items-center justify-between transition"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-rose-500" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
                     <span>İLETİŞİM</span>
                   </div>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </button>
@@ -715,7 +777,7 @@ export default function VoltaMotorPage() {
             </div>
 
             {/* Bottom Section */}
-            <div className="pt-6 border-t border-slate-100">
+            <div className="pt-4 border-t border-slate-100">
               {user && (
                 <div className="bg-slate-50 p-3 rounded-xl mb-3 border border-slate-200">
                   <div className="flex items-center justify-between text-xs mb-2">
@@ -726,13 +788,13 @@ export default function VoltaMotorPage() {
                     <Link
                       href="/admin"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex-1 bg-slate-900 text-white text-xs font-bold py-2 rounded-lg text-center hover:bg-slate-800 transition"
+                      className="flex-1 bg-slate-900 text-white text-xs font-semibold py-2 rounded-lg text-center hover:bg-slate-800 transition"
                     >
                       Yönetim Paneli
                     </Link>
                     <button
                       onClick={() => { logout(); setIsMobileMenuOpen(false); }}
-                      className="px-3 py-2 text-xs font-bold text-slate-600 hover:text-red-600 transition"
+                      className="px-3 py-2 text-xs font-semibold text-slate-600 hover:text-red-600 transition"
                     >
                       Çıkış
                     </button>
@@ -744,12 +806,9 @@ export default function VoltaMotorPage() {
                 href="https://wa.me/905000000000?text=Merhaba,%20Volta%20modelleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-sm"
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 px-4 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-sm"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.821 2.791.821 3.181 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.807-5.767-5.807zm3.398 8.163c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.782-.401-1.393-.578-2.316-1.996-2.386-2.09-.07-.094-.567-.756-.567-1.442 0-.686.357-1.023.484-1.164.127-.141.278-.176.371-.176.094 0 .188.001.27.006.088.004.206-.034.322.247.12.289.412 1.009.447 1.082.035.073.059.158.01.256-.048.098-.073.159-.145.244-.073.085-.154.19-.22.256-.073.073-.15.153-.064.3.086.147.383.633.821 1.023.564.502 1.04.657 1.188.73.148.073.235.061.322-.039.088-.099.373-.434.472-.584.099-.15.198-.125.33-.075.132.05 838.414 1.004.496.166.082.278.125.318.191.041.066.041.385-.103.79z" />
-                  <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.398C8.423 21.493 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.273c-1.636 0-3.16-.492-4.44-1.336l-.318-.207-2.955.827.842-2.885-.227-.333C3.993 14.978 3.5 13.535 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.273-8.5 8.273z" />
-                </svg>
+                <WhatsAppIcon className="w-4 h-4" />
                 <span>WhatsApp Danışma Hattı</span>
               </a>
             </div>
@@ -763,7 +822,7 @@ export default function VoltaMotorPage() {
           {featuredModels.map((item) => (
             <div 
               key={item.id}
-              className="bg-white rounded-3xl p-5 sm:p-8 border border-slate-200/90 shadow-lg shadow-slate-100 flex flex-col justify-between hover:border-slate-300 hover:shadow-xl transition-all duration-300 relative group"
+              className="bg-white rounded-3xl p-5 sm:p-8 border border-slate-200/90 shadow-md shadow-slate-100 flex flex-col justify-between hover:border-slate-300 hover:shadow-lg transition-all duration-300 relative group"
             >
               {item.advantageAmount ? (
                 <div className="absolute top-4 right-4 sm:top-5 sm:right-5 bg-red-600 text-white text-[11px] sm:text-xs font-bold px-3 py-1 rounded-full shadow-sm">
@@ -803,9 +862,9 @@ export default function VoltaMotorPage() {
                     alt={item.name} 
                     className="max-h-full max-w-full object-contain"
                   />
-                  <div className="absolute bottom-3 right-3 bg-slate-900/80 hover:bg-slate-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-sm flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+                  <div className="absolute bottom-3 right-3 bg-slate-900/80 hover:bg-slate-900 text-white text-[10px] font-semibold px-2.5 py-1.5 rounded-lg backdrop-blur-sm flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
                     <span>Tam Ekran İncele</span>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="9 18 15 12 9 6" />
                     </svg>
                   </div>
@@ -853,20 +912,20 @@ export default function VoltaMotorPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => startCheckout(item)}
-                    className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-md shadow-red-600/20 transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 active:scale-98"
+                    className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-3 sm:px-4 rounded-xl shadow-sm hover:shadow transition-all text-xs sm:text-sm flex items-center justify-center gap-1.5 active:scale-98"
                   >
                     <span>Sipariş Ver</span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                       <line x1="5" y1="12" x2="19" y2="12" />
                       <polyline points="12 5 19 12 12 19" />
                     </svg>
                   </button>
                   <button
                     onClick={() => openProductDetail(item)}
-                    className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-3 sm:px-4 rounded-xl transition text-xs sm:text-sm flex items-center justify-center gap-1.5"
+                    className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2.5 px-3 sm:px-4 rounded-xl transition text-xs sm:text-sm flex items-center justify-center gap-1.5"
                   >
                     <span>Detayları İncele</span>
                   </button>
@@ -901,7 +960,7 @@ export default function VoltaMotorPage() {
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap ${
                   selectedCategory === cat
-                    ? 'bg-red-600 text-white shadow-md shadow-red-500/20'
+                    ? 'bg-red-600 text-white shadow-sm'
                     : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
                 }`}
               >
@@ -916,7 +975,7 @@ export default function VoltaMotorPage() {
           {filteredCatalog.map((model) => (
             <div 
               key={model.id}
-              className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 flex flex-col justify-between hover:shadow-xl hover:border-slate-300 transition-all duration-200 group"
+              className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 flex flex-col justify-between hover:shadow-lg hover:border-slate-300 transition-all duration-200 group"
             >
               <div>
                 <div className="flex items-center justify-between text-xs text-slate-400 font-medium mb-3">
@@ -942,7 +1001,7 @@ export default function VoltaMotorPage() {
                     alt={model.name} 
                     className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
                   />
-                  <div className="absolute bottom-2 right-2 bg-slate-900/75 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+                  <div className="absolute bottom-2 right-2 bg-slate-900/75 text-white text-[10px] font-semibold px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
                     Tam Ekran İncele
                   </div>
                 </div>
@@ -986,17 +1045,17 @@ export default function VoltaMotorPage() {
                 <div className="flex items-center gap-1.5">
                   <button
                     onClick={() => openProductDetail(model)}
-                    className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs py-2.5 px-3 rounded-xl transition"
+                    className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs py-2 px-3 rounded-xl transition"
                     title="Detay & Özellikler"
                   >
                     Detay
                   </button>
                   <button
                     onClick={() => startCheckout(model)}
-                    className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs py-2.5 px-3.5 sm:px-4 rounded-xl transition-colors flex items-center gap-1.5 shadow-sm shadow-red-600/20"
+                    className="bg-red-600 hover:bg-red-700 text-white font-semibold text-xs py-2 px-3.5 sm:px-4 rounded-xl transition-colors flex items-center gap-1.5 shadow-sm"
                   >
                     <span>Sipariş</span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="9 18 15 12 9 6" />
                     </svg>
                   </button>
@@ -1063,7 +1122,7 @@ export default function VoltaMotorPage() {
       {/* Embedded Live Dynamic Payment Section */}
       <section id="odeme" className="py-12 sm:py-20 max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-6 sm:mb-8">
-          <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-red-600 bg-red-50 border border-red-200 px-3.5 py-1 rounded-full inline-block">
+          <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-red-600 bg-red-50 border border-red-200 px-3 py-1 rounded-full inline-block">
             GÜVENLİ SİPARİŞ & TAHSİLAT
           </span>
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 mt-2.5 leading-snug tracking-tight">
@@ -1452,9 +1511,20 @@ export default function VoltaMotorPage() {
                       <span className="text-slate-400 block text-[10px]">Çağrı Merkezi & Danışma Hattı</span>
                       <strong className="text-slate-900 text-sm">0850 305 85 82</strong>
                     </div>
-                    <a href="tel:08503058582" className="bg-red-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs">
-                      Ara
-                    </a>
+                    <div className="flex items-center gap-2">
+                      <a 
+                        href="https://wa.me/905000000000?text=Merhaba,%20Volta%20modelleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition"
+                      >
+                        <WhatsAppIcon className="w-3.5 h-3.5" />
+                        <span>WhatsApp</span>
+                      </a>
+                      <a href="tel:08503058582" className="bg-red-600 hover:bg-red-700 text-white font-semibold px-3 py-1.5 rounded-lg text-xs transition">
+                        Ara
+                      </a>
+                    </div>
                   </div>
 
                   <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
@@ -1510,14 +1580,11 @@ export default function VoltaMotorPage() {
           href="https://wa.me/905000000000?text=Merhaba,%20Volta%20modelleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2.5 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-3 rounded-full shadow-2xl shadow-emerald-500/40 hover:scale-105 active:scale-95 transition-all group font-bold text-sm"
+          className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full shadow-lg hover:shadow-xl transition-all font-semibold text-xs sm:text-sm active:scale-95"
           title="WhatsApp ile İletişime Geçin"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.821 2.791.821 3.181 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.807-5.767-5.807zm3.398 8.163c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.782-.401-1.393-.578-2.316-1.996-2.386-2.09-.07-.094-.567-.756-.567-1.442 0-.686.357-1.023.484-1.164.127-.141.278-.176.371-.176.094 0 .188.001.27.006.088.004.206-.034.322.247.12.289.412 1.009.447 1.082.035.073.059.158.01.256-.048.098-.073.159-.145.244-.073.085-.154.19-.22.256-.073.073-.15.153-.064.3.086.147.383.633.821 1.023.564.502 1.04.657 1.188.73.148.073.235.061.322-.039.088-.099.373-.434.472-.584.099-.15.198-.125.33-.075.132.05 838.414 1.004.496.166.082.278.125.318.191.041.066.041.385-.103.79z" />
-            <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.398C8.423 21.493 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.273c-1.636 0-3.16-.492-4.44-1.336l-.318-.207-2.955.827.842-2.885-.227-.333C3.993 14.978 3.5 13.535 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.273-8.5 8.273z" />
-          </svg>
-          <span className="hidden sm:inline">WhatsApp Danışmanı</span>
+          <WhatsAppIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+          <span>WhatsApp Danışmanı</span>
         </a>
       </div>
 
@@ -1544,7 +1611,7 @@ export default function VoltaMotorPage() {
               <button onClick={() => openInfoModal('kampanyalar')} className="hover:text-white transition">Kampanyalar</button>
               <button onClick={() => openInfoModal('bayiler')} className="hover:text-white transition">Bayiler & Servisler</button>
               <button onClick={() => openInfoModal('iletisim')} className="hover:text-white transition">İletişim</button>
-              <button onClick={openDirectPayment} className="hover:text-emerald-400 text-emerald-400 font-bold transition">Ödeme Bildirimi</button>
+              <button onClick={openDirectPayment} className="hover:text-emerald-400 text-emerald-400 font-semibold transition">Ödeme Bildirimi</button>
             </div>
           </div>
 
