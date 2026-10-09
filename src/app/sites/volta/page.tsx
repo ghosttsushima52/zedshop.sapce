@@ -370,44 +370,56 @@ export default function VoltaMotorPage() {
           )}
 
           {/* Guarantees Pillars */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold shrink-0">
-                🛡
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 mb-12">
+            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-sm flex items-start gap-3.5 hover:border-slate-300 transition-colors">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200/60">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <polyline points="9 12 11 14 15 10" />
+                </svg>
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">2 Yıl Resmi Garanti</h4>
-                <p className="text-xs text-slate-500 mt-0.5">Fabrika garantisi ve 10 yıl parça temin güvencesi</p>
+                <h4 className="font-bold text-slate-900 text-xs sm:text-sm">2 Yıl Resmi Garanti</h4>
+                <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">Fabrika garantisi ve 10 yıl parça temin güvencesi</p>
               </div>
             </div>
 
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold shrink-0">
-                ⚡
+            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-sm flex items-start gap-3.5 hover:border-slate-300 transition-colors">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200/60">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">100 km &apos;de 4 TL</h4>
-                <p className="text-xs text-slate-500 mt-0.5">Standart ev prizinden ultra ekonomik şarj imkanı</p>
+                <h4 className="font-bold text-slate-900 text-xs sm:text-sm">100 km &apos;de 4 TL</h4>
+                <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">Standart ev prizinden ultra ekonomik şarj imkanı</p>
               </div>
             </div>
 
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold shrink-0">
-                🚚
+            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-sm flex items-start gap-3.5 hover:border-slate-300 transition-colors">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200/60">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="1" y="3" width="15" height="13" rx="2" />
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                  <circle cx="5.5" cy="18.5" r="2.5" />
+                  <circle cx="18.5" cy="18.5" r="2.5" />
+                </svg>
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">Ücretsiz Sevkiyat</h4>
-                <p className="text-xs text-slate-500 mt-0.5">Adresinize veya en yakın bayiye montajı yapılmış teslimat</p>
+                <h4 className="font-bold text-slate-900 text-xs sm:text-sm">Ücretsiz Sevkiyat</h4>
+                <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">Adresinize veya en yakın bayiye montajı yapılmış teslimat</p>
               </div>
             </div>
 
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center font-bold shrink-0">
-                🔧
+            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-sm flex items-start gap-3.5 hover:border-slate-300 transition-colors">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200/60">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                </svg>
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">81 İlde Servis</h4>
-                <p className="text-xs text-slate-500 mt-0.5">500+ TSE onaylı yetkili servis ve mobil destek ağı</p>
+                <h4 className="font-bold text-slate-900 text-xs sm:text-sm">81 İlde Servis</h4>
+                <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">500+ TSE onaylı yetkili servis ve mobil destek ağı</p>
               </div>
             </div>
           </div>
