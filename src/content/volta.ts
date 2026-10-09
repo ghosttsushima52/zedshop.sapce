@@ -14,6 +14,7 @@ export interface VoltaModel {
     range: string;
     speed: string;
     battery: string;
+    bluetooth?: string;
     brakes?: string;
     weight?: string;
     chargeTime?: string;
@@ -29,7 +30,7 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     id: 'vsm',
     name: 'VSM',
     category: 'Elektrikli Motosiklet',
-    tagline: 'Şehir içi pratik ve ekonomik elektrikli motosiklet çözümü',
+    tagline: 'Şehir içi pratik, ekonomik ve Bluetooth bağlantılı elektrikli mobilite',
     price: 24990,
     oldPrice: 28900,
     discountRate: 13,
@@ -46,6 +47,7 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
       range: '40 km Menzil',
       speed: '25 km/s Azami Hız',
       battery: '48V 14Ah VRLA Jel Akü',
+      bluetooth: 'Bluetooth 5.0 Akıllı BMS & Telemetri',
       brakes: 'Ön / Arka Kampana Fren',
       weight: '52 kg',
       chargeTime: '6 - 8 Saat (220V Standart Priz)',
@@ -54,6 +56,7 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     detailedSpecs: [
       { label: 'Motor Gücü', value: '220W Yüksek Verimli Fırçasız DC Motor' },
       { label: 'Batarya & Akü', value: '48V 14Ah VRLA Derin Döngülü Jel Akü' },
+      { label: 'Bluetooth & Bağlantı', value: 'Bluetooth 5.0 / Volta Mobil Uygulama & Akıllı BMS Desteği' },
       { label: 'Menzil', value: '40 km (Sürüş moduna ve yüke göre değişken)' },
       { label: 'Azami Hız', value: '25 km/s (Yasal Şehir İçi Hız Sınırı)' },
       { label: 'Şarj Süresi', value: 'Standart 220V Ev Prizinden 6-8 Saat' },
@@ -64,6 +67,7 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
       { label: 'Garanti', value: '2 Yıl Volta Motor Resmi Fabrika Garantisi' }
     ],
     features: [
+      'Bluetooth 5.0 Mobil Uygulama ile Batarya Sağlığı & Telemetri Takibi',
       'Çıkarılabilir Taşınabilir Akü Kutusu (Evde / Ofiste Kolay Şarj)',
       'Pedallı Sürüş Asistanı & Şehir İçi Ulaşım Kolaylığı',
       'LED Ön Far & Arka Güvenlik Stop Lambası',
@@ -76,7 +80,7 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     id: 'vb2-pro',
     name: 'VB2 PRO',
     category: 'Elektrikli Bisiklet',
-    tagline: 'Katlanabilir alüminyum gövde ile özgürce her yere yanınızda',
+    tagline: 'Katlanabilir alüminyum gövde, Bluetooth akıllı LCD ekran ve yüksek menzil',
     price: 32990,
     oldPrice: 36950,
     discountRate: 10,
@@ -93,6 +97,7 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
       range: '50-80 km Destek Menzili',
       speed: '25 km/s Yasal Hız Sınırı',
       battery: '36V 10.4Ah Lityum-İyon Entegre Akü',
+      bluetooth: 'Bluetooth 5.2 Akıllı LCD Senkronizasyonu',
       brakes: 'Ön / Arka Mekanik Disk Fren',
       weight: '22 kg',
       chargeTime: '4 - 6 Saat',
@@ -101,6 +106,7 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     detailedSpecs: [
       { label: 'Motor Gücü', value: '250W Arka Göbek Fırçasız Motor' },
       { label: 'Batarya', value: '36V 10.4Ah Kilitlenebilir Taşınabilir Lityum-İyon' },
+      { label: 'Bluetooth & Akıllı Ekran', value: 'Bluetooth 5.2 / Sürüş Rotası, Kadans & Kalori Takibi' },
       { label: 'Destek Menzili', value: '50 - 80 km (Pedal Asistan Desteği ile)' },
       { label: 'Vites Sistemi', value: 'Shimano 6 İleri Vites Aktarma Mekanizması' },
       { label: 'Kadro & Gövde', value: 'Hafif ve Mukavemetli Katlanabilir Alüminyum Kadro' },
@@ -111,6 +117,7 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
       { label: 'Garanti', value: '2 Yıl Volta Motor Resmi Garantisi' }
     ],
     features: [
+      'Bluetooth 5.2 ile Volta Bisiklet Mobil Uygulaması Eşleşmesi',
       'Hafif Katlanabilir Alüminyum Kadro (Araç Bagajına Sığar)',
       'Entegre Akıllı LCD Bilgi & Hız Ekranı',
       'Shimano 6 Vites Profesyonel Aktarma Sistemi',
@@ -123,7 +130,7 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     id: 'vs1',
     name: 'VS1',
     category: 'Elektrikli Moped',
-    tagline: 'Modern çizgiler, sıfır emisyon ve sessiz şehir performansı',
+    tagline: 'Bluetooth anahtarsız çalıştırma (Keyless Go), dijital TFT ve sessiz Bosch motor',
     price: 43900,
     oldPrice: 48500,
     discountRate: 9,
@@ -139,6 +146,7 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
       range: '55 km Menzil',
       speed: '45 km/s Azami Hız',
       battery: '60V 20Ah Jel Akü',
+      bluetooth: 'Bluetooth 5.2 Keyless Go & Entegre Hoparlör',
       brakes: 'Ön Disk / Arka Kampana',
       weight: '68 kg',
       chargeTime: '6 - 7 Saat',
@@ -147,17 +155,21 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     detailedSpecs: [
       { label: 'Motor Gücü', value: '1500W Yüksek Verimli Bosch Elektrikli Motor' },
       { label: 'Batarya', value: '60V 20Ah Derin Deşarjlı Jel Batarya Paketi' },
+      { label: 'Bluetooth & Akıllı Anahtar', value: 'Bluetooth 5.2 Keyless Go (Telefondan Yaklaşarak Kilit Açma & Çalıştırma)' },
+      { label: 'Ses & Multimedya', value: 'Bluetooth Dahili Hoparlör & Müzik Çalar Entegrasyonu' },
       { label: 'Menzil', value: '55 km Şehir İçi Optimum Kullanım' },
       { label: 'Azami Hız', value: '45 km/s Hız Limiti' },
-      { label: 'Gösterge', value: 'Geniş Renkli Dijital TFT Gösterge Paneli' },
+      { label: 'Gösterge', value: 'Geniş Renkli Dijital TFT Gösterge Paneli (Arama & Bildirim Gösterimi)' },
       { label: 'Aydınlatma', value: 'Full LED Gündüz Farları ve Arka Stop' },
-      { label: 'Ekstralar', value: 'USB Şarj Çıkışı & Kask Askısı' },
+      { label: 'Ekstralar', value: 'USB Hızlı Şarj Çıkışı & Kask Askısı' },
       { label: 'Garanti', value: '2 Yıl Resmi Volta Fabrika Garantisi' }
     ],
     features: [
-      'Geniş Dijital Gösterge Paneli ve Hız Uyarıları',
+      'Bluetooth 5.2 ile Anahtarsız Yaklaşarak Çalıştırma & Otomatik Kilit (Keyless Go)',
+      'Bluetooth Entegre Dahili Hoparlör Sistemi & Kablosuz Müzik Çalma',
+      'Geniş Dijital TFT Gösterge Paneli ve Telefon Bildirim Yansıtma',
       'Gündüz LED Farları ve Dinamik Projektör Aydınlatma',
-      'USB Şarj Portu ile Telefon ve Cihaz Şarjı',
+      'USB Hızlı Şarj Portu ile Telefon ve Cihaz Şarjı',
       'Yüksek Taşıma Kapasitesi ve Çift Kişilik Konforlu Sele'
     ]
   },
@@ -165,7 +177,7 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     id: 'vm4',
     name: 'VM4',
     category: 'Elektrikli Üç Tekerlekli',
-    tagline: 'Maksimum denge, güvenlik ve yük taşıma kapasitesi',
+    tagline: 'Maksimum denge, Bluetooth ses sistemi, güvenlik ve yük taşıma kapasitesi',
     price: 54900,
     oldPrice: 59900,
     discountRate: 8,
@@ -181,6 +193,7 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
       range: '45 km Menzil',
       speed: '25 km/s Güvenli Hız',
       battery: '60V 20Ah Jel Akü',
+      bluetooth: 'Bluetooth Ses Sistemi & Akıllı Alarm',
       brakes: 'Ön & Arka Hidrolik Kampana',
       weight: '98 kg',
       chargeTime: '7 - 8 Saat',
@@ -189,12 +202,14 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     detailedSpecs: [
       { label: 'Motor', value: '1000W Güçlendirilmiş Diferansiyelli Elektrik Motoru' },
       { label: 'Batarya', value: '60V 20Ah Yüksek Kapasiteli Jel Akü' },
-      { label: 'Güvenlik', value: 'Geri Vites Sesli İkazı & Denge Destek Tekerlekleri' },
+      { label: 'Bluetooth & Ses', value: 'Bluetooth 5.0 Kablosuz Ses ve Müzik Yayını + FM Radyo' },
+      { label: 'Güvenlik', value: 'Bluetooth Akıllı Alarm, Geri Vites Sesli İkazı & Denge Tekerlekleri' },
       { label: 'Koltuk Düzeni', value: 'Kolçaklı, İleri-Geri Ayarlanabilir Ortopedik Koltuk' },
       { label: 'Depolama', value: 'Geniş Arka Bagaj Sepeti ve Ön Saklama Bölmesi' },
       { label: 'Garanti', value: '2 Yıl Resmi Üretici Garantisi' }
     ],
     features: [
+      'Bluetooth Kablosuz Hoparlör ve Müzik Çalar Donanımı',
       'Geri Vites ve Sesli İkaz Sistemi',
       'Kolçaklı ve İleri-Geri Ayarlı Lüks Koltuk',
       'Geniş Arka Alışveriş & Eşya Sepeti',
@@ -205,7 +220,7 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     id: 'vb1',
     name: 'VB1',
     category: 'Elektrikli Bisiklet',
-    tagline: 'Klasik şehir bisikleti zarafeti, elektrik gücüyle buluştu',
+    tagline: 'Klasik şehir bisikleti zarafeti, Bluetooth sürüş asistanı ve lityum güç',
     price: 27900,
     oldPrice: 30500,
     discountRate: 8,
@@ -222,6 +237,7 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
       range: '40-60 km Menzil',
       speed: '25 km/s',
       battery: '36V 8.8Ah Lityum Akü',
+      bluetooth: 'Bluetooth 5.0 Sürüş Asistanı Desteği',
       brakes: 'V-Fren & Kampana',
       weight: '20 kg',
       chargeTime: '4 - 5 Saat',
@@ -230,12 +246,14 @@ export const INITIAL_VOLTA_MODELS: VoltaModel[] = [
     detailedSpecs: [
       { label: 'Motor Gücü', value: '250W Entegre Göbek Motoru' },
       { label: 'Batarya', value: '36V 8.8Ah Çıkarılabilir Taşınabilir Lityum Batarya' },
+      { label: 'Bluetooth Desteği', value: 'Bluetooth 5.0 Akıllı Hız ve Batarya Asistanı' },
       { label: 'Menzil', value: '40 - 60 km Pedal Destekli Menzil' },
       { label: 'Kadro', value: 'Alüminyum Alaşımlı Şehir Kadrosu' },
       { label: 'Bagaj', value: 'Geniş Arka Taşıma Rafı' },
       { label: 'Garanti', value: '2 Yıl Resmi Volta Garantisi' }
     ],
     features: [
+      'Bluetooth Akıllı Sürüş Asistanı & Mobil Uyumluluk',
       'Ergonomik Şehir Geometrisi ve Kolay İniş-Biniş Kadro',
       'Çıkarılabilir Hafif Lityum Batarya',
       'Geniş Arka Bagaj Taşıyıcı Raf',

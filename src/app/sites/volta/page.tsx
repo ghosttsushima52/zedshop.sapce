@@ -28,6 +28,13 @@ const WhatsAppIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
   </svg>
 );
 
+// Minimal Bluetooth Icon Component
+const BluetoothIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5" />
+  </svg>
+);
+
 export default function VoltaMotorPage() {
   const [models, setModels] = useState<VoltaModel[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('Tümü');
@@ -128,10 +135,10 @@ export default function VoltaMotorPage() {
       <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-red-600 selection:text-white pb-24 sm:pb-16">
         {/* Sticky Top Header on Full-Screen Detail Page */}
         <header className="sticky top-0 z-40 bg-[#14212d] text-white border-b border-slate-800 shadow-md">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
             <button
               onClick={closeAllSubPages}
-              className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition border border-slate-700/80 active:scale-95"
+              className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition border border-slate-700/80 active:scale-95 shrink-0"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="19" y1="12" x2="5" y2="12" />
@@ -140,25 +147,25 @@ export default function VoltaMotorPage() {
               <span>Kataloğa Dön</span>
             </button>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
                 src="/volta-service-logo.png" 
                 alt="Volta Dönüşüm Servisi" 
                 className="w-9 h-9 sm:w-11 sm:h-11 object-contain rounded-xl drop-shadow-md"
               />
-              <div className="hidden md:flex flex-col">
+              <div className="hidden sm:flex flex-col">
                 <span className="text-lg font-black tracking-tight text-white leading-none">VOLTA</span>
                 <span className="text-[9px] font-bold tracking-[0.16em] text-emerald-400 uppercase">DÖNÜŞÜM SERVİSİ</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <a
                 href={`https://wa.me/905000000000?text=Merhaba,%20Volta%20${encodeURIComponent(selectedProductDetail.name)}%20modeli%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden sm:inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm px-3.5 py-2.5 rounded-xl transition shadow-sm active:scale-95"
+                className="hidden sm:inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm px-3.5 py-2.5 rounded-xl transition shadow-sm active:scale-95 shrink-0"
                 title="WhatsApp Destek"
               >
                 <WhatsAppIcon className="w-4 h-4" />
@@ -167,7 +174,7 @@ export default function VoltaMotorPage() {
 
               <button
                 onClick={() => startCheckout(selectedProductDetail)}
-                className="bg-red-600 hover:bg-red-700 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-sm hover:shadow transition flex items-center gap-1.5 active:scale-95"
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold text-xs sm:text-sm px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl shadow-sm hover:shadow transition flex items-center gap-1.5 active:scale-95 shrink-0"
               >
                 <span>Sipariş Ver</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -177,7 +184,7 @@ export default function VoltaMotorPage() {
 
               <button
                 onClick={closeAllSubPages}
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-semibold transition border border-slate-700/80"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-semibold transition border border-slate-700/80 shrink-0"
                 title="Ana Sayfaya Dön"
               >
                 ✕
@@ -208,6 +215,10 @@ export default function VoltaMotorPage() {
                 <div className="absolute top-5 left-5 flex flex-wrap gap-2 z-10">
                   <span className="text-xs font-bold text-slate-800 bg-slate-100/95 border border-slate-200 px-3 py-1 rounded-lg backdrop-blur-sm">
                     {selectedProductDetail.category}
+                  </span>
+                  <span className="text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-lg backdrop-blur-sm flex items-center gap-1">
+                    <BluetoothIcon className="w-3.5 h-3.5" />
+                    <span>Bluetooth 5.2</span>
                   </span>
                   {selectedProductDetail.discountRate ? (
                     <span className="text-xs font-bold text-white bg-red-600 px-3 py-1 rounded-lg shadow-sm">
@@ -342,6 +353,63 @@ export default function VoltaMotorPage() {
                   <WhatsAppIcon className="w-5 h-5" />
                   <span>WhatsApp Satış Danışmanı ile Görüş</span>
                 </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Dedicated Bluetooth & Smart IoT Technology Card */}
+          <div className="bg-gradient-to-br from-slate-900 via-[#14212d] to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl mb-12 relative overflow-hidden border border-slate-800">
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-800">
+                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-lg shadow-blue-900/50">
+                  <BluetoothIcon className="w-5 h-5" />
+                </div>
+                <div>
+                  <span className="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-widest">AKILLI MOBİLİTE & BAĞLANTI</span>
+                  <h3 className="text-lg sm:text-2xl font-black text-white">Bluetooth 5.2 & Volta Akıllı Mobil Entegrasyonu</h3>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-slate-800/60 backdrop-blur-sm p-4 sm:p-5 rounded-2xl border border-slate-700/60">
+                  <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-xs mb-3">
+                    📱
+                  </div>
+                  <h4 className="font-bold text-white text-sm mb-1">Volta Mobil Uygulama</h4>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    iOS ve Android telefonunuzla Bluetooth üzerinden anında eşleşerek sürüş rotası ve telemetri kaydı tutar.
+                  </p>
+                </div>
+
+                <div className="bg-slate-800/60 backdrop-blur-sm p-4 sm:p-5 rounded-2xl border border-slate-700/60">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs mb-3">
+                    🔑
+                  </div>
+                  <h4 className="font-bold text-white text-sm mb-1">Keyless Go (Akıllı Kilit)</h4>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Telefonunuz yanınızdayken araca yaklaştığınızda Bluetooth sinyaliyle kilidi otomatik açar ve sürüşe hazırlar.
+                  </p>
+                </div>
+
+                <div className="bg-slate-800/60 backdrop-blur-sm p-4 sm:p-5 rounded-2xl border border-slate-700/60">
+                  <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs mb-3">
+                    🔋
+                  </div>
+                  <h4 className="font-bold text-white text-sm mb-1">Akıllı BMS Batarya Takibi</h4>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Hücre bazlı batarya voltajını, net kalan menzili ve şarj döngüsünü Bluetooth üzerinden anlık raporlar.
+                  </p>
+                </div>
+
+                <div className="bg-slate-800/60 backdrop-blur-sm p-4 sm:p-5 rounded-2xl border border-slate-700/60">
+                  <div className="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-xs mb-3">
+                    🔄
+                  </div>
+                  <h4 className="font-bold text-white text-sm mb-1">OTA Kablosuz Güncelleme</h4>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Servise gitmeye gerek kalmadan Bluetooth bağlantısıyla en son motor kontrol ve hız yazılımlarını yükler.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -534,10 +602,10 @@ export default function VoltaMotorPage() {
     return (
       <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-red-600 selection:text-white pb-24 sm:pb-16">
         <header className="sticky top-0 z-40 bg-[#14212d] text-white border-b border-slate-800 shadow-md">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
             <button
               onClick={closeAllSubPages}
-              className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition border border-slate-700/80 active:scale-95"
+              className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition border border-slate-700/80 active:scale-95 shrink-0"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="19" y1="12" x2="5" y2="12" />
@@ -546,25 +614,25 @@ export default function VoltaMotorPage() {
               <span>Ana Sayfaya Dön</span>
             </button>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
                 src="/volta-service-logo.png" 
                 alt="Volta Dönüşüm Servisi" 
                 className="w-9 h-9 sm:w-11 sm:h-11 object-contain rounded-xl drop-shadow-md"
               />
-              <div className="hidden md:flex flex-col">
+              <div className="hidden sm:flex flex-col">
                 <span className="text-lg font-black tracking-tight text-white leading-none">VOLTA</span>
                 <span className="text-[9px] font-bold tracking-[0.16em] text-emerald-400 uppercase">DÖNÜŞÜM SERVİSİ</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <a
                 href="https://wa.me/905000000000?text=Merhaba,%20%C3%B6deme%20ve%20rezervasyon%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm px-3.5 py-2.5 rounded-xl transition shadow-sm active:scale-95"
+                className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm px-3.5 py-2.5 rounded-xl transition shadow-sm active:scale-95 shrink-0"
                 title="WhatsApp Destek"
               >
                 <WhatsAppIcon className="w-4 h-4" />
@@ -573,7 +641,7 @@ export default function VoltaMotorPage() {
 
               <button
                 onClick={closeAllSubPages}
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-semibold transition border border-slate-700/80"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-semibold transition border border-slate-700/80 shrink-0"
                 title="Kapat"
               >
                 ✕
@@ -648,10 +716,10 @@ export default function VoltaMotorPage() {
     return (
       <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-red-600 selection:text-white pb-24 sm:pb-16">
         <header className="sticky top-0 z-40 bg-[#14212d] text-white border-b border-slate-800 shadow-md">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
             <button
               onClick={closeAllSubPages}
-              className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition border border-slate-700/80 active:scale-95"
+              className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition border border-slate-700/80 active:scale-95 shrink-0"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="19" y1="12" x2="5" y2="12" />
@@ -660,25 +728,25 @@ export default function VoltaMotorPage() {
               <span>Ana Sayfaya Dön</span>
             </button>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
                 src="/volta-service-logo.png" 
                 alt="Volta Dönüşüm Servisi" 
                 className="w-9 h-9 sm:w-11 sm:h-11 object-contain rounded-xl drop-shadow-md"
               />
-              <div className="hidden md:flex flex-col">
+              <div className="hidden sm:flex flex-col">
                 <span className="text-lg font-black tracking-tight text-white leading-none">VOLTA</span>
                 <span className="text-[9px] font-bold tracking-[0.16em] text-emerald-400 uppercase">DÖNÜŞÜM SERVİSİ</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <a
                 href="https://wa.me/905000000000?text=Merhaba,%20Volta%20modelleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden sm:inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm px-3.5 py-2.5 rounded-xl transition shadow-sm active:scale-95"
+                className="hidden sm:inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm px-3.5 py-2.5 rounded-xl transition shadow-sm active:scale-95 shrink-0"
                 title="WhatsApp Destek"
               >
                 <WhatsAppIcon className="w-4 h-4" />
@@ -687,14 +755,14 @@ export default function VoltaMotorPage() {
 
               <button
                 onClick={openDirectPayment}
-                className="bg-red-600 hover:bg-red-700 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-sm hover:shadow transition flex items-center gap-1.5 active:scale-95"
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold text-xs sm:text-sm px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl shadow-sm hover:shadow transition flex items-center gap-1.5 active:scale-95 shrink-0"
               >
                 <span>Ödeme Yap</span>
               </button>
 
               <button
                 onClick={closeAllSubPages}
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-semibold transition border border-slate-700/80"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-semibold transition border border-slate-700/80 shrink-0"
                 title="Kapat"
               >
                 ✕
@@ -755,7 +823,7 @@ export default function VoltaMotorPage() {
                         Volta Motor, Türkiye’nin en büyük elektrikli araç ve hafif mobilite üreticilerinden biri olarak kurulduğu günden bu yana sürdürülebilir, çevreci ve yüksek teknolojili ulaşım çözümleri sunmaktadır.
                       </p>
                       <p>
-                        Modern entegre tesislerimizde üretilen elektrikli motosiklet, elektrikli bisiklet ve hafif ticari araçlarımız; üstün mühendislik kalitesi, düşük enerji tüketimi ve 81 ildeki yaygın servis ağı ile yüz binlerce kullanıcının güvenilir tercihi haline gelmiştir.
+                        Modern entegre tesislerimizde üretilen elektrikli motosiklet, elektrikli bisiklet ve hafif ticari araçlarımız; üstün mühendislik kalitesi, Bluetooth akıllı telemetri desteği, düşük enerji tüketimi ve 81 ildeki yaygın servis ağı ile yüz binlerce kullanıcının güvenilir tercihi haline gelmiştir.
                       </p>
                       
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
@@ -790,7 +858,7 @@ export default function VoltaMotorPage() {
                         </div>
                         <h3 className="text-base font-bold text-slate-900 mb-2">Misyonumuz</h3>
                         <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                          Gelişmiş elektrikli tahrik teknolojilerini herkes için erişilebilir, güvenli ve ekonomik hale getirerek şehir içi ulaşımda çevre dostu dönüşüme öncülük etmek.
+                          Gelişmiş elektrikli tahrik ve Bluetooth bağlantılı akıllı mobilite teknolojilerini herkes için erişilebilir, güvenli ve ekonomik hale getirerek şehir içi ulaşımda çevre dostu dönüşüme öncülük etmek.
                         </p>
                       </div>
 
@@ -869,7 +937,7 @@ export default function VoltaMotorPage() {
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
                     <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-1.5">Garanti Kapsamı</h3>
                     <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                      Motor, dijital beyin (ECU/controller), şasi, LCD gösterge paneli ve tüm elektronik aksamlar fatura tarihinden itibaren 2 yıl boyunca tam fabrika garantisi kapsamındadır.
+                      Motor, dijital beyin (ECU/controller), Bluetooth modülü, şasi, LCD/TFT gösterge paneli ve tüm elektronik aksamlar fatura tarihinden itibaren 2 yıl boyunca tam fabrika garantisi kapsamındadır.
                     </p>
                   </div>
 
@@ -903,7 +971,7 @@ export default function VoltaMotorPage() {
                   <div className="divide-y divide-slate-100 text-xs sm:text-sm">
                     <div className="p-3.5 flex items-center justify-between bg-white">
                       <span className="font-bold text-slate-800">500 km</span>
-                      <span className="text-slate-600">İlk Güvenlik, Fren & Cıvata Tork Kontrolü</span>
+                      <span className="text-slate-600">İlk Güvenlik, Fren, Cıvata Torku & Bluetooth Telemetri Kontrolü</span>
                       <span className="text-emerald-600 font-bold">Ücretsiz Kontrol</span>
                     </div>
                     <div className="p-3.5 flex items-center justify-between bg-slate-50/50">
@@ -913,7 +981,7 @@ export default function VoltaMotorPage() {
                     </div>
                     <div className="p-3.5 flex items-center justify-between bg-white">
                       <span className="font-bold text-slate-800">5.000 km</span>
-                      <span className="text-slate-600">Elektrik Tesisatı, Süspansiyon & Rulman Denetimi</span>
+                      <span className="text-slate-600">Elektrik Tesisatı, Süspansiyon, Beyin (ECU) Yazılım Güncellemesi</span>
                       <span className="text-slate-700 font-medium">Kapsamlı Bakım</span>
                     </div>
                   </div>
@@ -1158,7 +1226,7 @@ export default function VoltaMotorPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
                     <h4 className="font-bold text-slate-900 text-sm mb-1">Batarya & Akü Paketleri</h4>
-                    <p className="text-xs text-slate-500 leading-relaxed">Lityum-İyon ve Jel batarya modülleri, BMS kontrol üniteleri.</p>
+                    <p className="text-xs text-slate-500 leading-relaxed">Lityum-İyon ve Jel batarya modülleri, Bluetooth Smart BMS kontrol üniteleri.</p>
                   </div>
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
                     <h4 className="font-bold text-slate-900 text-sm mb-1">Akıllı Şarj Adaptörleri</h4>
@@ -1173,12 +1241,12 @@ export default function VoltaMotorPage() {
                     <p className="text-xs text-slate-500 leading-relaxed">Tubeless patlamaya dirençli lastikler ve alaşımlı jantlar.</p>
                   </div>
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                    <h4 className="font-bold text-slate-900 text-sm mb-1">Motor Beyni (ECU)</h4>
-                    <p className="text-xs text-slate-500 leading-relaxed">Orijinal fabrikasyon yazılımlı fırçasız motor kontrol beyinleri.</p>
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Bluetooth Modülü & Motor Beyni (ECU)</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed">Orijinal fabrikasyon Bluetooth 5.2 telemetri ve motor kontrol üniteleri.</p>
                   </div>
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                    <h4 className="font-bold text-slate-900 text-sm mb-1">Aydınlatma & Göstergeler</h4>
-                    <p className="text-xs text-slate-500 leading-relaxed">LED farlar, sinyaller, dijital renkli LCD gösterge panelleri.</p>
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Aydınlatma & Dijital Göstergeler</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed">LED farlar, sinyaller, Bluetooth bildirim özellikli TFT gösterge panelleri.</p>
                   </div>
                 </div>
 
@@ -1327,9 +1395,9 @@ export default function VoltaMotorPage() {
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-red-600 selection:text-white">
       {/* Official Volta Motor Navy Header */}
       <header className="sticky top-0 z-40 bg-[#14212d] text-white border-b border-slate-800 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between gap-4">
           {/* Volta Dönüşüm Servisi Logo */}
-          <Link href="/sites/volta" className="flex items-center gap-3 group">
+          <Link href="/sites/volta" className="flex items-center gap-3 shrink-0 mr-2 group">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
               src="/volta-service-logo.png" 
@@ -1342,65 +1410,65 @@ export default function VoltaMotorPage() {
             </div>
           </Link>
 
-          {/* Desktop Navigation - Clean Unified Styles */}
-          <nav className="hidden lg:flex items-center gap-6 text-xs sm:text-sm font-bold tracking-wider uppercase text-slate-200">
+          {/* Desktop Navigation - Clean Unified Styles with generous gaps (XL and up) */}
+          <nav className="hidden xl:flex items-center gap-5 2xl:gap-7 text-xs sm:text-sm font-bold tracking-wider uppercase text-slate-200 whitespace-nowrap shrink-0">
             <button 
               onClick={() => openInfoModal('kurumsal')} 
-              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase shrink-0"
             >
               Kurumsal
             </button>
             <a 
               href="#modeller" 
-              className="bg-transparent border-0 outline-none p-0 text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+              className="bg-transparent border-0 outline-none p-0 text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase shrink-0"
             >
               Modeller
             </a>
             <button 
               onClick={() => openInfoModal('garanti')} 
-              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase shrink-0"
             >
               Garanti
             </button>
             <button 
               onClick={() => openInfoModal('kampanyalar')} 
-              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase shrink-0"
             >
               Kampanyalar
             </button>
             <button 
               onClick={() => openInfoModal('bayiler')} 
-              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase shrink-0"
             >
               Bayiler
             </button>
             <button 
               onClick={() => openInfoModal('servisler')} 
-              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase shrink-0"
             >
               Servisler
             </button>
             <button 
               onClick={() => openInfoModal('yedekparca')} 
-              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase shrink-0"
             >
               Yedek Parça
             </button>
             <button 
               onClick={() => openInfoModal('iletisim')} 
-              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase shrink-0"
             >
               İletişim
             </button>
           </nav>
 
           {/* Top Right: WhatsApp & Direct Pay & 3-Line Hamburger Menu */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0 ml-auto">
             <a
               href="https://wa.me/905000000000?text=Merhaba,%20Volta%20modelleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden md:inline-flex items-center gap-1.5 bg-emerald-600/90 hover:bg-emerald-600 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl transition shadow-sm active:scale-95"
+              className="hidden md:inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 sm:py-2.5 rounded-xl transition shadow-sm active:scale-95 shrink-0"
               title="WhatsApp Danışmanı"
             >
               <WhatsAppIcon className="w-4 h-4" />
@@ -1409,7 +1477,7 @@ export default function VoltaMotorPage() {
 
             <button
               onClick={openDirectPayment}
-              className="hidden sm:inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-xl shadow-sm hover:shadow transition-all active:scale-95"
+              className="hidden sm:inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-semibold px-4 py-2 sm:py-2.5 rounded-xl shadow-sm hover:shadow transition-all active:scale-95 shrink-0"
             >
               <span>Ödeme Yap</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -1419,7 +1487,7 @@ export default function VoltaMotorPage() {
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white flex items-center justify-center transition border border-slate-700/80 active:scale-95"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white flex items-center justify-center transition border border-slate-700/80 active:scale-95 shrink-0"
               aria-label="Menü"
             >
               {isMobileMenuOpen ? (
@@ -1661,6 +1729,10 @@ export default function VoltaMotorPage() {
                     <span className="text-[11px] font-bold uppercase tracking-wider text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-md inline-block">
                       {item.category}
                     </span>
+                    <span className="text-[11px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded flex items-center gap-1">
+                      <BluetoothIcon className="w-3 h-3" />
+                      <span>Bluetooth</span>
+                    </span>
                     {item.discountRate ? (
                       <span className="text-[11px] font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded">
                         %{item.discountRate} İndirim
@@ -1773,7 +1845,7 @@ export default function VoltaMotorPage() {
               Tüm Volta Elektrikli Modelleri
             </h2>
             <p className="text-slate-600 text-xs sm:text-base mt-1.5 leading-relaxed max-w-2xl">
-              Benzin masrafına, egzoz dumanına ve bakım derdine son veren yeni nesil elektrikli araçlar.
+              Benzin masrafına, egzoz dumanına ve bakım derdine son veren yeni nesil Bluetooth akıllı elektrikli araçlar.
             </p>
           </div>
 
@@ -1897,22 +1969,18 @@ export default function VoltaMotorPage() {
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 leading-snug">Neden Elektrikli Volta?</h2>
             <p className="text-slate-600 text-xs sm:text-sm mt-1.5 leading-relaxed">
-              Sıfır fosil yakıt, minimum işletme maliyeti ve sessiz konforlu sürüş deneyimi.
+              Sıfır fosil yakıt, Bluetooth akıllı bağlantı, minimum işletme maliyeti ve sessiz konforlu sürüş deneyimi.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             <div className="bg-slate-50 p-5 sm:p-6 rounded-2xl border border-slate-200">
-              <div className="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center font-bold mb-4">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="2" y="7" width="16" height="12" rx="2" />
-                  <path d="M22 11v4" />
-                  <path d="M10 11l-2 3h4l-2 3" />
-                </svg>
+              <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center font-bold mb-4">
+                <BluetoothIcon className="w-6 h-6" />
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-2 leading-snug">Ev Prizinden Kolay Şarj</h3>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-2 leading-snug">Bluetooth 5.2 & Mobil Uygulama</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Özel şarj istasyonuna gerek duymadan standart 220V ev prizinizden taşınabilir bataryanızı güvenle doldurun.
+                Akıllı telefonunuzla eşleşerek anahtarsız yaklaşarak kilit açma (Keyless Go), batarya sağlık takibi ve OTA kablosuz güncelleme sağlar.
               </p>
             </div>
 
@@ -1929,7 +1997,7 @@ export default function VoltaMotorPage() {
             </div>
 
             <div className="bg-slate-50 p-5 sm:p-6 rounded-2xl border border-slate-200">
-              <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center font-bold mb-4">
+              <div className="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center font-bold mb-4">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   <path d="M9 12l2 2 4-4" />
@@ -1937,7 +2005,7 @@ export default function VoltaMotorPage() {
               </div>
               <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-2 leading-snug">2 Yıl Garanti & Yaygın Servis</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Türkiye genelinde yüzlerce yetkili servis noktası ve orijinal yedek parça desteği ile her zaman yanınızdayız.
+                Türkiye genelinde 500+ yetkili servis noktası ve 10 yıl orijinal yedek parça temin garantisi ile her zaman yanınızdayız.
               </p>
             </div>
           </div>
