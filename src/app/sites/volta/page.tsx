@@ -20,18 +20,11 @@ type InfoModalType =
   | 'mesafeli' 
   | null;
 
-// Reusable Minimal WhatsApp Icon Component
+// Reusable Minimal WhatsApp Icon Component (Only for dedicated WhatsApp buttons)
 const WhatsAppIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
     <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.821 2.791.821 3.181 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.807-5.767-5.807zm3.398 8.163c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.782-.401-1.393-.578-2.316-1.996-2.386-2.09-.07-.094-.567-.756-.567-1.442 0-.686.357-1.023.484-1.164.127-.141.278-.176.371-.176.094 0 .188.001.27.006.088.004.206-.034.322.247.12.289.412 1.009.447 1.082.035.073.059.158.01.256-.048.098-.073.159-.145.244-.073.085-.154.19-.22.256-.073.073-.15.153-.064.3.086.147.383.633.821 1.023.564.502 1.04.657 1.188.73.148.073.235.061.322-.039.088-.099.373-.434.472-.584.099-.15.198-.125.33-.075.132.05 838.414 1.004.496.166.082.278.125.318.191.041.066.041.385-.103.79z" />
     <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.398C8.423 21.493 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.273c-1.636 0-3.16-.492-4.44-1.336l-.318-.207-2.955.827.842-2.885-.227-.333C3.993 14.978 3.5 13.535 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.273-8.5 8.273z" />
-  </svg>
-);
-
-// Minimal Bluetooth Icon Component
-const BluetoothIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5" />
   </svg>
 );
 
@@ -216,9 +209,8 @@ export default function VoltaMotorPage() {
                   <span className="text-xs font-bold text-slate-800 bg-slate-100/95 border border-slate-200 px-3 py-1 rounded-lg backdrop-blur-sm">
                     {selectedProductDetail.category}
                   </span>
-                  <span className="text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-lg backdrop-blur-sm flex items-center gap-1">
-                    <BluetoothIcon className="w-3.5 h-3.5" />
-                    <span>Bluetooth 5.2</span>
+                  <span className="text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-lg backdrop-blur-sm">
+                    Bluetooth 5.2
                   </span>
                   {selectedProductDetail.discountRate ? (
                     <span className="text-xs font-bold text-white bg-red-600 px-3 py-1 rounded-lg shadow-sm">
@@ -357,59 +349,52 @@ export default function VoltaMotorPage() {
             </div>
           </div>
 
-          {/* Dedicated Bluetooth & Smart IoT Technology Card */}
-          <div className="bg-gradient-to-br from-slate-900 via-[#14212d] to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl mb-12 relative overflow-hidden border border-slate-800">
-            <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-800">
-                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-lg shadow-blue-900/50">
-                  <BluetoothIcon className="w-5 h-5" />
-                </div>
-                <div>
-                  <span className="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-widest">AKILLI MOBİLİTE & BAĞLANTI</span>
-                  <h3 className="text-lg sm:text-2xl font-black text-white">Bluetooth 5.2 & Volta Akıllı Mobil Entegrasyonu</h3>
-                </div>
+          {/* Dedicated Bluetooth & Smart IoT Technology Card (Clean Typography - No Emojis) */}
+          <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl mb-12 border border-slate-800">
+            <div className="mb-6 pb-4 border-b border-slate-800">
+              <span className="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-widest block mb-1">AKILLI MOBİLİTE TEKNOLOJİSİ</span>
+              <h3 className="text-xl sm:text-2xl font-black text-white">Bluetooth 5.2 & Volta Akıllı Mobil Entegrasyonu</h3>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-slate-800/80 p-5 rounded-2xl border border-slate-700/80">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400 bg-blue-950/60 px-2.5 py-1 rounded-md inline-block mb-3 border border-blue-800/50">
+                  MOBİL UYGULAMA
+                </span>
+                <h4 className="font-bold text-white text-sm mb-1.5">Volta Telefon Eşleşmesi</h4>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  iOS ve Android telefonunuzla Bluetooth üzerinden anında eşleşerek sürüş rotası ve telemetri kaydı tutar.
+                </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-slate-800/60 backdrop-blur-sm p-4 sm:p-5 rounded-2xl border border-slate-700/60">
-                  <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-xs mb-3">
-                    📱
-                  </div>
-                  <h4 className="font-bold text-white text-sm mb-1">Volta Mobil Uygulama</h4>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    iOS ve Android telefonunuzla Bluetooth üzerinden anında eşleşerek sürüş rotası ve telemetri kaydı tutar.
-                  </p>
-                </div>
+              <div className="bg-slate-800/80 p-5 rounded-2xl border border-slate-700/80">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded-md inline-block mb-3 border border-emerald-800/50">
+                  KEYLESS GO
+                </span>
+                <h4 className="font-bold text-white text-sm mb-1.5">Anahtarsız Akıllı Kilit</h4>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Telefonunuz yanınızdayken araca yaklaştığınızda Bluetooth sinyaliyle kilidi otomatik açar ve sürüşe hazırlar.
+                </p>
+              </div>
 
-                <div className="bg-slate-800/60 backdrop-blur-sm p-4 sm:p-5 rounded-2xl border border-slate-700/60">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs mb-3">
-                    🔑
-                  </div>
-                  <h4 className="font-bold text-white text-sm mb-1">Keyless Go (Akıllı Kilit)</h4>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    Telefonunuz yanınızdayken araca yaklaştığınızda Bluetooth sinyaliyle kilidi otomatik açar ve sürüşe hazırlar.
-                  </p>
-                </div>
+              <div className="bg-slate-800/80 p-5 rounded-2xl border border-slate-700/80">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-950/60 px-2.5 py-1 rounded-md inline-block mb-3 border border-amber-800/50">
+                  AKILLI BMS
+                </span>
+                <h4 className="font-bold text-white text-sm mb-1.5">Batarya Sağlık Takibi</h4>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Hücre bazlı batarya voltajını, net kalan menzili ve şarj döngüsünü Bluetooth üzerinden anlık raporlar.
+                </p>
+              </div>
 
-                <div className="bg-slate-800/60 backdrop-blur-sm p-4 sm:p-5 rounded-2xl border border-slate-700/60">
-                  <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs mb-3">
-                    🔋
-                  </div>
-                  <h4 className="font-bold text-white text-sm mb-1">Akıllı BMS Batarya Takibi</h4>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    Hücre bazlı batarya voltajını, net kalan menzili ve şarj döngüsünü Bluetooth üzerinden anlık raporlar.
-                  </p>
-                </div>
-
-                <div className="bg-slate-800/60 backdrop-blur-sm p-4 sm:p-5 rounded-2xl border border-slate-700/60">
-                  <div className="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-xs mb-3">
-                    🔄
-                  </div>
-                  <h4 className="font-bold text-white text-sm mb-1">OTA Kablosuz Güncelleme</h4>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    Servise gitmeye gerek kalmadan Bluetooth bağlantısıyla en son motor kontrol ve hız yazılımlarını yükler.
-                  </p>
-                </div>
+              <div className="bg-slate-800/80 p-5 rounded-2xl border border-slate-700/80">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400 bg-purple-950/60 px-2.5 py-1 rounded-md inline-block mb-3 border border-purple-800/50">
+                  OTA YAZILIM
+                </span>
+                <h4 className="font-bold text-white text-sm mb-1.5">Kablosuz Güncelleme</h4>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Servise gitmeye gerek kalmadan Bluetooth bağlantısıyla en son motor kontrol ve hız yazılımlarını yükler.
+                </p>
               </div>
             </div>
           </div>
@@ -433,58 +418,30 @@ export default function VoltaMotorPage() {
             </div>
           )}
 
-          {/* Guarantees Pillars */}
+          {/* Guarantees Pillars (Clean Minimalist Cards - NO ICON BOXES) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 mb-12">
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-sm flex items-start gap-3.5 hover:border-slate-300 transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200/60">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  <polyline points="9 12 11 14 15 10" />
-                </svg>
-              </div>
-              <div>
-                <h4 className="font-bold text-slate-900 text-xs sm:text-sm">2 Yıl Resmi Garanti</h4>
-                <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">Fabrika garantisi ve 10 yıl parça temin güvencesi</p>
-              </div>
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-slate-300 transition-colors">
+              <span className="text-[10px] font-bold text-red-600 uppercase tracking-wider block mb-1">GÜVENCE</span>
+              <h4 className="font-bold text-slate-900 text-sm">2 Yıl Resmi Garanti</h4>
+              <p className="text-xs text-slate-500 mt-1 leading-relaxed">Fabrika garantisi ve 10 yıl parça temin güvencesi</p>
             </div>
 
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-sm flex items-start gap-3.5 hover:border-slate-300 transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200/60">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                </svg>
-              </div>
-              <div>
-                <h4 className="font-bold text-slate-900 text-xs sm:text-sm">100 km &apos;de 4 TL</h4>
-                <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">Standart ev prizinden ultra ekonomik şarj imkanı</p>
-              </div>
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-slate-300 transition-colors">
+              <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider block mb-1">TASARRUF</span>
+              <h4 className="font-bold text-slate-900 text-sm">100 km &apos;de 4 TL</h4>
+              <p className="text-xs text-slate-500 mt-1 leading-relaxed">Standart ev prizinden ultra ekonomik şarj imkanı</p>
             </div>
 
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-sm flex items-start gap-3.5 hover:border-slate-300 transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200/60">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="1" y="3" width="15" height="13" rx="2" />
-                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-                  <circle cx="5.5" cy="18.5" r="2.5" />
-                  <circle cx="18.5" cy="18.5" r="2.5" />
-                </svg>
-              </div>
-              <div>
-                <h4 className="font-bold text-slate-900 text-xs sm:text-sm">Ücretsiz Sevkiyat</h4>
-                <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">Adresinize veya en yakın bayiye montajı yapılmış teslimat</p>
-              </div>
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-slate-300 transition-colors">
+              <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block mb-1">LOJİSTİK</span>
+              <h4 className="font-bold text-slate-900 text-sm">Ücretsiz Sevkiyat</h4>
+              <p className="text-xs text-slate-500 mt-1 leading-relaxed">Adresinize veya en yakın bayiye montajı yapılmış teslimat</p>
             </div>
 
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-sm flex items-start gap-3.5 hover:border-slate-300 transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200/60">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-                </svg>
-              </div>
-              <div>
-                <h4 className="font-bold text-slate-900 text-xs sm:text-sm">81 İlde Servis</h4>
-                <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">500+ TSE onaylı yetkili servis ve mobil destek ağı</p>
-              </div>
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-slate-300 transition-colors">
+              <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider block mb-1">DESTEK AĞI</span>
+              <h4 className="font-bold text-slate-900 text-sm">81 İlde Servis</h4>
+              <p className="text-xs text-slate-500 mt-1 leading-relaxed">500+ TSE onaylı yetkili servis ve mobil destek ağı</p>
             </div>
           </div>
 
@@ -850,25 +807,16 @@ export default function VoltaMotorPage() {
                   {kurumsalTab === 'misyon' && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
-                        <div className="w-10 h-10 rounded-xl bg-slate-200 text-slate-800 flex items-center justify-center font-bold mb-3">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <polyline points="12 6 12 12 14 14" />
-                          </svg>
-                        </div>
-                        <h3 className="text-base font-bold text-slate-900 mb-2">Misyonumuz</h3>
+                        <span className="text-[10px] font-bold text-red-600 uppercase tracking-wider block mb-1">MİSYON</span>
+                        <h3 className="text-base font-bold text-slate-900 mb-2">Hedefimiz</h3>
                         <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                           Gelişmiş elektrikli tahrik ve Bluetooth bağlantılı akıllı mobilite teknolojilerini herkes için erişilebilir, güvenli ve ekonomik hale getirerek şehir içi ulaşımda çevre dostu dönüşüme öncülük etmek.
                         </p>
                       </div>
 
                       <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
-                        <div className="w-10 h-10 rounded-xl bg-slate-200 text-slate-800 flex items-center justify-center font-bold mb-3">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                          </svg>
-                        </div>
-                        <h3 className="text-base font-bold text-slate-900 mb-2">Vizyonumuz</h3>
+                        <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block mb-1">VİZYON</span>
+                        <h3 className="text-base font-bold text-slate-900 mb-2">Gelecek Bakışımız</h3>
                         <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                           Türkiye’de ve uluslararası pazarda hafif elektrikli araç segmentinde lider marka olarak, sıfır emisyonlu sürdürülebilir bir geleceğin mimarı olmak.
                         </p>
@@ -883,14 +831,17 @@ export default function VoltaMotorPage() {
                       </p>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
                         <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                          <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">SERTİFİKASYON</span>
                           <h4 className="font-bold text-slate-900 text-sm mb-1">Batarya Güvenliği</h4>
                           <p className="text-xs text-slate-500">Sertifikalı lityum ve derin döngülü jel batarya teknolojisi</p>
                         </div>
                         <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                          <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">MÜHENDİSLİK</span>
                           <h4 className="font-bold text-slate-900 text-sm mb-1">Şasi Dayanımı</h4>
                           <p className="text-xs text-slate-500">Korozyona dayanıklı hafif alüminyum ve çelik şasi mimarisi</p>
                         </div>
                         <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                          <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">TAAHHÜT</span>
                           <h4 className="font-bold text-slate-900 text-sm mb-1">Resmi Garanti</h4>
                           <p className="text-xs text-slate-500">2 Yıl Resmi Garanti ve 10 Yıl Parça Bulundurma Taahhüdü</p>
                         </div>
@@ -904,6 +855,7 @@ export default function VoltaMotorPage() {
                         Volta Motor olarak fosil yakıtlara olan bağımlılığı ortadan kaldırmayı, şehirlerimizdeki karbon salınımını ve gürültü kirliliğini sıfıra indirmeyi hedefliyoruz.
                       </p>
                       <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-200 text-emerald-950">
+                        <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block mb-1">SIFIR EMİSYON</span>
                         <h4 className="font-bold text-base mb-1 text-emerald-900">Çevreci Tasarruf</h4>
                         <p className="text-xs sm:text-sm">
                           Yılda ortalama 10.000 km yol yapan bir Volta kullanıcısı, atmosferi 1.2 ton karbon gazından korur ve standart içten yanmalı motorlara kıyasla %90 enerji tasarrufu sağlar.
@@ -920,43 +872,39 @@ export default function VoltaMotorPage() {
           {activeInfoModal === 'garanti' && (
             <div className="space-y-8">
               <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
-                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                      <polyline points="9 12 11 14 15 10" />
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">RESMİ GÜVENCE STANDARTLARI</span>
-                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900">Volta 2 Yıl Resmi Fabrika Garantisi</h1>
-                  </div>
+                <div className="mb-6 pb-6 border-b border-slate-100">
+                  <span className="text-xs font-bold text-red-600 uppercase tracking-wider block mb-1">RESMİ GÜVENCE STANDARTLARI</span>
+                  <h1 className="text-2xl sm:text-3xl font-black text-slate-900">Volta 2 Yıl Resmi Fabrika Garantisi</h1>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                    <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-1.5">Garanti Kapsamı</h3>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">KAPSAM</span>
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-1.5">Elektronik ve Mekanik Garanti</h3>
                     <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                       Motor, dijital beyin (ECU/controller), Bluetooth modülü, şasi, LCD/TFT gösterge paneli ve tüm elektronik aksamlar fatura tarihinden itibaren 2 yıl boyunca tam fabrika garantisi kapsamındadır.
                     </p>
                   </div>
 
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                    <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-1.5">Batarya & Güç Güvencesi</h3>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">BATARYA</span>
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-1.5">Güç & Akü Güvencesi</h3>
                     <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                       Orijinal Lityum-İyon ve Derin Döngülü Jel bataryalar fabrikasyon ve üretim kusurlarına karşı resmi koruma altındadır.
                     </p>
                   </div>
 
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                    <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-1.5">Periyodik Bakım Programı</h3>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">PERİYODİK BAKIM</span>
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-1.5">Planlı Servis Programı</h3>
                     <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                       İlk 500 km rodaj/güvenlik kontrolü ve ardından her 2.500 km periyodik servis bakımı yetkili istasyonlarımızda hızlıca gerçekleştirilir.
                     </p>
                   </div>
 
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                    <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-1.5">10 Yıl Yedek Parça Temini</h3>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">YEDEK PARÇA</span>
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-1.5">10 Yıl Parça Temini</h3>
                     <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                       Sanayi ve Teknoloji Bakanlığı mevzuatına uygun olarak tüm modellerimizde 10 yıl boyunca kesintisiz orijinal parça tedarik garantisi sunulmaktadır.
                     </p>
@@ -994,20 +942,13 @@ export default function VoltaMotorPage() {
           {activeInfoModal === 'kampanyalar' && (
             <div className="space-y-8">
               <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
-                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-red-600 uppercase tracking-wider">GÜNCEL FIRSATLAR</span>
-                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900">Volta Elektrikli Mobilite Kampanyaları</h1>
-                  </div>
+                <div className="mb-6 pb-6 border-b border-slate-100">
+                  <span className="text-xs font-bold text-red-600 uppercase tracking-wider block mb-1">GÜNCEL FIRSATLAR</span>
+                  <h1 className="text-2xl sm:text-3xl font-black text-slate-900">Volta Elektrikli Mobilite Kampanyaları</h1>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-gradient-to-br from-red-50 to-white border border-red-200 p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+                  <div className="bg-slate-50 border border-slate-200 p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
                     <div>
                       <span className="bg-red-600 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full">Aktif Fırsat</span>
                       <h3 className="text-xl font-black text-slate-900 mt-3 mb-2">Elektrikli Dönüşüm & Nakit Avantajı</h3>
@@ -1017,13 +958,13 @@ export default function VoltaMotorPage() {
                     </div>
                     <button onClick={closeAllSubPages} className="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl transition inline-flex items-center justify-center gap-1.5">
                       <span>Modelleri İncele</span>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="9 18 15 12 9 6" />
                       </svg>
                     </button>
                   </div>
 
-                  <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+                  <div className="bg-slate-50 border border-slate-200 p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
                     <div>
                       <span className="bg-emerald-600 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full">81 İl Geçerli</span>
                       <h3 className="text-xl font-black text-slate-900 mt-3 mb-2">Ücretsiz Adrese Teslimat & Montaj</h3>
@@ -1033,13 +974,13 @@ export default function VoltaMotorPage() {
                     </div>
                     <button onClick={closeAllSubPages} className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold py-2.5 px-4 rounded-xl transition inline-flex items-center justify-center gap-1.5">
                       <span>Hemen Sipariş Ver</span>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="9 18 15 12 9 6" />
                       </svg>
                     </button>
                   </div>
 
-                  <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+                  <div className="bg-slate-50 border border-slate-200 p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
                     <div>
                       <span className="bg-blue-600 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full">Hediye Paketi</span>
                       <h3 className="text-xl font-black text-slate-900 mt-3 mb-2">Kask & Güvenlik Kilidi Hediyesi</h3>
@@ -1047,12 +988,12 @@ export default function VoltaMotorPage() {
                         Seçili elektrikli bisiklet ve moped alımlarında TSE onaylı aerodinamik sürüş kaskı ve çelik spiral güvenlik kilidi kutu içeriğinde ücretsiz gönderilmektedir.
                       </p>
                     </div>
-                    <button onClick={closeAllSubPages} className="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold py-2.5 px-4 rounded-xl transition inline-flex items-center justify-center gap-1.5">
+                    <button onClick={closeAllSubPages} className="bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-semibold py-2.5 px-4 rounded-xl transition inline-flex items-center justify-center gap-1.5">
                       <span>Detaylı Bilgi</span>
                     </button>
                   </div>
 
-                  <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+                  <div className="bg-slate-50 border border-slate-200 p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
                     <div>
                       <span className="bg-slate-700 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full">Eski / Yeni Takas</span>
                       <h3 className="text-xl font-black text-slate-900 mt-3 mb-2">Eski Benzinli Aracını Getir, Volta&apos;ya Geç</h3>
@@ -1080,17 +1021,9 @@ export default function VoltaMotorPage() {
             <div className="space-y-8">
               <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6 pb-6 border-b border-slate-100">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                        <polyline points="9 22 9 12 15 12 15 22" />
-                      </svg>
-                    </div>
-                    <div>
-                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">SATIŞ VE SHOWROOM AĞI</span>
-                      <h1 className="text-2xl sm:text-3xl font-black text-slate-900">81 İlde Yetkili Bayilerimiz</h1>
-                    </div>
+                  <div>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">SATIŞ VE SHOWROOM AĞI</span>
+                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900">81 İlde Yetkili Bayilerimiz</h1>
                   </div>
 
                   {/* Region Filter */}
@@ -1151,33 +1084,30 @@ export default function VoltaMotorPage() {
           {activeInfoModal === 'servisler' && (
             <div className="space-y-8">
               <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
-                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">SATIŞ SONRASI HİZMETLER</span>
-                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900">500+ TSE Belgeli Yetkili Servis Ağı</h1>
-                  </div>
+                <div className="mb-6 pb-6 border-b border-slate-100">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">SATIŞ SONRASI HİZMETLER</span>
+                  <h1 className="text-2xl sm:text-3xl font-black text-slate-900">500+ TSE Belgeli Yetkili Servis Ağı</h1>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                    <h4 className="font-bold text-slate-900 text-sm mb-1">Periyodik Bakım</h4>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">PERİYODİK</span>
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Planlı Bakım</h4>
                     <p className="text-xs text-slate-500">TSE standartlarında uzman teknisyenlerle hızlı servis</p>
                   </div>
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">ANALİZ</span>
                     <h4 className="font-bold text-slate-900 text-sm mb-1">Batarya Sağlık Testi</h4>
                     <p className="text-xs text-slate-500">Bilgisayarlı hücre ve kapasite analiz cihazları</p>
                   </div>
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                    <h4 className="font-bold text-slate-900 text-sm mb-1">Orijinal Parça</h4>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">ORİJİNAL</span>
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Barkodlu Yedek Parça</h4>
                     <p className="text-xs text-slate-500">%100 fabrika barkodlu garantili yedek parça</p>
                   </div>
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                    <h4 className="font-bold text-slate-900 text-sm mb-1">Mobil Servis</h4>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">ACİL</span>
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Mobil Servis Desteği</h4>
                     <p className="text-xs text-slate-500">Acil durumlarda yerinde arıza tespit ve onarım desteği</p>
                   </div>
                 </div>
@@ -1210,41 +1140,39 @@ export default function VoltaMotorPage() {
           {activeInfoModal === 'yedekparca' && (
             <div className="space-y-8">
               <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
-                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="3" />
-                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">ORİJİNAL DONANIM & AKSESUAR</span>
-                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900">Volta Orijinal Yedek Parça Merkezi</h1>
-                  </div>
+                <div className="mb-6 pb-6 border-b border-slate-100">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">ORİJİNAL DONANIM & AKSESUAR</span>
+                  <h1 className="text-2xl sm:text-3xl font-black text-slate-900">Volta Orijinal Yedek Parça Merkezi</h1>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">GÜÇ GRUBU</span>
                     <h4 className="font-bold text-slate-900 text-sm mb-1">Batarya & Akü Paketleri</h4>
                     <p className="text-xs text-slate-500 leading-relaxed">Lityum-İyon ve Jel batarya modülleri, Bluetooth Smart BMS kontrol üniteleri.</p>
                   </div>
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">ŞARJ GRUBU</span>
                     <h4 className="font-bold text-slate-900 text-sm mb-1">Akıllı Şarj Adaptörleri</h4>
                     <p className="text-xs text-slate-500 leading-relaxed">Otomatik akım kesmeli, aşırı gerilim korumalı hızlı şarj cihazları.</p>
                   </div>
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">FREN SİSTEMİ</span>
                     <h4 className="font-bold text-slate-900 text-sm mb-1">Fren & Balata Donanımları</h4>
                     <p className="text-xs text-slate-500 leading-relaxed">Hidrolik disk frenler, kaliperler, kampana ve balata setleri.</p>
                   </div>
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">JANT & LASTİK</span>
                     <h4 className="font-bold text-slate-900 text-sm mb-1">Lastik & Jant Grubu</h4>
                     <p className="text-xs text-slate-500 leading-relaxed">Tubeless patlamaya dirençli lastikler ve alaşımlı jantlar.</p>
                   </div>
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                    <h4 className="font-bold text-slate-900 text-sm mb-1">Bluetooth Modülü & Motor Beyni (ECU)</h4>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">KONTROL & ECU</span>
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Bluetooth Modülü & Motor Beyni</h4>
                     <p className="text-xs text-slate-500 leading-relaxed">Orijinal fabrikasyon Bluetooth 5.2 telemetri ve motor kontrol üniteleri.</p>
                   </div>
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">ELEKTRONİK</span>
                     <h4 className="font-bold text-slate-900 text-sm mb-1">Aydınlatma & Dijital Göstergeler</h4>
                     <p className="text-xs text-slate-500 leading-relaxed">LED farlar, sinyaller, Bluetooth bildirim özellikli TFT gösterge panelleri.</p>
                   </div>
@@ -1273,16 +1201,9 @@ export default function VoltaMotorPage() {
           {activeInfoModal === 'iletisim' && (
             <div className="space-y-8">
               <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
-                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">MÜŞTERİ HİZMETLERİ & FABRİKA</span>
-                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900">İletişim ve Destek Merkezi</h1>
-                  </div>
+                <div className="mb-6 pb-6 border-b border-slate-100">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">MÜŞTERİ HİZMETLERİ & FABRİKA</span>
+                  <h1 className="text-2xl sm:text-3xl font-black text-slate-900">İletişim ve Destek Merkezi</h1>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -1339,20 +1260,9 @@ export default function VoltaMotorPage() {
           {(activeInfoModal === 'gizlilik' || activeInfoModal === 'kullanim' || activeInfoModal === 'kvkk' || activeInfoModal === 'mesafeli') && (
             <div className="space-y-8">
               <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
-                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                      <polyline points="14 2 14 8 20 8" />
-                      <line x1="16" y1="13" x2="8" y2="13" />
-                      <line x1="16" y1="17" x2="8" y2="17" />
-                      <polyline points="10 9 9 9 8 9" />
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">HUKUKİ VE YASAL BİLGİLENDİRME</span>
-                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900">{getModalTitle()}</h1>
-                  </div>
+                <div className="mb-6 pb-6 border-b border-slate-100">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">HUKUKİ VE YASAL BİLGİLENDİRME</span>
+                  <h1 className="text-2xl sm:text-3xl font-black text-slate-900">{getModalTitle()}</h1>
                 </div>
 
                 <div className="space-y-4 text-xs sm:text-sm text-slate-600 leading-relaxed max-w-4xl">
@@ -1729,9 +1639,8 @@ export default function VoltaMotorPage() {
                     <span className="text-[11px] font-bold uppercase tracking-wider text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-md inline-block">
                       {item.category}
                     </span>
-                    <span className="text-[11px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded flex items-center gap-1">
-                      <BluetoothIcon className="w-3 h-3" />
-                      <span>Bluetooth</span>
+                    <span className="text-[11px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded">
+                      Bluetooth 5.2
                     </span>
                     {item.discountRate ? (
                       <span className="text-[11px] font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded">
@@ -1761,7 +1670,7 @@ export default function VoltaMotorPage() {
                   />
                   <div className="absolute bottom-3 right-3 bg-slate-900/80 hover:bg-slate-900 text-white text-[10px] font-semibold px-2.5 py-1.5 rounded-lg backdrop-blur-sm flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
                     <span>Tam Ekran İncele</span>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="9 18 15 12 9 6" />
                     </svg>
                   </div>
@@ -1963,7 +1872,7 @@ export default function VoltaMotorPage() {
         </div>
       </section>
 
-      {/* Benefits / Mobility Guarantee Section */}
+      {/* Benefits Section (Clean Typography Cards - NO ICON BOXES) */}
       <section id="avantajlar" className="bg-white py-12 sm:py-16 border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
@@ -1974,35 +1883,24 @@ export default function VoltaMotorPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            <div className="bg-slate-50 p-5 sm:p-6 rounded-2xl border border-slate-200">
-              <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center font-bold mb-4">
-                <BluetoothIcon className="w-6 h-6" />
-              </div>
+            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+              <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block mb-2">AKILLI MOBİLİTE</span>
               <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-2 leading-snug">Bluetooth 5.2 & Mobil Uygulama</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Akıllı telefonunuzla eşleşerek anahtarsız yaklaşarak kilit açma (Keyless Go), batarya sağlık takibi ve OTA kablosuz güncelleme sağlar.
               </p>
             </div>
 
-            <div className="bg-slate-50 p-5 sm:p-6 rounded-2xl border border-slate-200">
-              <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center font-bold mb-4">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                </svg>
-              </div>
+            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+              <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider block mb-2">ENERJİ TASARRUFU</span>
               <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-2 leading-snug">100 Kilometrede Sadece 4 TL</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Benzinli araçlara göre %90 daha düşük enerji maliyetiyle bütçenizi koruyun, çevreci sürüşün keyfini yaşayın.
               </p>
             </div>
 
-            <div className="bg-slate-50 p-5 sm:p-6 rounded-2xl border border-slate-200">
-              <div className="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center font-bold mb-4">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  <path d="M9 12l2 2 4-4" />
-                </svg>
-              </div>
+            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+              <span className="text-[10px] font-bold text-red-600 uppercase tracking-wider block mb-2">YAYGIN HİZMET</span>
               <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-2 leading-snug">2 Yıl Garanti & Yaygın Servis</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Türkiye genelinde 500+ yetkili servis noktası ve 10 yıl orijinal yedek parça temin garantisi ile her zaman yanınızdayız.
