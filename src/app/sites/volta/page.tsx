@@ -37,6 +37,7 @@ export default function VoltaMotorPage() {
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
   const [activeInfoModal, setActiveInfoModal] = useState<InfoModalType>(null);
   const [kurumsalTab, setKurumsalTab] = useState<'hakkimizda' | 'misyon' | 'kalite' | 'surdurulebilirlik'>('hakkimizda');
+  const [selectedRegion, setSelectedRegion] = useState<string>('Tümü');
 
   const { user, logout } = useAuth();
 
@@ -90,6 +91,8 @@ export default function VoltaMotorPage() {
   };
 
   const openProductDetail = (model: VoltaModel) => {
+    setActiveInfoModal(null);
+    setIsPaymentModalOpen(false);
     setSelectedProductDetail(model);
     setActiveGalleryIndex(0);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -97,12 +100,26 @@ export default function VoltaMotorPage() {
 
   const openDirectPayment = () => {
     setIsMobileMenuOpen(false);
+    setSelectedProductDetail(null);
+    setActiveInfoModal(null);
     setIsPaymentModalOpen(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const openInfoModal = (type: InfoModalType) => {
     setIsMobileMenuOpen(false);
+    setSelectedProductDetail(null);
+    setIsPaymentModalOpen(false);
     setActiveInfoModal(type);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const closeAllSubPages = () => {
+    setSelectedProductDetail(null);
+    setActiveInfoModal(null);
+    setIsPaymentModalOpen(false);
+    setIsCheckoutOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // ================= RENDER TRUE FULL-SCREEN PRODUCT DETAIL VIEW =================
@@ -113,7 +130,7 @@ export default function VoltaMotorPage() {
         <header className="sticky top-0 z-40 bg-[#14212d] text-white border-b border-slate-800 shadow-md">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
             <button
-              onClick={() => setSelectedProductDetail(null)}
+              onClick={closeAllSubPages}
               className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition border border-slate-700/80 active:scale-95"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -159,7 +176,7 @@ export default function VoltaMotorPage() {
               </button>
 
               <button
-                onClick={() => setSelectedProductDetail(null)}
+                onClick={closeAllSubPages}
                 className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-semibold transition border border-slate-700/80"
                 title="Ana Sayfaya Dön"
               >
@@ -173,9 +190,9 @@ export default function VoltaMotorPage() {
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
           {/* Breadcrumbs */}
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-6 font-medium">
-            <button onClick={() => setSelectedProductDetail(null)} className="hover:text-slate-900 transition">Ana Sayfa</button>
+            <button onClick={closeAllSubPages} className="hover:text-slate-900 transition">Ana Sayfa</button>
             <span>/</span>
-            <button onClick={() => setSelectedProductDetail(null)} className="hover:text-slate-900 transition">Modeller</button>
+            <button onClick={closeAllSubPages} className="hover:text-slate-900 transition">Modeller</button>
             <span>/</span>
             <span className="text-slate-700">{selectedProductDetail.category}</span>
             <span>/</span>
@@ -248,68 +265,55 @@ export default function VoltaMotorPage() {
                   <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">Stokta Mevcut • Hızlı Sevkiyat</span>
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+                <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
                   Volta {selectedProductDetail.name}
                 </h1>
                 <p className="text-sm sm:text-base text-slate-600 mt-2 leading-relaxed">
                   {selectedProductDetail.tagline}
                 </p>
 
-                {/* Pricing Banner */}
-                <div className="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-md my-6">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Doğrudan Fabrika & Satış Fiyatı</span>
-                  <div className="flex items-baseline gap-3 mt-1.5 flex-wrap">
-                    <span className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight font-mono">
-                      {selectedProductDetail.price.toLocaleString('tr-TR')},00 <span className="text-lg font-bold text-slate-500">TL</span>
-                    </span>
+                {/* Price Display Card */}
+                <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm my-6">
+                  <div className="flex items-baseline justify-between mb-2">
+                    <span className="text-xs font-bold text-slate-500 uppercase">Resmi Satış Fiyatı</span>
                     {selectedProductDetail.oldPrice ? (
-                      <span className="text-base text-slate-400 line-through font-semibold font-mono">
-                        {selectedProductDetail.oldPrice.toLocaleString('tr-TR')} TL
+                      <span className="text-sm text-slate-400 line-through font-semibold">
+                        {selectedProductDetail.oldPrice.toLocaleString('tr-TR')},00 TL
                       </span>
                     ) : null}
                   </div>
-
-                  {selectedProductDetail.advantageAmount ? (
-                    <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                      <span className="text-slate-600 font-medium">Toplam Tasarruf:</span>
-                      <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
-                        {selectedProductDetail.advantageAmount.toLocaleString('tr-TR')} TL Doğrudan Avantaj
-                      </span>
-                    </div>
-                  ) : null}
+                  <div className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+                    {selectedProductDetail.price.toLocaleString('tr-TR')},00 <span className="text-lg font-bold text-slate-500">TL</span>
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-slate-500 mt-1.5 flex items-center gap-1.5">
+                    <span className="text-emerald-600 font-bold">✓ KDV Dahil</span> • Adrese Teslimat & Anahtar Teslim Montaj
+                  </p>
                 </div>
 
-                {/* Quick Highlight Cards */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-6">
-                  <div className="bg-white p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
-                    <span className="text-[10px] text-slate-400 block font-medium">Motor</span>
-                    <strong className="text-xs sm:text-sm text-slate-900 font-bold mt-0.5 block">{selectedProductDetail.specs.engine.split(' ')[0]}</strong>
+                {/* Core Performance Metric Grid */}
+                <div className="grid grid-cols-3 gap-3 mb-6">
+                  <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <span className="text-[10px] sm:text-xs text-slate-500 font-medium block">Motor Gücü</span>
+                    <strong className="text-sm sm:text-base font-bold text-slate-900 mt-0.5 block">{selectedProductDetail.specs.engine}</strong>
                   </div>
-                  <div className="bg-white p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
-                    <span className="text-[10px] text-slate-400 block font-medium">Menzil</span>
-                    <strong className="text-xs sm:text-sm text-slate-900 font-bold mt-0.5 block">{selectedProductDetail.specs.range.split(' ')[0]}</strong>
+                  <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <span className="text-[10px] sm:text-xs text-slate-500 font-medium block">Menzil Kapasitesi</span>
+                    <strong className="text-sm sm:text-base font-bold text-slate-900 mt-0.5 block">{selectedProductDetail.specs.range}</strong>
                   </div>
-                  <div className="bg-white p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
-                    <span className="text-[10px] text-slate-400 block font-medium">Azami Hız</span>
-                    <strong className="text-xs sm:text-sm text-slate-900 font-bold mt-0.5 block">{selectedProductDetail.specs.speed.split(' ')[0]}</strong>
-                  </div>
-                  <div className="bg-white p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
-                    <span className="text-[10px] text-slate-400 block font-medium">Akü / Batarya</span>
-                    <strong className="text-xs sm:text-sm text-slate-900 font-bold mt-0.5 block">{selectedProductDetail.specs.battery.split(' ')[0]}</strong>
+                  <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <span className="text-[10px] sm:text-xs text-slate-500 font-medium block">Maksimum Hız</span>
+                    <strong className="text-sm sm:text-base font-bold text-slate-900 mt-0.5 block">{selectedProductDetail.specs.speed}</strong>
                   </div>
                 </div>
 
-                {/* Features Checklist */}
-                <div className="bg-white p-5 rounded-3xl border border-slate-200 mb-6">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-red-600" />
-                    <span>Öne Çıkan Standart Donanımlar</span>
-                  </h3>
-                  <ul className="space-y-2 text-xs sm:text-sm text-slate-700">
-                    {selectedProductDetail.features.map((f, i) => (
-                      <li key={i} className="flex items-start gap-2.5">
-                        <span className="text-emerald-600 font-bold text-base leading-none">✓</span>
-                        <span className="leading-snug">{f}</span>
+                {/* Key Features Bullet List */}
+                <div className="space-y-2 mb-6">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">Öne Çıkan Donanımlar</h4>
+                  <ul className="space-y-2">
+                    {selectedProductDetail.features.map((feat, idx) => (
+                      <li key={idx} className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-700 bg-white p-2.5 rounded-xl border border-slate-100 shadow-2xs">
+                        <span className="w-2 h-2 rounded-full bg-red-600 shrink-0" />
+                        <span className="font-medium">{feat}</span>
                       </li>
                     ))}
                   </ul>
@@ -317,45 +321,37 @@ export default function VoltaMotorPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="space-y-2.5 pt-2">
+              <div className="space-y-3 pt-4 border-t border-slate-200">
                 <button
                   onClick={() => startCheckout(selectedProductDetail)}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3.5 px-6 rounded-2xl shadow-sm hover:shadow-md transition-all text-sm sm:text-base flex items-center justify-center gap-2 active:scale-98"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3.5 sm:py-4 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all text-sm sm:text-base flex items-center justify-center gap-2 active:scale-98"
                 >
-                  <span>Online Sipariş Ver & Rezervasyon Yap</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="9 18 15 12 9 6" />
+                  <span>Hemen Sipariş Ver & Rezervasyon Yap</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
                   </svg>
                 </button>
 
                 <a
-                  href={`https://wa.me/905000000000?text=Merhaba,%20Volta%20${encodeURIComponent(selectedProductDetail.name)}%20modeli%20hakk%C4%B1nda%20teknik%20bilgi%20ve%20stok%20durumu%20almak%20istiyorum`}
+                  href={`https://wa.me/905000000000?text=Merhaba,%20Volta%20${encodeURIComponent(selectedProductDetail.name)}%20modeli%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-2xl transition text-sm flex items-center justify-center gap-2 shadow-sm active:scale-98"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 sm:py-3.5 px-6 rounded-2xl transition-all text-sm flex items-center justify-center gap-2 shadow-sm active:scale-98"
                 >
-                  <WhatsAppIcon className="w-4 h-4" />
+                  <WhatsAppIcon className="w-5 h-5" />
                   <span>WhatsApp Satış Danışmanı ile Görüş</span>
                 </a>
               </div>
             </div>
           </div>
 
-          {/* Full-Screen Detailed Technical Specs Grid */}
+          {/* Full Technical Specifications Table */}
           {selectedProductDetail.detailedSpecs && selectedProductDetail.detailedSpecs.length > 0 && (
-            <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-lg mb-12">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100">
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                    Kapsamlı Teknik Özellikler Tablosu
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                    Volta {selectedProductDetail.name} modeline ait resmi fabrika verileri ve mühendislik parametreleri
-                  </p>
-                </div>
-                <span className="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-xl self-start sm:self-auto">
-                  TSE & CE Onaylı
-                </span>
+            <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm mb-12">
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                <div className="w-3 h-3 rounded-full bg-red-600" />
+                <h3 className="text-xl sm:text-2xl font-black text-slate-900">Detaylı Teknik Özellikler</h3>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
@@ -533,6 +529,799 @@ export default function VoltaMotorPage() {
     );
   }
 
+  // ================= RENDER TRUE FULL-SCREEN DIRECT PAYMENT PORTAL =================
+  if (isPaymentModalOpen) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-red-600 selection:text-white pb-24 sm:pb-16">
+        <header className="sticky top-0 z-40 bg-[#14212d] text-white border-b border-slate-800 shadow-md">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+            <button
+              onClick={closeAllSubPages}
+              className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition border border-slate-700/80 active:scale-95"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+              </svg>
+              <span>Ana Sayfaya Dön</span>
+            </button>
+
+            <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
+                src="/volta-service-logo.png" 
+                alt="Volta Dönüşüm Servisi" 
+                className="w-9 h-9 sm:w-11 sm:h-11 object-contain rounded-xl drop-shadow-md"
+              />
+              <div className="hidden md:flex flex-col">
+                <span className="text-lg font-black tracking-tight text-white leading-none">VOLTA</span>
+                <span className="text-[9px] font-bold tracking-[0.16em] text-emerald-400 uppercase">DÖNÜŞÜM SERVİSİ</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 sm:gap-3">
+              <a
+                href="https://wa.me/905000000000?text=Merhaba,%20%C3%B6deme%20ve%20rezervasyon%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm px-3.5 py-2.5 rounded-xl transition shadow-sm active:scale-95"
+                title="WhatsApp Destek"
+              >
+                <WhatsAppIcon className="w-4 h-4" />
+                <span>WhatsApp</span>
+              </a>
+
+              <button
+                onClick={closeAllSubPages}
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-semibold transition border border-slate-700/80"
+                title="Kapat"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          <div className="flex items-center gap-2 text-xs text-slate-500 mb-6 font-medium">
+            <button onClick={closeAllSubPages} className="hover:text-slate-900 transition">Ana Sayfa</button>
+            <span>/</span>
+            <span className="text-red-600 font-bold">Online Ödeme & Rezervasyon Portalı</span>
+          </div>
+
+          <div className="text-center mb-8">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-red-600 bg-red-50 border border-red-200 px-3 py-1 rounded-full inline-block">
+              GÜVENLİ BANKA TAHSİLAT MERKEZİ
+            </span>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 mt-2.5 leading-snug">
+              Online Rezervasyon ve Ödeme Bildirimi
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-600 mt-1.5 max-w-xl mx-auto leading-relaxed">
+              Banka Havalesi ve FAST transferi ile araç rezervasyonunuzu anında başlatabilir, dekontunuzu yükleyerek onay sürecini takip edebilirsiniz.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xl">
+            <PaymentFlow 
+              targetSite="Volta Motor" 
+              productTitle="Volta Elektrikli Araç Rezervasyonu"
+              initialAmount="24.990 TL"
+            />
+          </div>
+        </main>
+
+        <div className="fixed bottom-6 right-6 z-40">
+          <a 
+            href="https://wa.me/905000000000?text=Merhaba,%20%C3%B6deme%20hakk%C4%B1nda%20dan%C4%B1%C5%9Fmak%20istiyorum"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full shadow-lg hover:shadow-xl transition-all font-semibold text-xs sm:text-sm active:scale-95"
+            title="WhatsApp ile İletişime Geçin"
+          >
+            <WhatsAppIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span>WhatsApp Danışmanı</span>
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  // ================= RENDER TRUE FULL-SCREEN CORPORATE & INFO PAGES =================
+  if (activeInfoModal) {
+    const getModalTitle = () => {
+      switch (activeInfoModal) {
+        case 'kurumsal': return 'Kurumsal';
+        case 'garanti': return '2 Yıl Resmi Garanti';
+        case 'kampanyalar': return 'Güncel Kampanyalar';
+        case 'bayiler': return 'Yetkili Bayi Ağı';
+        case 'servisler': return 'Yetkili Servis Ağı';
+        case 'yedekparca': return 'Yedek Parça & Donanım';
+        case 'iletisim': return 'Müşteri Hizmetleri & İletişim';
+        case 'gizlilik': return 'Gizlilik Politikası';
+        case 'kullanim': return 'Kullanım Koşulları';
+        case 'kvkk': return 'KVKK Aydınlatma Metni';
+        case 'mesafeli': return 'Mesafeli Satış Sözleşmesi';
+        default: return 'Bilgilendirme';
+      }
+    };
+
+    return (
+      <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-red-600 selection:text-white pb-24 sm:pb-16">
+        <header className="sticky top-0 z-40 bg-[#14212d] text-white border-b border-slate-800 shadow-md">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+            <button
+              onClick={closeAllSubPages}
+              className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition border border-slate-700/80 active:scale-95"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+              </svg>
+              <span>Ana Sayfaya Dön</span>
+            </button>
+
+            <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
+                src="/volta-service-logo.png" 
+                alt="Volta Dönüşüm Servisi" 
+                className="w-9 h-9 sm:w-11 sm:h-11 object-contain rounded-xl drop-shadow-md"
+              />
+              <div className="hidden md:flex flex-col">
+                <span className="text-lg font-black tracking-tight text-white leading-none">VOLTA</span>
+                <span className="text-[9px] font-bold tracking-[0.16em] text-emerald-400 uppercase">DÖNÜŞÜM SERVİSİ</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 sm:gap-3">
+              <a
+                href="https://wa.me/905000000000?text=Merhaba,%20Volta%20modelleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm px-3.5 py-2.5 rounded-xl transition shadow-sm active:scale-95"
+                title="WhatsApp Destek"
+              >
+                <WhatsAppIcon className="w-4 h-4" />
+                <span>WhatsApp</span>
+              </a>
+
+              <button
+                onClick={openDirectPayment}
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-sm hover:shadow transition flex items-center gap-1.5 active:scale-95"
+              >
+                <span>Ödeme Yap</span>
+              </button>
+
+              <button
+                onClick={closeAllSubPages}
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-semibold transition border border-slate-700/80"
+                title="Kapat"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          {/* Breadcrumbs */}
+          <div className="flex items-center gap-2 text-xs text-slate-500 mb-6 font-medium">
+            <button onClick={closeAllSubPages} className="hover:text-slate-900 transition">Ana Sayfa</button>
+            <span>/</span>
+            <span className="text-red-600 font-bold">{getModalTitle()}</span>
+          </div>
+
+          {/* ================= KURUMSAL VIEW ================= */}
+          {activeInfoModal === 'kurumsal' && (
+            <div className="space-y-8">
+              <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-100">
+                  <div className="flex items-center gap-4">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/volta-service-logo.png" alt="Volta" className="w-14 h-14 object-contain rounded-2xl drop-shadow" />
+                    <div>
+                      <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider">KURUMSAL PROFİL</span>
+                      <h1 className="text-2xl sm:text-3xl font-black text-slate-900">Volta Motor & Dönüşüm Servisi</h1>
+                    </div>
+                  </div>
+
+                  {/* Subtabs */}
+                  <div className="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-2xl overflow-x-auto">
+                    {[
+                      { id: 'hakkimizda', label: 'Hakkımızda' },
+                      { id: 'misyon', label: 'Misyon & Vizyon' },
+                      { id: 'kalite', label: 'Kalite Politikası' },
+                      { id: 'surdurulebilirlik', label: 'Sürdürülebilirlik' }
+                    ].map((tab) => (
+                      <button
+                        key={tab.id}
+                        onClick={() => setKurumsalTab(tab.id as any)}
+                        className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap ${
+                          kurumsalTab === tab.id 
+                            ? 'bg-white text-slate-900 shadow-sm' 
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-8">
+                  {kurumsalTab === 'hakkimizda' && (
+                    <div className="space-y-6 text-sm text-slate-600 leading-relaxed">
+                      <p className="text-base text-slate-800 font-medium leading-relaxed">
+                        Volta Motor, Türkiye’nin en büyük elektrikli araç ve hafif mobilite üreticilerinden biri olarak kurulduğu günden bu yana sürdürülebilir, çevreci ve yüksek teknolojili ulaşım çözümleri sunmaktadır.
+                      </p>
+                      <p>
+                        Modern entegre tesislerimizde üretilen elektrikli motosiklet, elektrikli bisiklet ve hafif ticari araçlarımız; üstün mühendislik kalitesi, düşük enerji tüketimi ve 81 ildeki yaygın servis ağı ile yüz binlerce kullanıcının güvenilir tercihi haline gelmiştir.
+                      </p>
+                      
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
+                        <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 text-center">
+                          <span className="text-2xl sm:text-3xl font-black text-slate-900 block">500.000+</span>
+                          <span className="text-xs text-slate-500 font-semibold mt-1 block">Mutlu Kullanıcı</span>
+                        </div>
+                        <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 text-center">
+                          <span className="text-2xl sm:text-3xl font-black text-slate-900 block">81 İl</span>
+                          <span className="text-xs text-slate-500 font-semibold mt-1 block">Yetkili Servis Ağı</span>
+                        </div>
+                        <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 text-center">
+                          <span className="text-2xl sm:text-3xl font-black text-slate-900 block">%100</span>
+                          <span className="text-xs text-slate-500 font-semibold mt-1 block">Elektrikli Mobilite</span>
+                        </div>
+                        <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 text-center">
+                          <span className="text-2xl sm:text-3xl font-black text-slate-900 block">50.000 m²</span>
+                          <span className="text-xs text-slate-500 font-semibold mt-1 block">Entegre Üretim Tesisi</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {kurumsalTab === 'misyon' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                        <div className="w-10 h-10 rounded-xl bg-slate-200 text-slate-800 flex items-center justify-center font-bold mb-3">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 14 14" />
+                          </svg>
+                        </div>
+                        <h3 className="text-base font-bold text-slate-900 mb-2">Misyonumuz</h3>
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                          Gelişmiş elektrikli tahrik teknolojilerini herkes için erişilebilir, güvenli ve ekonomik hale getirerek şehir içi ulaşımda çevre dostu dönüşüme öncülük etmek.
+                        </p>
+                      </div>
+
+                      <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                        <div className="w-10 h-10 rounded-xl bg-slate-200 text-slate-800 flex items-center justify-center font-bold mb-3">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                          </svg>
+                        </div>
+                        <h3 className="text-base font-bold text-slate-900 mb-2">Vizyonumuz</h3>
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                          Türkiye’de ve uluslararası pazarda hafif elektrikli araç segmentinde lider marka olarak, sıfır emisyonlu sürdürülebilir bir geleceğin mimarı olmak.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {kurumsalTab === 'kalite' && (
+                    <div className="space-y-4 text-sm text-slate-600 leading-relaxed">
+                      <p>
+                        Üretim bandımızdan çıkan her Volta aracı, uluslararası TSE, CE ve ISO 9001 kalite standartlarına uygun olarak zorlu güvenlik, batarya dayanıklılık ve fren testlerinden geçirilir.
+                      </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                        <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                          <h4 className="font-bold text-slate-900 text-sm mb-1">Batarya Güvenliği</h4>
+                          <p className="text-xs text-slate-500">Sertifikalı lityum ve derin döngülü jel batarya teknolojisi</p>
+                        </div>
+                        <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                          <h4 className="font-bold text-slate-900 text-sm mb-1">Şasi Dayanımı</h4>
+                          <p className="text-xs text-slate-500">Korozyona dayanıklı hafif alüminyum ve çelik şasi mimarisi</p>
+                        </div>
+                        <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                          <h4 className="font-bold text-slate-900 text-sm mb-1">Resmi Garanti</h4>
+                          <p className="text-xs text-slate-500">2 Yıl Resmi Garanti ve 10 Yıl Parça Bulundurma Taahhüdü</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {kurumsalTab === 'surdurulebilirlik' && (
+                    <div className="space-y-4 text-sm text-slate-600 leading-relaxed">
+                      <p>
+                        Volta Motor olarak fosil yakıtlara olan bağımlılığı ortadan kaldırmayı, şehirlerimizdeki karbon salınımını ve gürültü kirliliğini sıfıra indirmeyi hedefliyoruz.
+                      </p>
+                      <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-200 text-emerald-950">
+                        <h4 className="font-bold text-base mb-1 text-emerald-900">Çevreci Tasarruf</h4>
+                        <p className="text-xs sm:text-sm">
+                          Yılda ortalama 10.000 km yol yapan bir Volta kullanıcısı, atmosferi 1.2 ton karbon gazından korur ve standart içten yanmalı motorlara kıyasla %90 enerji tasarrufu sağlar.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ================= GARANTI VIEW ================= */}
+          {activeInfoModal === 'garanti' && (
+            <div className="space-y-8">
+              <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
+                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
+                  <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                      <polyline points="9 12 11 14 15 10" />
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">RESMİ GÜVENCE STANDARTLARI</span>
+                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900">Volta 2 Yıl Resmi Fabrika Garantisi</h1>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-1.5">Garanti Kapsamı</h3>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      Motor, dijital beyin (ECU/controller), şasi, LCD gösterge paneli ve tüm elektronik aksamlar fatura tarihinden itibaren 2 yıl boyunca tam fabrika garantisi kapsamındadır.
+                    </p>
+                  </div>
+
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-1.5">Batarya & Güç Güvencesi</h3>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      Orijinal Lityum-İyon ve Derin Döngülü Jel bataryalar fabrikasyon ve üretim kusurlarına karşı resmi koruma altındadır.
+                    </p>
+                  </div>
+
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-1.5">Periyodik Bakım Programı</h3>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      İlk 500 km rodaj/güvenlik kontrolü ve ardından her 2.500 km periyodik servis bakımı yetkili istasyonlarımızda hızlıca gerçekleştirilir.
+                    </p>
+                  </div>
+
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-1.5">10 Yıl Yedek Parça Temini</h3>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      Sanayi ve Teknoloji Bakanlığı mevzuatına uygun olarak tüm modellerimizde 10 yıl boyunca kesintisiz orijinal parça tedarik garantisi sunulmaktadır.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Maintenance Table */}
+                <div className="border border-slate-200 rounded-2xl overflow-hidden mb-6">
+                  <div className="bg-slate-100 p-4 font-bold text-slate-900 text-xs sm:text-sm">
+                    Periyodik Bakım ve Kontrol Tablosu
+                  </div>
+                  <div className="divide-y divide-slate-100 text-xs sm:text-sm">
+                    <div className="p-3.5 flex items-center justify-between bg-white">
+                      <span className="font-bold text-slate-800">500 km</span>
+                      <span className="text-slate-600">İlk Güvenlik, Fren & Cıvata Tork Kontrolü</span>
+                      <span className="text-emerald-600 font-bold">Ücretsiz Kontrol</span>
+                    </div>
+                    <div className="p-3.5 flex items-center justify-between bg-slate-50/50">
+                      <span className="font-bold text-slate-800">2.500 km</span>
+                      <span className="text-slate-600">Batarya Sağlık Testi, Lastik Basınç & Fren Balata Ayarı</span>
+                      <span className="text-slate-700 font-medium">Standart Bakım</span>
+                    </div>
+                    <div className="p-3.5 flex items-center justify-between bg-white">
+                      <span className="font-bold text-slate-800">5.000 km</span>
+                      <span className="text-slate-600">Elektrik Tesisatı, Süspansiyon & Rulman Denetimi</span>
+                      <span className="text-slate-700 font-medium">Kapsamlı Bakım</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ================= KAMPANYALAR VIEW ================= */}
+          {activeInfoModal === 'kampanyalar' && (
+            <div className="space-y-8">
+              <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
+                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
+                  <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-red-600 uppercase tracking-wider">GÜNCEL FIRSATLAR</span>
+                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900">Volta Elektrikli Mobilite Kampanyaları</h1>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-gradient-to-br from-red-50 to-white border border-red-200 p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                      <span className="bg-red-600 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full">Aktif Fırsat</span>
+                      <h3 className="text-xl font-black text-slate-900 mt-3 mb-2">Elektrikli Dönüşüm & Nakit Avantajı</h3>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                        Banka havalesi ve FAST ile peşin alımlarda tüm elektrikli motosiklet ve mopedlerde <strong>5.000 TL&apos;ye varan doğrudan indirim</strong> fırsatı!
+                      </p>
+                    </div>
+                    <button onClick={closeAllSubPages} className="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl transition inline-flex items-center justify-center gap-1.5">
+                      <span>Modelleri İncele</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                      <span className="bg-emerald-600 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full">81 İl Geçerli</span>
+                      <h3 className="text-xl font-black text-slate-900 mt-3 mb-2">Ücretsiz Adrese Teslimat & Montaj</h3>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                        Siparişiniz doğrudan fabrikanın özel lojistik araçlarıyla adresinize sevk edilir. Yetkili servis tarafından akü montajı tamamlanmış ve ilk sürüşe hazır teslim edilir.
+                      </p>
+                    </div>
+                    <button onClick={closeAllSubPages} className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold py-2.5 px-4 rounded-xl transition inline-flex items-center justify-center gap-1.5">
+                      <span>Hemen Sipariş Ver</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                      <span className="bg-blue-600 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full">Hediye Paketi</span>
+                      <h3 className="text-xl font-black text-slate-900 mt-3 mb-2">Kask & Güvenlik Kilidi Hediyesi</h3>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                        Seçili elektrikli bisiklet ve moped alımlarında TSE onaylı aerodinamik sürüş kaskı ve çelik spiral güvenlik kilidi kutu içeriğinde ücretsiz gönderilmektedir.
+                      </p>
+                    </div>
+                    <button onClick={closeAllSubPages} className="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold py-2.5 px-4 rounded-xl transition inline-flex items-center justify-center gap-1.5">
+                      <span>Detaylı Bilgi</span>
+                    </button>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                      <span className="bg-slate-700 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full">Eski / Yeni Takas</span>
+                      <h3 className="text-xl font-black text-slate-900 mt-3 mb-2">Eski Benzinli Aracını Getir, Volta&apos;ya Geç</h3>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                        Eski benzinli scooter veya motosikletinizi bayilerimize getirerek ek takas indiriminden yararlanabilir, benzin masraflarına hemen son verebilirsiniz.
+                      </p>
+                    </div>
+                    <a 
+                      href="https://wa.me/905000000000?text=Merhaba,%20takas%20kampanyas%C4%B1%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl transition inline-flex items-center justify-center gap-1.5"
+                    >
+                      <WhatsAppIcon className="w-4 h-4" />
+                      <span>WhatsApp ile Teklif Al</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ================= BAYİLER VIEW ================= */}
+          {activeInfoModal === 'bayiler' && (
+            <div className="space-y-8">
+              <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6 pb-6 border-b border-slate-100">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                      </svg>
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">SATIŞ VE SHOWROOM AĞI</span>
+                      <h1 className="text-2xl sm:text-3xl font-black text-slate-900">81 İlde Yetkili Bayilerimiz</h1>
+                    </div>
+                  </div>
+
+                  {/* Region Filter */}
+                  <div className="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-2xl overflow-x-auto">
+                    {['Tümü', 'Marmara', 'Ege', 'İç Anadolu', 'Akdeniz', 'Karadeniz'].map((reg) => (
+                      <button
+                        key={reg}
+                        onClick={() => setSelectedRegion(reg)}
+                        className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+                          selectedRegion === reg ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        {reg}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                  {[
+                    { city: 'İstanbul / Anadolu', name: 'Volta Kadıköy Plaza', address: 'Bağdat Caddesi No: 142, Kadıköy', phone: '0216 414 00 12', region: 'Marmara' },
+                    { city: 'İstanbul / Avrupa', name: 'Volta Maslak Showroom', address: 'Büyükdere Cad. No: 88, Maslak', phone: '0212 285 00 24', region: 'Marmara' },
+                    { city: 'Ankara', name: 'Volta Çankaya Merkez', address: 'Turan Güneş Bulvarı No: 54, Çankaya', phone: '0312 440 00 36', region: 'İç Anadolu' },
+                    { city: 'İzmir', name: 'Volta Alsancak Showroom', address: 'Şair Eşref Bulvarı No: 32, Alsancak', phone: '0232 464 00 48', region: 'Ege' },
+                    { city: 'Bursa', name: 'Volta Nilüfer Plaza', address: 'FSM Bulvarı No: 19, Nilüfer', phone: '0224 245 00 60', region: 'Marmara' },
+                    { city: 'Antalya', name: 'Volta Muratpaşa Showroom', address: 'Metin Kasapoğlu Cad. No: 77, Muratpaşa', phone: '0242 316 00 72', region: 'Akdeniz' },
+                    { city: 'Kocaeli', name: 'Volta İzmit Merkez', address: 'D-100 Karayolu Üzeri No: 112, İzmit', phone: '0262 331 00 84', region: 'Marmara' },
+                    { city: 'Düzce', name: 'Volta Fabrika Satış Mağazası', address: 'Gümüşova OSB 1. Cadde No: 5, Düzce', phone: '0380 731 00 96', region: 'Karadeniz' },
+                    { city: 'Adana', name: 'Volta Seyhan Showroom', address: 'Ziyapaşa Bulvarı No: 41, Seyhan', phone: '0322 458 00 10', region: 'Akdeniz' },
+                  ].filter(b => selectedRegion === 'Tümü' || b.region === selectedRegion).map((b, idx) => (
+                    <div key={idx} className="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-between hover:border-slate-300 transition">
+                      <div>
+                        <span className="text-[10px] font-bold uppercase text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded">
+                          {b.city}
+                        </span>
+                        <h4 className="font-bold text-slate-900 text-sm mt-2">{b.name}</h4>
+                        <p className="text-xs text-slate-500 mt-1 leading-relaxed">{b.address}</p>
+                      </div>
+                      <div className="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between">
+                        <span className="text-xs font-mono font-semibold text-slate-700">{b.phone}</span>
+                        <a 
+                          href={`https://wa.me/905000000000?text=Merhaba,%20${encodeURIComponent(b.name)}%20i%C3%A7in%20test%20s%C3%BCr%C3%BC%C5%9F%C3%BC%20randevusu%20almak%20istiyorum`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-emerald-600 font-bold hover:underline"
+                        >
+                          Randevu Al →
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ================= SERVİSLER VIEW ================= */}
+          {activeInfoModal === 'servisler' && (
+            <div className="space-y-8">
+              <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
+                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
+                  <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">SATIŞ SONRASI HİZMETLER</span>
+                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900">500+ TSE Belgeli Yetkili Servis Ağı</h1>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Periyodik Bakım</h4>
+                    <p className="text-xs text-slate-500">TSE standartlarında uzman teknisyenlerle hızlı servis</p>
+                  </div>
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Batarya Sağlık Testi</h4>
+                    <p className="text-xs text-slate-500">Bilgisayarlı hücre ve kapasite analiz cihazları</p>
+                  </div>
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Orijinal Parça</h4>
+                    <p className="text-xs text-slate-500">%100 fabrika barkodlu garantili yedek parça</p>
+                  </div>
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Mobil Servis</h4>
+                    <p className="text-xs text-slate-500">Acil durumlarda yerinde arıza tespit ve onarım desteği</p>
+                  </div>
+                </div>
+
+                <div className="bg-slate-900 text-white p-6 sm:p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div>
+                    <h3 className="text-xl font-bold">Servis Randevusu ve Danışma Hattı</h3>
+                    <p className="text-xs sm:text-sm text-slate-400 mt-1">Türkiye genelindeki tüm yetkili servis randevularınız için tek numara.</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <a href="tel:08503058582" className="bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl transition">
+                      0850 305 85 82
+                    </a>
+                    <a 
+                      href="https://wa.me/905000000000?text=Merhaba,%20servis%20randevusu%20almak%20istiyorum"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5"
+                    >
+                      <WhatsAppIcon className="w-4 h-4" />
+                      <span>WhatsApp Servis</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ================= YEDEK PARÇA VIEW ================= */}
+          {activeInfoModal === 'yedekparca' && (
+            <div className="space-y-8">
+              <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
+                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
+                  <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="3" />
+                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">ORİJİNAL DONANIM & AKSESUAR</span>
+                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900">Volta Orijinal Yedek Parça Merkezi</h1>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Batarya & Akü Paketleri</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed">Lityum-İyon ve Jel batarya modülleri, BMS kontrol üniteleri.</p>
+                  </div>
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Akıllı Şarj Adaptörleri</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed">Otomatik akım kesmeli, aşırı gerilim korumalı hızlı şarj cihazları.</p>
+                  </div>
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Fren & Balata Donanımları</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed">Hidrolik disk frenler, kaliperler, kampana ve balata setleri.</p>
+                  </div>
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Lastik & Jant Grubu</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed">Tubeless patlamaya dirençli lastikler ve alaşımlı jantlar.</p>
+                  </div>
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Motor Beyni (ECU)</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed">Orijinal fabrikasyon yazılımlı fırçasız motor kontrol beyinleri.</p>
+                  </div>
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Aydınlatma & Göstergeler</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed">LED farlar, sinyaller, dijital renkli LCD gösterge panelleri.</p>
+                  </div>
+                </div>
+
+                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-sm">Doğrudan Fabrikadan Orijinal Parça Siparişi</h4>
+                    <p className="text-xs text-slate-500">Parça numarası ve model bilginizle WhatsApp üzerinden sipariş verebilirsiniz.</p>
+                  </div>
+                  <a 
+                    href="https://wa.me/905000000000?text=Merhaba,%20orijinal%20yedek%20par%C3%A7a%20sipari%C5%9Fi%20vermek%20istiyorum"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2.5 px-4 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap"
+                  >
+                    <WhatsAppIcon className="w-4 h-4" />
+                    <span>WhatsApp Parça Siparişi</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ================= İLETİŞİM VIEW ================= */}
+          {activeInfoModal === 'iletisim' && (
+            <div className="space-y-8">
+              <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
+                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
+                  <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">MÜŞTERİ HİZMETLERİ & FABRİKA</span>
+                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900">İletişim ve Destek Merkezi</h1>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                  <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 flex flex-col justify-between">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Çağrı Merkezi & Danışma Hattı</span>
+                      <h3 className="text-2xl font-black text-slate-900 mt-1 mb-2">0850 305 85 82</h3>
+                      <p className="text-xs text-slate-500 leading-relaxed">
+                        Hafta içi 08:30 - 18:00, Cumartesi 09:00 - 14:00 saatleri arasında kesintisiz danışmanlık desteği.
+                      </p>
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-slate-200 flex items-center gap-2">
+                      <a href="tel:08503058582" className="bg-red-600 hover:bg-red-700 text-white font-semibold text-xs py-2 px-4 rounded-xl transition">
+                        Hemen Ara
+                      </a>
+                      <a 
+                        href="https://wa.me/905000000000?text=Merhaba,%20bilgi%20almak%20istiyorum"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2 px-4 rounded-xl transition flex items-center gap-1.5"
+                      >
+                        <WhatsAppIcon className="w-3.5 h-3.5" />
+                        <span>WhatsApp Destek</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 flex flex-col justify-between">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">E-Posta İletişim</span>
+                      <h3 className="text-lg font-black text-slate-900 mt-1 mb-2">info@volta.com.tr</h3>
+                      <p className="text-xs text-slate-500 leading-relaxed">
+                        Kurumsal talepleriniz, bayi başvuruları ve servis bildirimleriniz için e-posta adresimizden bize 7/24 ulaşabilirsiniz.
+                      </p>
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-slate-200">
+                      <span className="text-xs font-semibold text-slate-700">Teknik Destek: destek@volta.com.tr</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Fabrika & Üretim Kampüsü</span>
+                  <h3 className="text-lg font-bold text-slate-900 mt-1 mb-1">Volta Motor Sanayi ve Ticaret A.Ş.</h3>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Gümüşova Organize Sanayi Bölgesi 1. Cadde No: 5, Gümüşova / DÜZCE - TÜRKİYE
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ================= HUKUKİ VIEW ================= */}
+          {(activeInfoModal === 'gizlilik' || activeInfoModal === 'kullanim' || activeInfoModal === 'kvkk' || activeInfoModal === 'mesafeli') && (
+            <div className="space-y-8">
+              <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
+                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
+                  <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <line x1="16" y1="13" x2="8" y2="13" />
+                      <line x1="16" y1="17" x2="8" y2="17" />
+                      <polyline points="10 9 9 9 8 9" />
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">HUKUKİ VE YASAL BİLGİLENDİRME</span>
+                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900">{getModalTitle()}</h1>
+                  </div>
+                </div>
+
+                <div className="space-y-4 text-xs sm:text-sm text-slate-600 leading-relaxed max-w-4xl">
+                  <p>
+                    Volta Motor & Dönüşüm Servisi Sanayi ve Ticaret A.Ş. olarak müşterilerimizin kişisel verilerinin korunması, gizliliği ve güvenliği temel önceliğimizdir.
+                  </p>
+                  <p>
+                    6698 sayılı Kişisel Verilerin Korunması Kanunu (&quot;KVKK&quot;) ve ilgili mevzuat uyarınca; sitemiz üzerinden yapılan online sipariş, rezervasyon, teknik servis ve ödeme bildirim süreçlerinde paylaşılan ad, soyad, telefon, adres ve ödeme teyit dekontu bilgileri yalnızca yasal yükümlülüklerin yerine getirilmesi, araç tescil işlemleri, garanti başlatılması ve faturalandırma amacıyla işlenmektedir.
+                  </p>
+                  <p>
+                    Banka ödeme işlemlerinde kullanıcı güvenliği için SSL 256-bit uçtan uca şifreleme protokolü ve tekil işlem süreleri uygulanmaktadır. Bilgileriniz hiçbir koşulda üçüncü şahıslarla paylaşılmaz ve ticari amaçla satılmaz.
+                  </p>
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mt-4 text-slate-700">
+                    <strong>Resmi İletişim:</strong> KVKK kapsamındaki haklarınız ve bilgi talepleriniz için <span className="font-mono text-slate-900">kvkk@volta.com.tr</span> adresine yazılı olarak başvurabilirsiniz.
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </main>
+
+        <div className="fixed bottom-6 right-6 z-40">
+          <a 
+            href="https://wa.me/905000000000?text=Merhaba,%20Volta%20modelleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full shadow-lg hover:shadow-xl transition-all font-semibold text-xs sm:text-sm active:scale-95"
+            title="WhatsApp ile İletişime Geçin"
+          >
+            <WhatsAppIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span>WhatsApp Danışmanı</span>
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   // ================= MAIN HOME / CATALOG PAGE =================
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-red-600 selection:text-white">
@@ -553,35 +1342,59 @@ export default function VoltaMotorPage() {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Clean Unified Styles */}
           <nav className="hidden lg:flex items-center gap-6 text-xs sm:text-sm font-bold tracking-wider uppercase text-slate-200">
-            <button onClick={() => openInfoModal('kurumsal')} className="hover:text-emerald-400 transition-colors">
+            <button 
+              onClick={() => openInfoModal('kurumsal')} 
+              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+            >
               Kurumsal
             </button>
-            <a href="#modeller" className="hover:text-emerald-400 transition-colors">
+            <a 
+              href="#modeller" 
+              className="bg-transparent border-0 outline-none p-0 text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+            >
               Modeller
             </a>
-            <button onClick={() => openInfoModal('garanti')} className="hover:text-emerald-400 transition-colors">
+            <button 
+              onClick={() => openInfoModal('garanti')} 
+              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+            >
               Garanti
             </button>
-            <button onClick={() => openInfoModal('kampanyalar')} className="hover:text-emerald-400 transition-colors">
+            <button 
+              onClick={() => openInfoModal('kampanyalar')} 
+              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+            >
               Kampanyalar
             </button>
-            <button onClick={() => openInfoModal('bayiler')} className="hover:text-emerald-400 transition-colors">
+            <button 
+              onClick={() => openInfoModal('bayiler')} 
+              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+            >
               Bayiler
             </button>
-            <button onClick={() => openInfoModal('servisler')} className="hover:text-emerald-400 transition-colors">
+            <button 
+              onClick={() => openInfoModal('servisler')} 
+              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+            >
               Servisler
             </button>
-            <button onClick={() => openInfoModal('yedekparca')} className="hover:text-emerald-400 transition-colors">
+            <button 
+              onClick={() => openInfoModal('yedekparca')} 
+              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+            >
               Yedek Parça
             </button>
-            <button onClick={() => openInfoModal('iletisim')} className="hover:text-emerald-400 transition-colors">
+            <button 
+              onClick={() => openInfoModal('iletisim')} 
+              className="bg-transparent border-0 outline-none p-0 appearance-none text-slate-200 hover:text-emerald-400 transition-colors cursor-pointer font-bold tracking-wider text-xs sm:text-sm uppercase"
+            >
               İletişim
             </button>
           </nav>
 
-          {/* Top Right: Direct Pay & 3-Line Hamburger Menu */}
+          {/* Top Right: WhatsApp & Direct Pay & 3-Line Hamburger Menu */}
           <div className="flex items-center gap-2 sm:gap-3">
             <a
               href="https://wa.me/905000000000?text=Merhaba,%20Volta%20modelleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
@@ -1152,440 +1965,6 @@ export default function VoltaMotorPage() {
         />
       </section>
 
-      {/* ================= MODAL: DIRECT PAYMENT MODAL ================= */}
-      {isPaymentModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl relative border border-slate-200">
-            <button
-              onClick={() => setIsPaymentModalOpen(false)}
-              className="absolute top-4 right-4 sm:top-5 sm:right-5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition font-bold"
-            >
-              ✕
-            </button>
-
-            <div className="mb-6 flex items-center gap-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img 
-                src="/volta-service-logo.png" 
-                alt="Volta Dönüşüm Servisi" 
-                className="w-12 h-12 object-contain rounded-xl shadow-sm"
-              />
-              <div>
-                <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider">VOLTA DÖNÜŞÜM SERVİSİ</span>
-                <h3 className="text-xl sm:text-2xl font-black text-slate-900 leading-snug">Online Rezervasyon & Ödeme</h3>
-              </div>
-            </div>
-
-            <PaymentFlow 
-              targetSite="Volta Motor" 
-              productTitle="Volta Elektrikli Araç Ödeme / Rezervasyon"
-              initialAmount="24.990 TL"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* ================= MODAL: CHECKOUT MODAL ================= */}
-      {isCheckoutOpen && activeCheckoutModel && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl relative border border-slate-200">
-            <button
-              onClick={() => setIsCheckoutOpen(false)}
-              className="absolute top-4 right-4 sm:top-5 sm:right-5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition font-bold"
-            >
-              ✕
-            </button>
-
-            <div className="mb-6 flex items-center gap-4">
-              <div className="w-16 h-16 bg-slate-50 rounded-xl p-2 border border-slate-100 shrink-0">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={activeCheckoutModel.image} alt={activeCheckoutModel.name} className="w-full h-full object-contain" />
-              </div>
-              <div>
-                <span className="text-xs font-bold text-red-600 uppercase">{activeCheckoutModel.category}</span>
-                <h3 className="text-lg sm:text-2xl font-black text-slate-900 leading-snug">{activeCheckoutModel.name}</h3>
-                <p className="text-sm sm:text-base font-black text-slate-800 leading-none mt-0.5">
-                  {activeCheckoutModel.price.toLocaleString('tr-TR')},00 TL
-                </p>
-              </div>
-            </div>
-
-            <PaymentFlow 
-              targetSite="Volta Motor" 
-              productTitle={`Volta ${activeCheckoutModel.name} - ${activeCheckoutModel.category}`}
-              initialAmount={`${activeCheckoutModel.price.toLocaleString('tr-TR')} TL`}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* ================= MODAL: CORPORATE / INFO MODALS ================= */}
-      {activeInfoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative border border-slate-200">
-            <button
-              onClick={() => setActiveInfoModal(null)}
-              className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition font-bold text-sm"
-            >
-              ✕
-            </button>
-
-            {/* Modal Content Switcher */}
-            {activeInfoModal === 'kurumsal' && (
-              <div>
-                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/volta-service-logo.png" alt="Volta" className="w-10 h-10 object-contain rounded-lg" />
-                  <div>
-                    <span className="text-xs font-bold text-emerald-600 uppercase">KURUMSAL</span>
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">Volta Motor & Dönüşüm Servisi</h3>
-                  </div>
-                </div>
-
-                {/* Sub-tabs */}
-                <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
-                  {[
-                    { id: 'hakkimizda', label: 'Hakkımızda' },
-                    { id: 'misyon', label: 'Misyon & Vizyon' },
-                    { id: 'kalite', label: 'Kalite Politikası' },
-                    { id: 'surdurulebilirlik', label: 'Sürdürülebilirlik' }
-                  ].map((tab) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setKurumsalTab(tab.id as any)}
-                      className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-                        kurumsalTab === tab.id 
-                          ? 'bg-slate-900 text-white' 
-                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
-
-                {kurumsalTab === 'hakkimizda' && (
-                  <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    <p>
-                      Volta Motor, Türkiye’nin en büyük elektrikli araç ve hafif mobilite üreticilerinden biri olarak kurulduğu günden bu yana sürdürülebilir, çevreci ve yüksek teknolojili ulaşım çözümleri sunmaktadır.
-                    </p>
-                    <p>
-                      Modern entegre tesislerimizde üretilen elektrikli motosiklet, elektrikli bisiklet ve hafif ticari araçlarımız; üstün mühendislik kalitesi, düşük enerji tüketimi ve yaygın servis ağı ile milyonlarca kullanıcının tercihi haline gelmiştir.
-                    </p>
-                    <div className="grid grid-cols-3 gap-3 pt-3">
-                      <div className="bg-slate-50 p-3 rounded-xl text-center">
-                        <span className="text-lg font-black text-slate-900 block">500.000+</span>
-                        <span className="text-[11px] text-slate-500">Mutlu Kullanıcı</span>
-                      </div>
-                      <div className="bg-slate-50 p-3 rounded-xl text-center">
-                        <span className="text-lg font-black text-slate-900 block">81 İl</span>
-                        <span className="text-[11px] text-slate-500">Yaygın Servis Ağı</span>
-                      </div>
-                      <div className="bg-slate-50 p-3 rounded-xl text-center">
-                        <span className="text-lg font-black text-slate-900 block">%100</span>
-                        <span className="text-[11px] text-slate-500">Elektrikli Mobilite</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {kurumsalTab === 'misyon' && (
-                  <div className="space-y-4 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                      <strong className="text-slate-900 block text-sm mb-1">Misyonumuz</strong>
-                      <p>
-                        Gelişmiş elektrikli tahrik teknolojilerini herkes için erişilebilir, güvenli ve ekonomik hale getirerek şehir içi ulaşımda çevre dostu dönüşüme öncülük etmek.
-                      </p>
-                    </div>
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                      <strong className="text-slate-900 block text-sm mb-1">Vizyonumuz</strong>
-                      <p>
-                        Türkiye’de ve uluslararası pazarda hafif elektrikli araç segmentinde lider marka olarak, sıfır emisyonlu sürdürülebilir bir geleceğin mimarı olmak.
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {kurumsalTab === 'kalite' && (
-                  <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    <p>
-                      Üretim bandımızdan çıkan her Volta aracı, uluslararası TSE, CE ve ISO 9001 kalite standartlarına uygun olarak zorlu güvenlik, batarya dayanıklılık ve fren testlerinden geçirilir.
-                    </p>
-                    <ul className="space-y-2 mt-2">
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-red-600" />
-                        <span>Sertifikalı lityum ve derin döngülü jel batarya teknolojisi</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-red-600" />
-                        <span>Korozyona dayanıklı hafif alüminyum şasi mimarisi</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-red-600" />
-                        <span>2 Yıl Resmi Garanti ve 10 Yıl Parça Bulundurma Taahhüdü</span>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-
-                {kurumsalTab === 'surdurulebilirlik' && (
-                  <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    <p>
-                      Volta Motor olarak fosil yakıtlara olan bağımlılığı ortadan kaldırmayı, şehirlerimizdeki karbon salınımını ve gürültü kirliliğini sıfıra indirmeyi hedefliyoruz.
-                    </p>
-                    <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100 text-emerald-900 text-xs">
-                      ⚡ <strong>Çevreci Tasarruf:</strong> Yılda ortalama 10.000 km yol yapan bir Volta kullanıcısı, atmosferi 1.2 ton karbon gazından korur ve %90 yakıt tasarrufu sağlar.
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {activeInfoModal === 'garanti' && (
-              <div>
-                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-                  <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
-                    🛡
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-blue-600 uppercase">GÜVENCE & DESTEK</span>
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">2 Yıl Resmi Garanti Hizmeti</h3>
-                  </div>
-                </div>
-
-                <div className="space-y-4 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  <p>
-                    Tüm Volta Motor elektrikli araçları, fatura tarihinden itibaren <strong>2 Yıl Resmi Fabrika Garantisi</strong> altındadır.
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
-                      <strong className="text-slate-900 block mb-1">Kapsam</strong>
-                      <p className="text-xs">Motor, beyin (controller), şasi, gösterge ve elektronik bileşenler tam garanti kapsamındadır.</p>
-                    </div>
-                    <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
-                      <strong className="text-slate-900 block mb-1">Batarya Güvencesi</strong>
-                      <p className="text-xs">Lityum ve Jel aküler üretim ve fabrikasyon hatalarına karşı koruma altındadır.</p>
-                    </div>
-                  </div>
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                    <strong className="text-slate-900 block text-xs mb-1">Periyodik Bakım ve Servis</strong>
-                    <p className="text-xs">
-                      İlk 500 km ve sonrasındaki her 2.500 km periyodik bakım yetkili servislerimizde uzman teknisyenlerce gerçekleştirilmektedir.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeInfoModal === 'kampanyalar' && (
-              <div>
-                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-                  <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
-                    🏷
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-amber-600 uppercase">FIRSATLAR & AVANTAJLAR</span>
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">Güncel Kampanyalar</h3>
-                  </div>
-                </div>
-
-                <div className="space-y-3 text-xs sm:text-sm">
-                  <div className="bg-red-50 border border-red-200 p-4 rounded-2xl">
-                    <div className="flex items-center justify-between font-bold text-red-700 text-sm mb-1">
-                      <span>Elektrikli Mobilite Dönüşüm İndirimi</span>
-                      <span className="bg-red-600 text-white text-xs px-2 py-0.5 rounded">Aktif</span>
-                    </div>
-                    <p className="text-slate-700 text-xs">
-                      Tüm modellerde nakit ve banka havalesine özel <strong>5.000 TL&apos;ye varan doğrudan indirim avantajı</strong> sunulmaktadır.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl">
-                    <div className="flex items-center justify-between font-bold text-slate-900 text-sm mb-1">
-                      <span>Ücretsiz Fabrika Sevkiyatı & Kurulum</span>
-                      <span className="bg-emerald-600 text-white text-xs px-2 py-0.5 rounded">Ücretsiz</span>
-                    </div>
-                    <p className="text-slate-600 text-xs">
-                      Siparişiniz doğrudan adresinize veya en yakın yetkili servis noktasına ücretsiz olarak sevk edilir ve ilk sürüşe hazır teslim edilir.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl">
-                    <div className="flex items-center justify-between font-bold text-slate-900 text-sm mb-1">
-                      <span>Kask ve Güvenlik Kilidi Hediyesi</span>
-                      <span className="bg-blue-600 text-white text-xs px-2 py-0.5 rounded">Hediye</span>
-                    </div>
-                    <p className="text-slate-600 text-xs">
-                      Seçili elektrikli bisiklet ve moped alımlarında TSE onaylı güvenlik kaskı ve çelik kilit hediye edilmektedir.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeInfoModal === 'bayiler' && (
-              <div>
-                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-                  <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">
-                    🏢
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-indigo-600 uppercase">SATIŞ NOKTALARI</span>
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">Yetkili Bayi Ağı</h3>
-                  </div>
-                </div>
-
-                <div className="space-y-4 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  <p>
-                    Türkiye&apos;nin 81 ilinde 400&apos;ün üzerinde yetkili satış noktamız ile size en yakın Volta showroom&apos;unda test sürüşü yapabilir, modellerimizi yerinde inceleyebilirsiniz.
-                  </p>
-                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
-                    <div className="font-bold text-slate-900 text-sm">Test Sürüşü & Rezervasyon</div>
-                    <p className="text-xs">
-                      İnternet sitemiz üzerinden sipariş oluşturduğunuzda ürününüz bölgenizdeki yetkili bayimiz tarafından sıfır kilometre ve plakaya hazır şekilde teslim edilir.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeInfoModal === 'servisler' && (
-              <div>
-                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-                  <div className="w-10 h-10 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center font-bold">
-                    🔧
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-teal-600 uppercase">SATIŞ SONRASI HİZMETLER</span>
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">Yetkili Servis Ağı</h3>
-                  </div>
-                </div>
-
-                <div className="space-y-4 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  <p>
-                    500&apos;ü aşkın TSE belgeli yetkili servis istasyonumuzla periyodik bakım, onarım, akü değişimi ve yazılım güncellemelerinde kesintisiz destek sağlıyoruz.
-                  </p>
-                  <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="bg-slate-50 p-3 rounded-xl">
-                      <strong className="text-slate-900 block mb-1">Mobil Servis</strong>
-                      <span>Gerektiğinde yerinde arıza tespit ve servis desteği</span>
-                    </div>
-                    <div className="bg-slate-50 p-3 rounded-xl">
-                      <strong className="text-slate-900 block mb-1">Orijinal Parça</strong>
-                      <span>%100 orijinal ve sertifikalı fabrika yedek parçaları</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeInfoModal === 'yedekparca' && (
-              <div>
-                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-                  <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold">
-                    ⚙
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-slate-500 uppercase">ORİJİNAL DONANIM</span>
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">Yedek Parça & Aksesuar</h3>
-                  </div>
-                </div>
-
-                <div className="space-y-4 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  <p>
-                    Volta elektrikli araçlarınız için ihtiyaç duyduğunuz tüm akü blokları, şarj adaptörleri, lastik, fren balataları ve gövde aksesuarları doğrudan fabrikadan temin edilmektedir.
-                  </p>
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                    <strong className="text-slate-900 block text-xs mb-1">Hızlı Kargo Garantisi</strong>
-                    <p className="text-xs">
-                      Tüm standart sarf malzemeleri ve yedek parçalar 24 saat içerisinde yetkili servislerimize kargolanmaktadır.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeInfoModal === 'iletisim' && (
-              <div>
-                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-                  <div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold">
-                    📞
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-rose-600 uppercase">MÜŞTERİ HİZMETLERİ</span>
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">İletişim & Fabrika Bilgileri</h3>
-                  </div>
-                </div>
-
-                <div className="space-y-3 text-xs sm:text-sm text-slate-700">
-                  <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100 flex items-center justify-between">
-                    <div>
-                      <span className="text-slate-400 block text-[10px]">Çağrı Merkezi & Danışma Hattı</span>
-                      <strong className="text-slate-900 text-sm">0850 305 85 82</strong>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <a 
-                        href="https://wa.me/905000000000?text=Merhaba,%20Volta%20modelleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition"
-                      >
-                        <WhatsAppIcon className="w-3.5 h-3.5" />
-                        <span>WhatsApp</span>
-                      </a>
-                      <a href="tel:08503058582" className="bg-red-600 hover:bg-red-700 text-white font-semibold px-3 py-1.5 rounded-lg text-xs transition">
-                        Ara
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
-                    <span className="text-slate-400 block text-[10px]">E-Posta İletişim</span>
-                    <strong className="text-slate-900">info@volta.com.tr • destek@volta.com.tr</strong>
-                  </div>
-
-                  <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
-                    <span className="text-slate-400 block text-[10px]">Fabrika & Üretim Tesisi</span>
-                    <strong className="text-slate-900">Gümüşova Organize Sanayi Bölgesi, Düzce / TÜRKİYE</strong>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {(activeInfoModal === 'gizlilik' || activeInfoModal === 'kullanim' || activeInfoModal === 'kvkk' || activeInfoModal === 'mesafeli') && (
-              <div>
-                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-                  <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center font-bold">
-                    ⚖
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-slate-500 uppercase">HUKUKİ BİLGİLENDİRME</span>
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">
-                      {activeInfoModal === 'gizlilik' && 'Gizlilik Politikası'}
-                      {activeInfoModal === 'kullanim' && 'Kullanım Koşulları'}
-                      {activeInfoModal === 'kvkk' && 'KVKK Aydınlatma Metni'}
-                      {activeInfoModal === 'mesafeli' && 'Mesafeli Satış Sözleşmesi'}
-                    </h3>
-                  </div>
-                </div>
-
-                <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed max-h-[50vh] overflow-y-auto pr-2">
-                  <p>
-                    Volta Motor & Dönüşüm Servisi Sanayi ve Ticaret A.Ş. olarak müşterilerimizin kişisel verilerinin güvenliğine ve gizliliğine en üst düzeyde önem vermekteyiz.
-                  </p>
-                  <p>
-                    6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) uyarınca, sipariş ve rezervasyon işlemleriniz esnasında paylaştığınız bilgiler yalnızca siparişin oluşturulması, banka havalesi teyidi, teslimat ve garanti süreçlerinin işletilmesi amacıyla işlenmektedir.
-                  </p>
-                  <p>
-                    Banka ödeme işlemlerinde kullanıcı güvenliği için SSL 256-bit şifreleme protokolü ve tekil işlem süreleri uygulanmaktadır.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* Floating WhatsApp Action Button (FAB) */}
       <div className="fixed bottom-6 right-6 z-40">
         <a 
@@ -1616,7 +1995,7 @@ export default function VoltaMotorPage() {
               <span className="text-slate-300 font-semibold">VOLTA DÖNÜŞÜM & GARANTİ SERVİSİ</span>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-slate-300">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-slate-300 font-medium">
               <button onClick={() => openInfoModal('kurumsal')} className="hover:text-white transition">Kurumsal</button>
               <a href="#modeller" className="hover:text-white transition">Modeller</a>
               <button onClick={() => openInfoModal('garanti')} className="hover:text-white transition">Garanti</button>
