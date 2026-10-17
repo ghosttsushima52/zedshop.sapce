@@ -12,9 +12,9 @@ interface AdminPanelProps {
 
 export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
   const { user, isAdmin, usersList } = useAuth();
-  const { models, updateModel, resetModels, orders, updateOrderStatus, deleteOrder } = useData();
+  const { models, updateModel, resetModels, orders, updateOrderStatus, deleteOrder, bankInfo, updateBankInfo } = useData();
 
-  const [activeTab, setActiveTab] = useState<'models' | 'orders' | 'users' | 'stats'>('models');
+  const [activeTab, setActiveTab] = useState<'models' | 'orders' | 'users' | 'bank' | 'stats'>('models');
   const [editingModelId, setEditingModelId] = useState<string | null>(null);
   const [editPrice, setEditPrice] = useState<number>(0);
   const [editOldPrice, setEditOldPrice] = useState<number>(0);
@@ -22,6 +22,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
   const [editIsFeatured, setEditIsFeatured] = useState<boolean>(false);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [saveSuccessMessage, setSaveSuccessMessage] = useState<string | null>(null);
+
+  // Bank & IBAN local form state
+  const [adminBankName, setAdminBankName] = useState(bankInfo?.bankName || '');
+  const [adminAccountHolder, setAdminAccountHolder] = useState(bankInfo?.accountHolder || '');
+  const [adminIban, setAdminIban] = useState(bankInfo?.iban || '');
+  const [adminBankDesc, setAdminBankDesc] = useState(bankInfo?.description || '');
+
 
   if (!isOpen) return null;
 
@@ -139,6 +146,22 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
               }`}
             >
               👥 Kayıtlı Kullanıcılar ({usersList.length})
+            </button>
+            <button
+              onClick={() => {
+                setAdminBankName(bankInfo?.bankName || '');
+                setAdminAccountHolder(bankInfo?.accountHolder || '');
+                setAdminIban(bankInfo?.iban || '');
+                setAdminBankDesc(bankInfo?.description || '');
+                setActiveTab('bank');
+              }}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+                activeTab === 'bank'
+                  ? 'bg-red-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 bg-white/60 hover:bg-white'
+              }`}
+            >
+              💳 IBAN & Ödeme Bilgisi
             </button>
             <button
               onClick={() => setActiveTab('stats')}
@@ -440,6 +463,114 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                       </span>
                     </div>
                   ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB: BANK & IBAN SETTINGS */}
+          {activeTab === 'bank' && (
+            <div className="space-y-6 max-w-2xl">
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div>
+                  <h3 className="font-black text-slate-900 text-sm">Banka & IBAN Bilgileri Yönetimi</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Buraya girdiğiniz IBAN ve banka bilgileri ödeme ekranında müşterilere gösterilir. Boş bırakırsanız müşteriler doğrudan WhatsApp ile ödeme bilgisi talep edebilir.
+                  </p>
+                </div>
+
+                <div className="space-y-3 pt-2">
+                  <div>
+                    <label className="text-xs font-bold text-slate-700 block mb-1">
+                      Banka Adı
+                    </label>
+                    <input
+                      type="text"
+                      value={adminBankName}
+                      onChange={(e) => setAdminBankName(e.target.value)}
+                      placeholder="örn: Ziraat Bankası, Garanti BBVA"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-red-600 outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-slate-700 block mb-1">
+                      Hesap Sahibi / Alıcı Unvanı
+                    </label>
+                    <input
+                      type="text"
+                      value={adminAccountHolder}
+                      onChange={(e) => setAdminAccountHolder(e.target.value)}
+                      placeholder="örn: Ad Soyad veya Şirket Unvanı"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-red-600 outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-slate-700 block mb-1">
+                      IBAN Numarası
+                    </label>
+                    <input
+                      type="text"
+                      value={adminIban}
+                      onChange={(e) => setAdminIban(e.target.value)}
+                      placeholder="TR00 0000 0000 0000 0000 0000 00"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-red-600 outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-slate-700 block mb-1">
+                      Ödeme Açıklaması / Talimatı
+                    </label>
+                    <textarea
+                      value={adminBankDesc}
+                      onChange={(e) => setAdminBankDesc(e.target.value)}
+                      placeholder="örn: Açıklama kısmına sipariş takip numaranızı ve adınızı yazınız."
+                      rows={2}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:ring-2 focus:ring-red-600 outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAdminBankName('');
+                      setAdminAccountHolder('');
+                      setAdminIban('');
+                      setAdminBankDesc('');
+                      updateBankInfo({
+                        bankName: '',
+                        accountHolder: '',
+                        iban: '',
+                        description: '',
+                      });
+                      setSaveSuccessMessage('IBAN bilgisi temizlendi. Ödeme ekranında sadece Bilgi Talep Et gösterilecek.');
+                      setTimeout(() => setSaveSuccessMessage(null), 3000);
+                    }}
+                    className="text-xs font-semibold text-slate-500 hover:text-red-600"
+                  >
+                    IBAN Bilgisini Temizle
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      updateBankInfo({
+                        bankName: adminBankName.trim(),
+                        accountHolder: adminAccountHolder.trim(),
+                        iban: adminIban.trim(),
+                        description: adminBankDesc.trim(),
+                      });
+                      setSaveSuccessMessage('Banka ve IBAN bilgileri başarıyla güncellendi!');
+                      setTimeout(() => setSaveSuccessMessage(null), 3000);
+                    }}
+                    className="bg-red-600 hover:bg-red-700 text-white font-black px-6 py-2.5 rounded-xl text-xs transition shadow-sm"
+                  >
+                    Bilgileri Kaydet
+                  </button>
                 </div>
               </div>
             </div>

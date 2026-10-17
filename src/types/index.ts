@@ -63,3 +63,11 @@ export interface Campaign {
   active: boolean;
   discountBadge?: string;
 }
+
+export interface BankInfo {
+  bankName: string;
+  accountHolder: string;
+  iban: string;
+  description?: string;
+}
+

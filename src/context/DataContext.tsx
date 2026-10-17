@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { VoltaModel, Order } from '@/types';
+import { VoltaModel, Order, BankInfo } from '@/types';
 import { INITIAL_VOLTA_MODELS } from '@/data/models';
 
 interface DataContextType {
@@ -12,10 +12,21 @@ interface DataContextType {
   createOrder: (order: Omit<Order, 'id' | 'orderNumber' | 'createdAt' | 'status'>) => Order;
   updateOrderStatus: (orderId: string, status: Order['status']) => void;
   deleteOrder: (orderId: string) => void;
+  bankInfo: BankInfo;
+  updateBankInfo: (info: BankInfo) => void;
 }
 
 const MODELS_STORAGE_KEY = 'volta_models_data_v2';
 const ORDERS_STORAGE_KEY = 'volta_orders_data_v2';
+const BANK_STORAGE_KEY = 'volta_bank_info_v1';
+
+const DEFAULT_BANK_INFO: BankInfo = {
+  bankName: '',
+  accountHolder: '',
+  iban: '',
+  description: 'Ödeme bilgisi için siparişinizi tamamlayabilir veya doğrudan talep edebilirsiniz.',
+};
+
 
 // Seed demo orders so admin panel is not empty upon first load
 const INITIAL_DEMO_ORDERS: Order[] = [
@@ -73,6 +84,7 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 export function DataProvider({ children }: { children: React.ReactNode }) {
   const [models, setModels] = useState<VoltaModel[]>(INITIAL_VOLTA_MODELS);
   const [orders, setOrders] = useState<Order[]>(INITIAL_DEMO_ORDERS);
+  const [bankInfo, setBankInfo] = useState<BankInfo>(DEFAULT_BANK_INFO);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -90,10 +102,18 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       } else {
         localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(INITIAL_DEMO_ORDERS));
       }
+
+      const storedBank = localStorage.getItem(BANK_STORAGE_KEY);
+      if (storedBank) {
+        setBankInfo(JSON.parse(storedBank));
+      } else {
+        localStorage.setItem(BANK_STORAGE_KEY, JSON.stringify(DEFAULT_BANK_INFO));
+      }
     } catch (e) {
       console.error('Failed to load data:', e);
     }
   }, []);
+
 
   const updateModel = (id: string, updates: Partial<VoltaModel>) => {
     const updated = models.map((m) => {
@@ -167,6 +187,15 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const updateBankInfo = (newInfo: BankInfo) => {
+    setBankInfo(newInfo);
+    try {
+      localStorage.setItem(BANK_STORAGE_KEY, JSON.stringify(newInfo));
+    } catch (e) {
+      console.error('Failed to save bank info:', e);
+    }
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -177,6 +206,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         createOrder,
         updateOrderStatus,
         deleteOrder,
+        bankInfo,
+        updateBankInfo,
       }}
     >
       {children}

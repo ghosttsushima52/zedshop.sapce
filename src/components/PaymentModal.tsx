@@ -18,21 +18,27 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   preselectedModel,
 }) => {
   const { user } = useAuth();
-  const { models, createOrder } = useData();
+  const { models, createOrder, bankInfo } = useData();
+
+  // Step state: 1 = Contact & Delivery Info, 2 = Model & Payment
+  const [step, setStep] = useState<1 | 2>(1);
 
   const [selectedModelId, setSelectedModelId] = useState<string>(
     preselectedModel ? preselectedModel.id : models[0]?.id || 'vsm'
   );
-  const [paymentMethod, setPaymentMethod] = useState<'havale' | 'kart' | 'fast'>('havale');
   
-  // Form fields
+  // Only Bank Transfer / EFT
+  const paymentMethod = 'havale';
+  
+  // Step 1 Form fields
   const [name, setName] = useState(user?.name || '');
   const [phone, setPhone] = useState(user?.phone || '');
   const [email, setEmail] = useState(user?.email || '');
-  const [city, setCity] = useState('İstanbul');
+  const [city, setCity] = useState('');
   const [address, setAddress] = useState('');
   const [receiptNote, setReceiptNote] = useState('');
 
+  const [stepError, setStepError] = useState<string | null>(null);
   const [completedOrderNumber, setCompletedOrderNumber] = useState<string | null>(null);
 
   if (!isOpen) return null;
@@ -40,24 +46,31 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   const currentModel = models.find((m) => m.id === selectedModelId) || preselectedModel || models[0];
   const finalPrice = currentModel ? currentModel.price : 24990;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleProceedToStep2 = (e: React.FormEvent) => {
     e.preventDefault();
+    setStepError(null);
 
-    if (!name.trim() || !phone.trim() || !address.trim()) {
-      alert('Lütfen tüm zorunlu alanları doldurunuz.');
+    if (!phone.trim()) {
+      setStepError('Lütfen geçerli bir telefon numarası giriniz.');
       return;
     }
 
+    setStep(2);
+  };
+
+  const handleFinalSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
     const order = createOrder({
-      customerName: name.trim(),
+      customerName: name.trim() || 'Değerli Müşterimiz',
       customerPhone: phone.trim(),
-      customerEmail: email.trim() || (user?.email || 'musteri@volta.com.tr'),
+      customerEmail: email.trim() || (user?.email || 'musteri@voltaservis.net'),
       modelId: currentModel.id,
       modelName: `Volta ${currentModel.name}`,
       amount: finalPrice,
       paymentMethod,
-      city,
-      address: address.trim(),
+      city: city.trim() || 'Belirtilmedi',
+      address: address.trim() || 'Belirtilmedi',
       receiptNote: receiptNote.trim(),
     });
 
@@ -66,6 +79,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
 
   const handleResetAndClose = () => {
     setCompletedOrderNumber(null);
+    setStep(1);
+    setStepError(null);
     onClose();
   };
 
@@ -93,6 +108,30 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
           </button>
         </div>
 
+        {/* Step Indicator Header (Only shown when not completed) */}
+        {!completedOrderNumber && (
+          <div className="bg-slate-100 px-6 py-2.5 border-b border-slate-200 flex items-center justify-between text-xs font-bold">
+            <div className="flex items-center gap-2">
+              <span className={`px-2.5 py-1 rounded-lg ${step === 1 ? 'bg-red-600 text-white' : 'bg-slate-200 text-slate-700'}`}>
+                1. İletişim Bilgileri
+              </span>
+              <span className="text-slate-400">→</span>
+              <span className={`px-2.5 py-1 rounded-lg ${step === 2 ? 'bg-red-600 text-white' : 'bg-slate-200 text-slate-700'}`}>
+                2. Model & Ödeme
+              </span>
+            </div>
+            {step === 2 && (
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="text-slate-600 hover:text-slate-900 font-semibold underline text-[11px]"
+              >
+                ← 1. Adıma Dön
+              </button>
+            )}
+          </div>
+        )}
+
         {/* Content Body */}
         <div className="p-5 sm:p-7 overflow-y-auto flex-1">
           {completedOrderNumber ? (
@@ -100,7 +139,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mx-auto font-black shadow-md">
                 ✓
               </div>
-              <h4 className="text-xl font-black text-slate-900">Rezervasyonunuz Alındı!</h4>
+              <h4 className="text-xl font-black text-slate-900">Siparişiniz Alındı!</h4>
               <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
                 Talebiniz başarıyla kaydedildi. Sipariş numaranız ve ayrıntılarınız müşteri panelinize aktarılmıştır.
               </p>
@@ -112,13 +151,13 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
 
               <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <a
-                  href={`https://wa.me/905000000000?text=Merhaba,%20${encodeURIComponent(completedOrderNumber)}%20numaral%C4%B1%20rezervasyonum%20hakk%C4%B1nda%20dekont%20payla%C5%9Fmak%20istiyorum`}
+                  href={`https://wa.me/905000000000?text=Merhaba,%20${encodeURIComponent(completedOrderNumber)}%20numaral%C4%B1%20sipari%C5%9Fim%20i%C3%A7in%20%C3%B6deme%20bilgisi%20talep%20ediyorum`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-sm"
                 >
                   <WhatsAppIcon className="w-4 h-4" />
-                  <span>WhatsApp ile Dekont Bildir</span>
+                  <span>WhatsApp ile Ödeme Bilgisi Al</span>
                 </a>
                 <button
                   onClick={handleResetAndClose}
@@ -128,12 +167,121 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                 </button>
               </div>
             </div>
+          ) : step === 1 ? (
+            /* ================= STEP 1: İLETİŞİM BİLGİLERİ ================= */
+            <form onSubmit={handleProceedToStep2} className="space-y-4">
+              <div className="border-b border-slate-100 pb-2">
+                <h4 className="text-sm font-black text-slate-900 uppercase tracking-tight">
+                  3. İLETİŞİM BİLGİLERİ — ÜYELİK GEREKMEZ
+                </h4>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Lütfen teslimat ve sipariş onayınız için iletişim bilgilerinizi giriniz.
+                </p>
+              </div>
+
+              {stepError && (
+                <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-bold rounded-xl">
+                  {stepError}
+                </div>
+              )}
+
+              <div>
+                <label className="text-[11px] font-bold text-slate-600 block mb-1">
+                  Ad Soyad (İsteğe bağlı)
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ahmet Yılmaz"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium focus:ring-2 focus:ring-red-600 outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold text-slate-600 block mb-1">
+                  Telefon Numarası *
+                </label>
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="05XX XXX XX XX"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium focus:ring-2 focus:ring-red-600 outline-none"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold text-slate-600 block mb-1">
+                  E-Posta Adresi *
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="ahmet@gmail.com"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium focus:ring-2 focus:ring-red-600 outline-none"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold text-slate-600 block mb-1">
+                  Teslimat İli (İsteğe bağlı)
+                </label>
+                <input
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder="İstanbul, Ankara, İzmir..."
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium focus:ring-2 focus:ring-red-600 outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold text-slate-600 block mb-1">
+                  Teslimat Adresi (İsteğe bağlı)
+                </label>
+                <textarea
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Mahalle, cadde, sokak, bina ve daire numarası..."
+                  rows={2}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium focus:ring-2 focus:ring-red-600 outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold text-slate-600 block mb-1">
+                  Ödeme Notu / Dekont Numarası (Opsiyonel)
+                </label>
+                <input
+                  type="text"
+                  value={receiptNote}
+                  onChange={(e) => setReceiptNote(e.target.value)}
+                  placeholder="Varsa notunuz veya açıklamanız"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium focus:ring-2 focus:ring-red-600 outline-none"
+                />
+              </div>
+
+              <div className="pt-4 border-t border-slate-200 flex items-center justify-end">
+                <button
+                  type="submit"
+                  className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs sm:text-sm px-7 py-3.5 rounded-xl transition shadow-md active:scale-98 flex items-center gap-2"
+                >
+                  <span>Devam Et (Model ve Ödeme Seçimi)</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </form>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Step 1: Select Model */}
+            /* ================= STEP 2: MODEL SEÇİMİ VE ÖDEME ================= */
+            <form onSubmit={handleFinalSubmit} className="space-y-5">
+              {/* Step 2.1: Model Selection */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase mb-2">
-                  1. Seçilen Model & Satış Fiyatı
+                  1. SEÇİLEN MODEL & SATIŞ FİYATI
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {models.map((m) => (
@@ -156,148 +304,97 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                 </div>
               </div>
 
-              {/* Step 2: Payment Method */}
+              {/* Step 2.2: Payment Method (Only Banka Havalesi / EFT) */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase mb-2">
-                  2. Ödeme Yöntemi
+                  2. ÖDEME YÖNTEMİ
                 </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { id: 'havale', label: 'Banka Havalesi / EFT', desc: 'Resmi Şirket Hesabı' },
-                    { id: 'fast', label: 'FAST Anında Transfer', desc: '7/24 Kesintisiz' },
-                    { id: 'kart', label: 'Kredi Kartı / Rezervasyon', desc: 'Taksit & Güvence' },
-                  ].map((pm) => (
-                    <button
-                      key={pm.id}
-                      type="button"
-                      onClick={() => setPaymentMethod(pm.id as any)}
-                      className={`p-3 rounded-2xl border text-left transition ${
-                        paymentMethod === pm.id
-                          ? 'border-red-600 bg-red-50/50 shadow-sm ring-2 ring-red-100'
-                          : 'border-slate-200 bg-slate-50 hover:bg-white'
-                      }`}
-                    >
-                      <span className="text-xs font-bold text-slate-900 block">{pm.label}</span>
-                      <span className="text-[10px] text-slate-500 mt-0.5 block">{pm.desc}</span>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Bank Account Info Box */}
-                {(paymentMethod === 'havale' || paymentMethod === 'fast') && (
-                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 mt-3 space-y-2 text-xs">
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-500 font-medium">Banka:</span>
-                      <span className="font-bold text-slate-900">Ziraat Bankası / Türkiye İş Bankası</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-500 font-medium">Alıcı Unvanı:</span>
-                      <span className="font-bold text-slate-900">Volta Motor San. ve Tic. A.Ş.</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-500 font-medium">IBAN:</span>
-                      <span className="font-mono font-bold text-slate-900 bg-white px-2 py-1 rounded border border-slate-200">
-                        TR84 0001 0090 1234 5678 9012 34
+                <div className="grid grid-cols-1 gap-2">
+                  <div className="p-3.5 rounded-2xl border border-red-600 bg-red-50/40 ring-2 ring-red-100 flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-4 h-4 rounded-full border-2 border-red-600 flex items-center justify-center">
+                        <div className="w-2 h-2 rounded-full bg-red-600" />
+                      </div>
+                      <span className="text-xs font-bold text-slate-900">
+                        Banka Havalesi / EFT
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-500 pt-1">
-                      * Açıklama kısmına adınızı ve telefon numaranızı yazınız.
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Step 3: Customer Details */}
-              <div className="space-y-3 pt-2">
-                <label className="block text-xs font-bold text-slate-700 uppercase">
-                  3. Teslimat & İletişim Bilgileri
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-600 block mb-1">Ad Soyad *</label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Ahmet Yılmaz"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-red-600 outline-none"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-600 block mb-1">Telefon Numarası *</label>
-                    <input
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="05XX XXX XX XX"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-red-600 outline-none"
-                      required
-                    />
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/70 px-2.5 py-1 rounded-md">
+                      Aktif
+                    </span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-600 block mb-1">E-Posta Adresi</label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="ahmet@gmail.com"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-red-600 outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-600 block mb-1">Teslimat İli *</label>
-                    <input
-                      type="text"
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                      placeholder="İstanbul, Ankara, İzmir..."
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-red-600 outline-none"
-                      required
-                    />
-                  </div>
-                </div>
+                {/* Bank / IBAN Info Box */}
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 mt-3 space-y-3 text-xs">
+                  {bankInfo && bankInfo.iban ? (
+                    <div className="space-y-2">
+                      {bankInfo.bankName && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-500 font-medium">Banka:</span>
+                          <span className="font-bold text-slate-900">{bankInfo.bankName}</span>
+                        </div>
+                      )}
+                      {bankInfo.accountHolder && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-500 font-medium">Alıcı:</span>
+                          <span className="font-bold text-slate-900">{bankInfo.accountHolder}</span>
+                        </div>
+                      )}
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-500 font-medium">IBAN:</span>
+                        <span className="font-mono font-bold text-slate-900 bg-white px-2 py-1 rounded border border-slate-200">
+                          {bankInfo.iban}
+                        </span>
+                      </div>
+                      {bankInfo.description && (
+                        <p className="text-[11px] text-slate-500 pt-1 border-t border-slate-200">
+                          {bankInfo.description}
+                        </p>
+                      )}
+                    </div>
+                  ) : null}
 
-                <div>
-                  <label className="text-[11px] font-bold text-slate-600 block mb-1">Teslimat Adresi *</label>
-                  <textarea
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Mahalle, cadde, sokak, bina ve daire numarası..."
-                    rows={2}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-red-600 outline-none"
-                    required
-                  />
-                </div>
+                  {/* "Ödeme Bilgisi Talep Et" Info Block */}
+                  <div className="p-3 bg-amber-50 border border-amber-200/80 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div>
+                      <span className="font-black text-amber-900 text-xs block">
+                        💳 Ödeme Bilgisi Talep Et
+                      </span>
+                      <p className="text-[11px] text-amber-800/90 mt-0.5">
+                        Siparişinizi tamamladıktan sonra veya doğrudan danışmanımızdan güncel IBAN & ödeme bilgisi talep edebilirsiniz.
+                      </p>
+                    </div>
+                    <a
+                      href={`https://wa.me/905000000000?text=Merhaba,%20Volta%20${encodeURIComponent(currentModel.name)}%20modeli%20i%C3%A7in%20%C3%B6deme%20bilgisi%20talep%20ediyorum`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] px-3.5 py-2 rounded-xl transition whitespace-nowrap shadow-sm"
+                    >
+                      <WhatsAppIcon className="w-3.5 h-3.5" />
+                      <span>Bilgi Talep Et</span>
+                    </a>
+                  </div>
 
-                <div>
-                  <label className="text-[11px] font-bold text-slate-600 block mb-1">Ödeme Notu / Dekont Numarası (Opsiyonel)</label>
-                  <input
-                    type="text"
-                    value={receiptNote}
-                    onChange={(e) => setReceiptNote(e.target.value)}
-                    placeholder="örn: Garanti FAST 124567 nolu transfer"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-red-600 outline-none"
-                  />
+                  <p className="text-[11px] text-slate-500 pt-1">
+                    * Açıklama kısmına adınızı ve telefon numaranızı yazınız.
+                  </p>
                 </div>
               </div>
 
-              {/* Total & Submit */}
+              {/* Total & Submit Button ("Siparişi Tamamla") */}
               <div className="pt-4 border-t border-slate-200 flex items-center justify-between gap-4">
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Toplam Tutar</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase block">TOPLAM TUTAR</span>
                   <span className="text-xl sm:text-2xl font-black text-slate-900 font-mono">
                     {finalPrice.toLocaleString('tr-TR')},00 TL
                   </span>
                 </div>
                 <button
                   type="submit"
-                  className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-xl transition shadow-md active:scale-98"
+                  className="bg-red-600 hover:bg-red-700 text-white font-black text-xs sm:text-sm px-6 py-3.5 rounded-xl transition shadow-md active:scale-98"
                 >
-                  Rezervasyonu Onayla
+                  Siparişi Tamamla
                 </button>
               </div>
             </form>

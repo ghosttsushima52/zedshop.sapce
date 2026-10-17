@@ -65,10 +65,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             Kampanyalar
           </button>
           <button
-            onClick={() => onOpenInfo('bayiler')}
-            className="text-xs uppercase font-bold tracking-wider text-slate-300 hover:text-white transition-colors"
+            onClick={onOpenPayment}
+            className="text-xs uppercase font-bold tracking-wider text-red-400 hover:text-red-300 transition-colors bg-red-950/40 px-3 py-1.5 rounded-lg border border-red-500/30"
           >
-            Bayiler
+            ( Sipariş ve Ödeme )
           </button>
           <button
             onClick={() => onOpenInfo('servisler')}
@@ -151,14 +151,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span>WhatsApp</span>
           </a>
 
-          {/* Online Order / Rezervasyon CTA */}
-          <button
-            onClick={onOpenPayment}
-            className="bg-red-600 hover:bg-red-500 text-white text-xs sm:text-sm font-bold px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl transition shadow-sm active:scale-95 shrink-0"
-          >
-            <span>Ödeme Yap</span>
-          </button>
-
           {/* Mobile Hamburger Toggle Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -230,11 +222,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={() => {
                 setIsMobileMenuOpen(false);
-                onOpenInfo('bayiler');
+                onOpenPayment();
               }}
-              className="p-3 text-left rounded-xl bg-slate-800/60 hover:bg-slate-800 text-slate-200"
+              className="p-3 text-left rounded-xl bg-red-600/20 border border-red-500/30 hover:bg-red-600/30 text-red-300 font-bold"
             >
-              📍 Yetkili Bayiler
+              🛒 ( Sipariş ve Ödeme )
             </button>
             <button
               onClick={() => {
