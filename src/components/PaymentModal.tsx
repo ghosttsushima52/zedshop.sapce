@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
 import { VoltaModel } from '@/types';
@@ -30,10 +30,9 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   // Only Bank Transfer / EFT
   const paymentMethod = 'havale';
   
-  // Step 1 Form fields
+  // Step 1 Form fields (E-mail removed per user request)
   const [name, setName] = useState(user?.name || '');
   const [phone, setPhone] = useState(user?.phone || '');
-  const [email, setEmail] = useState(user?.email || '');
   const [city, setCity] = useState('');
   const [address, setAddress] = useState('');
   const [receiptNote, setReceiptNote] = useState('');
@@ -41,10 +40,32 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   const [stepError, setStepError] = useState<string | null>(null);
   const [completedOrderNumber, setCompletedOrderNumber] = useState<string | null>(null);
 
+  // Sync model selection & reset state when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      if (preselectedModel) {
+        setSelectedModelId(preselectedModel.id);
+      } else if (models.length > 0 && !selectedModelId) {
+        setSelectedModelId(models[0].id);
+      }
+      setCompletedOrderNumber(null);
+      setStep(1);
+      setStepError(null);
+    }
+  }, [isOpen, preselectedModel, models]);
+
+  // Autofill if logged in user data arrives
+  useEffect(() => {
+    if (user) {
+      if (user.name && !name) setName(user.name);
+      if (user.phone && !phone) setPhone(user.phone);
+    }
+  }, [user]);
+
   if (!isOpen) return null;
 
   const currentModel = models.find((m) => m.id === selectedModelId) || preselectedModel || models[0];
-  const finalPrice = currentModel ? currentModel.price : 24990;
+  const finalPrice = currentModel && currentModel.price > 0 ? currentModel.price : 24990;
 
   const handleProceedToStep2 = (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,12 +82,15 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   const handleFinalSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const cleanPhone = phone.trim();
+    const fallbackEmail = user?.email || (cleanPhone ? `${cleanPhone.replace(/\D/g, '')}@voltaservis.net` : 'musteri@voltaservis.net');
+
     const order = createOrder({
       customerName: name.trim() || 'Değerli Müşterimiz',
-      customerPhone: phone.trim(),
-      customerEmail: email.trim() || (user?.email || 'musteri@voltaservis.net'),
-      modelId: currentModel.id,
-      modelName: `Volta ${currentModel.name}`,
+      customerPhone: cleanPhone,
+      customerEmail: fallbackEmail,
+      modelId: currentModel?.id || 'vsm',
+      modelName: currentModel ? `Volta ${currentModel.name}` : 'Volta Motosiklet',
       amount: finalPrice,
       paymentMethod,
       city: city.trim() || 'Belirtilmedi',
@@ -85,13 +109,13 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-md p-3 sm:p-6 flex items-center justify-center animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-md p-2 sm:p-4 flex sm:items-center items-start justify-center animate-in fade-in duration-200">
       <div 
-        className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col relative max-h-[92vh]"
+        className="bg-white rounded-2xl sm:rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col relative max-h-[92vh] my-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-[#14212d] text-white p-5 sm:p-6 flex items-center justify-between shrink-0">
+        <div className="bg-[#14212d] text-white p-4 sm:p-6 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/volta-service-logo.png" alt="Volta" className="w-10 h-10 object-contain rounded-xl" />
@@ -172,10 +196,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
             <form onSubmit={handleProceedToStep2} className="space-y-4">
               <div className="border-b border-slate-100 pb-2">
                 <h4 className="text-sm font-black text-slate-900 uppercase tracking-tight">
-                  3. İLETİŞİM BİLGİLERİ — ÜYELİK GEREKMEZ
+                  1. İLETİŞİM BİLGİLERİ — HIZLI SİPARİŞ
                 </h4>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Lütfen teslimat ve sipariş onayınız için iletişim bilgilerinizi giriniz.
+                  Lütfen teslimat ve sipariş teyidi için telefon numaranızı giriniz (üyelik gerekmez).
                 </p>
               </div>
 
@@ -207,20 +231,6 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="05XX XXX XX XX"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium focus:ring-2 focus:ring-red-600 outline-none"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="text-[11px] font-bold text-slate-600 block mb-1">
-                  E-Posta Adresi *
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="ahmet@gmail.com"
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium focus:ring-2 focus:ring-red-600 outline-none"
                   required
                 />

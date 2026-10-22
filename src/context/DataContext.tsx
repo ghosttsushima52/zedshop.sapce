@@ -91,14 +91,26 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     try {
       const storedModels = localStorage.getItem(MODELS_STORAGE_KEY);
       if (storedModels) {
-        setModels(JSON.parse(storedModels));
+        const parsed = JSON.parse(storedModels);
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed.every((m: VoltaModel) => m && m.price > 0 && m.name)) {
+          setModels(parsed);
+        } else {
+          setModels(INITIAL_VOLTA_MODELS);
+          localStorage.setItem(MODELS_STORAGE_KEY, JSON.stringify(INITIAL_VOLTA_MODELS));
+        }
       } else {
         localStorage.setItem(MODELS_STORAGE_KEY, JSON.stringify(INITIAL_VOLTA_MODELS));
       }
 
       const storedOrders = localStorage.getItem(ORDERS_STORAGE_KEY);
       if (storedOrders) {
-        setOrders(JSON.parse(storedOrders));
+        const parsedOrders = JSON.parse(storedOrders);
+        if (Array.isArray(parsedOrders)) {
+          setOrders(parsedOrders);
+        } else {
+          setOrders(INITIAL_DEMO_ORDERS);
+          localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(INITIAL_DEMO_ORDERS));
+        }
       } else {
         localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(INITIAL_DEMO_ORDERS));
       }

@@ -48,7 +48,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col font-sans antialiased selection:bg-red-600 selection:text-white">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col font-sans antialiased selection:bg-red-600 selection:text-white w-full max-w-full overflow-x-hidden">
       {/* Top Navbar */}
       <Navbar
         onOpenInfo={(type) => setActiveInfoModal(type)}
@@ -274,8 +274,8 @@ export default function HomePage() {
       </section>
 
       {/* Full Catalog Section */}
-      <section id="models" className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200/80">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+      <section id="models" className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200/80 w-full max-w-full overflow-hidden">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 w-full max-w-full min-w-0">
           <div>
             <span className="text-xs font-bold text-red-600 uppercase tracking-wider block mb-1">
               VOLTA ÜRÜN GAMMI
@@ -286,7 +286,7 @@ export default function HomePage() {
           </div>
 
           {/* Category Filter Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none w-full max-w-full min-w-0">
             {categories.map((cat) => (
               <button
                 key={cat}

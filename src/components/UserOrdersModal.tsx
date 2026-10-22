@@ -21,16 +21,17 @@ export const UserOrdersModal: React.FC<UserOrdersModalProps> = ({ isOpen, onClos
   // If user is gglegend, can view all orders or their orders
   const userOrders = isAdmin
     ? orders
-    : orders.filter(
-        (o) =>
-          o.customerEmail.toLowerCase() === user.email.toLowerCase() ||
-          o.customerName.toLowerCase() === user.name.toLowerCase()
-      );
+    : orders.filter((o) => {
+        const emailMatch = user.email && o.customerEmail && o.customerEmail.toLowerCase() === user.email.toLowerCase();
+        const phoneMatch = user.phone && o.customerPhone && o.customerPhone.replace(/\D/g, '') === user.phone.replace(/\D/g, '');
+        const nameMatch = user.name && o.customerName && o.customerName.toLowerCase() === user.name.toLowerCase();
+        return emailMatch || phoneMatch || nameMatch;
+      });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex sm:items-center items-start justify-center p-2 sm:p-6 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto">
       <div 
-        className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[85vh]"
+        className="bg-white rounded-2xl sm:rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[85vh] my-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr">
-      <body className="antialiased selection:bg-red-600 selection:text-white">
+      <body className="antialiased selection:bg-red-600 selection:text-white w-full max-w-full overflow-x-hidden">
         <AuthProvider>
           <DataProvider>
             {children}
